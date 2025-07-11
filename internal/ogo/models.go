@@ -8,7 +8,6 @@ type OgoResponseStatus struct {
 
 // Site
 type Site struct {
-	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name"`
 	ClusterID        int    `json:"clusterId"`
 	ClusterName      string `json:"clusterName,omitempty"`

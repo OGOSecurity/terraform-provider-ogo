@@ -41,7 +41,7 @@ type clustersDataSource struct {
 }
 
 func (d *clustersDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_clusters"
+	resp.TypeName = req.ProviderTypeName + "_shield_clusters"
 }
 
 func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {

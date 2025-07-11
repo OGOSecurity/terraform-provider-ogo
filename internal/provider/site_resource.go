@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -25,7 +24,6 @@ var (
 
 // siteResourceModel maps the resource schema data.
 type siteResourceModel struct {
-	ID               types.Int64  `tfsdk:"id"`
 	Name             types.String `tfsdk:"name"`
 	ClusterID        types.Int64  `tfsdk:"cluster_id"`
 	ClusterName      types.String `tfsdk:"cluster_name"`
@@ -51,19 +49,13 @@ type siteResource struct {
 
 // Metadata returns the resource type name.
 func (r *siteResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_site"
+	resp.TypeName = req.ProviderTypeName + "_shield_site"
 }
 
 // Schema defines the schema for the resource.
 func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"id": schema.Int64Attribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.UseStateForUnknown(),
-				},
-			},
 			"name": schema.StringAttribute{
 				Required: true,
 			},
@@ -159,7 +151,6 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.ID = types.Int64Value(int64(site.ID))
 	plan.ClusterName = types.StringValue(string(site.ClusterName))
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
@@ -243,7 +234,6 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.ID = types.Int64Value(int64(site.ID))
 	plan.ClusterName = types.StringValue(string(site.ClusterName))
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
@@ -277,6 +267,6 @@ func (r *siteResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 }
 
 func (r *siteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Retrieve import ID and save to id attribute
+	// Retrieve import Name and save to name attribute
 	resource.ImportStatePassthroughID(ctx, path.Root("name"), req, resp)
 }

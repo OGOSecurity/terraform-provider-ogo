@@ -10,8 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -25,7 +23,6 @@ var (
 // siteResourceModel maps the resource schema data.
 type siteResourceModel struct {
 	Name             types.String `tfsdk:"name"`
-	ClusterID        types.Int64  `tfsdk:"cluster_id"`
 	ClusterName      types.String `tfsdk:"cluster_name"`
 	DestHost         types.String `tfsdk:"dest_host"`
 	DestHostScheme   types.String `tfsdk:"dest_host_scheme"`
@@ -59,14 +56,8 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"name": schema.StringAttribute{
 				Required: true,
 			},
-			"cluster_id": schema.Int64Attribute{
-				Required: true,
-			},
 			"cluster_name": schema.StringAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
+				Required: true,
 			},
 			"dest_host": schema.StringAttribute{
 				Required: true,
@@ -131,7 +122,7 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	// Create new site
 	s := ogosecurity.Site{
 		Name:             string(plan.Name.ValueString()),
-		ClusterID:        int(plan.ClusterID.ValueInt64()),
+		ClusterName:      string(plan.ClusterName.ValueString()),
 		DestHost:         string(plan.DestHost.ValueString()),
 		DestHostScheme:   string(plan.DestHostScheme.ValueString()),
 		TrustSelfSigned:  bool(plan.TrustSelfSigned.ValueBool()),
@@ -183,7 +174,6 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	// Overwrite properties with refreshed state
-	state.ClusterID = types.Int64Value(int64(site.ClusterID))
 	state.ClusterName = types.StringValue(site.ClusterName)
 	state.DestHost = types.StringValue(site.DestHost)
 	state.DestHostScheme = types.StringValue(site.DestHostScheme)
@@ -214,7 +204,7 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	// Create new site
 	s := ogosecurity.Site{
 		Name:             string(plan.Name.ValueString()),
-		ClusterID:        int(plan.ClusterID.ValueInt64()),
+		ClusterName:      string(plan.ClusterName.ValueString()),
 		DestHost:         string(plan.DestHost.ValueString()),
 		DestHostScheme:   string(plan.DestHostScheme.ValueString()),
 		TrustSelfSigned:  bool(plan.TrustSelfSigned.ValueBool()),

@@ -24,7 +24,6 @@ type clustersDataSourceModel struct {
 
 // clusterModel maps cluster schema data
 type clustersModel struct {
-	ClusterID           types.Int64  `tfsdk:"cluster_id"`
 	ClusterHost         types.String `tfsdk:"cluster_host"`
 	ClusterName         types.String `tfsdk:"cluster_name"`
 	SupportsCache       types.Bool   `tfsdk:"supports_cache"`
@@ -51,9 +50,6 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"cluster_id": schema.Int64Attribute{
-							Computed: true,
-						},
 						"cluster_host": schema.StringAttribute{
 							Computed: true,
 						},
@@ -112,7 +108,6 @@ func (d *clustersDataSource) Read(ctx context.Context, req datasource.ReadReques
 	// Map response body to model
 	for _, cluster := range clusters {
 		clusterState := clustersModel{
-			ClusterID:           types.Int64Value(int64(cluster.ClusterID)),
 			ClusterHost:         types.StringValue(cluster.ClusterHost),
 			ClusterName:         types.StringValue(cluster.ClusterName),
 			SupportsCache:       types.BoolValue(cluster.SupportsCache),

@@ -17,6 +17,7 @@ type Client struct {
 	HTTPClient  *http.Client
 	Username    string
 	ApiKey      string
+	Clusters    map[string]int
 }
 
 func md5sum(text string) string {
@@ -28,6 +29,7 @@ func md5sum(text string) string {
 func NewClient(host *string, username *string, apikey *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		Clusters:   map[string]int{},
 	}
 
 	// Check if endpoint, username and password are provided
@@ -50,6 +52,15 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 	}
 
 	c.HostBaseURL = *host + "/api/" + *username
+	clusters, err := c.GetAllClusters()
+
+	for _, cluster := range clusters {
+		c.Clusters[cluster.ClusterName] = cluster.ClusterID
+	}
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &c, nil
 }

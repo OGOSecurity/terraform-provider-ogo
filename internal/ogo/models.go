@@ -9,7 +9,6 @@ type OgoResponseStatus struct {
 // Site
 type Site struct {
 	Name             string `json:"name"`
-	ClusterID        int    `json:"clusterId"`
 	ClusterName      string `json:"clusterName,omitempty"`
 	DestHost         string `json:"destHost"`
 	DestHostScheme   string `json:"destHostScheme"`
@@ -45,9 +44,9 @@ type SitesResponse struct {
 
 // Cluster
 type Cluster struct {
-	ClusterID           int      `json:"clusterId,omitempty"`
+	ClusterID           int      `json:"clusterId"`
 	ClusterHost         string   `json:"clusterHost,omitempty"`
-	ClusterName         string   `json:"clusterName,omitempty"`
+	ClusterName         string   `json:"clusterName"`
 	SupportsCache       bool     `json:"supportsCache"`
 	SupportsIpv6Origins bool     `json:"supportsIpv6Origins"`
 	SupportsMtls        bool     `json:"supportsMtls"`

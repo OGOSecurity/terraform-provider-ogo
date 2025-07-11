@@ -28,8 +28,12 @@ func (c *Client) GetAllClusters() ([]Cluster, error) {
 }
 
 // GetCluster - Returns a specifc cluster
-func (c *Client) GetCluster(clusterId int) ([]Cluster, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters/%d", c.HostBaseURL, clusterId), nil)
+func (c *Client) GetCluster(clusterName string) ([]Cluster, error) {
+	if _, ok := c.Clusters[clusterName]; !ok {
+		return nil, fmt.Errorf("Unknown cluster %s", clusterName)
+	}
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters/%d", c.HostBaseURL, c.Clusters[clusterName]), nil)
 	if err != nil {
 		return nil, err
 	}

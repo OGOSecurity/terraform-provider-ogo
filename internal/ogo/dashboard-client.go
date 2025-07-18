@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+var sem = make(chan int, 1)
+
 // Client
 type Client struct {
 	Endpoint    string
@@ -79,7 +81,11 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 
 	//fmt.Printf("req: %+v\n", req)
 
+	// Lock access to Ogo API to restrict count of concurrent request
+	sem <- 1
 	res, err := c.HTTPClient.Do(req)
+	<-sem
+
 	if err != nil {
 		return nil, err
 	}

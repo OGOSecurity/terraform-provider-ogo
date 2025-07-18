@@ -22,16 +22,23 @@ var (
 
 // siteResourceModel maps the resource schema data.
 type siteResourceModel struct {
-	Name             types.String `tfsdk:"name"`
-	ClusterName      types.String `tfsdk:"cluster_name"`
-	DestHost         types.String `tfsdk:"dest_host"`
-	DestHostScheme   types.String `tfsdk:"dest_host_scheme"`
+	Name           types.String `tfsdk:"name"`
+	ClusterName    types.String `tfsdk:"cluster_name"`
+	DestHost       types.String `tfsdk:"dest_host"`
+	DestHostScheme types.String `tfsdk:"dest_host_scheme"`
+	//Port             types.Int32  `tfsdk:"port"`
 	TrustSelfSigned  types.Bool   `tfsdk:"trust_selfsigned"`
 	NoCopyXForwarded types.Bool   `tfsdk:"no_copy_xforwarded"`
 	ForceHttps       types.Bool   `tfsdk:"force_https"`
 	DryRun           types.Bool   `tfsdk:"dry_run"`
 	PanicMode        types.Bool   `tfsdk:"panic_mode"`
 	LastUpdated      types.String `tfsdk:"last_updated"`
+	//Hsts              types.String   `tfsdk:"hsts"`
+	//LogExport         types.Bool     `tfsdk:"log_export"`
+	//DestHostMtls      types.Bool     `tfsdk:"dest_host_mtls"`
+	//TlsOptionsUid     types.String   `tfsdk:"tls_options_uid"`
+	//PassTlsClientCert types.String   `tfsdk:"pass_tls_client_cert"`
+	//Tags              []types.String `tfsdk:"tags"`
 }
 
 // NewSiteResource is a helper function to simplify the provider implementation.
@@ -65,6 +72,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"dest_host_scheme": schema.StringAttribute{
 				Required: true,
 			},
+			//"port": schema.Int32Attribute{
+			//	Optional: true,
+			//},
 			"trust_selfsigned": schema.BoolAttribute{
 				Required: true,
 			},
@@ -83,6 +93,27 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"last_updated": schema.StringAttribute{
 				Computed: true,
 			},
+			//"hsts": schema.StringAttribute{
+			//	Optional: true,
+			//},
+			//"log_export": schema.BoolAttribute{
+			//	Optional: true,
+			//},
+			//"dest_host_mtls": schema.BoolAttribute{
+			//	Optional: true,
+			//},
+			//"tls_options_uid": schema.StringAttribute{
+			//	Optional: true,
+			//},
+			//"pass_tls_client_cert": schema.StringAttribute{
+			//	Optional: true,
+			//},
+			//"tags": schema.ListAttribute{
+			//	ElementType: types.ListType{
+			//		ElemType: types.StringType,
+			//	},
+			//	Optional: true,
+			//},
 		},
 	}
 }
@@ -121,16 +152,26 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	// Create new site
 	s := ogosecurity.Site{
-		Name:             string(plan.Name.ValueString()),
-		ClusterName:      string(plan.ClusterName.ValueString()),
-		DestHost:         string(plan.DestHost.ValueString()),
-		DestHostScheme:   string(plan.DestHostScheme.ValueString()),
+		Name:           string(plan.Name.ValueString()),
+		ClusterName:    string(plan.ClusterName.ValueString()),
+		DestHost:       string(plan.DestHost.ValueString()),
+		DestHostScheme: string(plan.DestHostScheme.ValueString()),
+		//Port:             int(plan.Port.ValueInt32()),
 		TrustSelfSigned:  bool(plan.TrustSelfSigned.ValueBool()),
 		NoCopyXForwarded: bool(plan.NoCopyXForwarded.ValueBool()),
 		ForceHttps:       bool(plan.ForceHttps.ValueBool()),
 		DryRun:           bool(plan.DryRun.ValueBool()),
 		PanicMode:        bool(plan.PanicMode.ValueBool()),
+		//Hsts:              string(plan.Hsts.ValueString()),
+		//LogExport:         bool(plan.LogExport.ValueBool()),
+		//DestHostMtls:      bool(plan.DestHostMtls.ValueBool()),
+		//TlsOptionsUid:     string(plan.TlsOptionsUid.ValueString()),
+		//PassTlsClientCert: string(plan.PassTlsClientCert.ValueString()),
 	}
+
+	//for _, tag := range plan.Tags {
+	//	s.Tags = append(s.Tags, string(tag.ValueString()))
+	//}
 
 	site, err := r.client.CreateSite(s)
 	if err != nil {
@@ -177,11 +218,21 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.ClusterName = types.StringValue(site.ClusterName)
 	state.DestHost = types.StringValue(site.DestHost)
 	state.DestHostScheme = types.StringValue(site.DestHostScheme)
+	//state.Port = types.Int32Value(int32(site.Port))
 	state.TrustSelfSigned = types.BoolValue(site.TrustSelfSigned)
 	state.NoCopyXForwarded = types.BoolValue(site.NoCopyXForwarded)
 	state.ForceHttps = types.BoolValue(site.ForceHttps)
 	state.DryRun = types.BoolValue(site.DryRun)
 	state.PanicMode = types.BoolValue(site.PanicMode)
+	//state.Hsts = types.StringValue(site.Hsts)
+	//state.LogExport = types.BoolValue(site.LogExport)
+	//state.DestHostMtls = types.BoolValue(site.DestHostMtls)
+	//state.TlsOptionsUid = types.StringValue(site.TlsOptionsUid)
+	//state.PassTlsClientCert = types.StringValue(site.PassTlsClientCert)
+
+	//for _, tag := range site.Tags {
+	//	state.Tags = append(state.Tags, types.StringValue(tag))
+	//}
 
 	// Set refreshed state
 	diags = resp.State.Set(ctx, &state)

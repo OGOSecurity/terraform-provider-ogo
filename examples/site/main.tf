@@ -45,18 +45,6 @@ resource "ogo_shield_site" "gys_webapp_ogosecurity_com" {
   panic_mode         = false
 }
 
-resource "ogo_shield_site" "stubapache_ogosecurity_com" {
-  cluster_name       = "c1-stg"
-  dest_host          = "195.154.168.43"
-  dest_host_scheme   = "https"
-  dry_run            = false
-  force_https        = true
-  name               = "stubapache.ogosecurity.com"
-  no_copy_xforwarded = false
-  panic_mode         = false
-  trust_selfsigned   = false
-}
-
 variable "cluster_name" {
   type        = string
   description = "Default Cluster ID to be used"
@@ -71,7 +59,7 @@ output "origin_stub" {
   value = ogo_shield_site.gys_webapp_ogosecurity_com.dest_host
 }
 
-output "stubapache_site" {
-  value = ogo_shield_site.stubapache_ogosecurity_com
+output "gys_webapp_site" {
+  value = ogo_shield_site.gys_webapp_ogosecurity_com
 }
 

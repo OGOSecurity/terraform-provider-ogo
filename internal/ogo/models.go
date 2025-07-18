@@ -8,15 +8,22 @@ type OgoResponseStatus struct {
 
 // Site
 type Site struct {
-	Name             string `json:"name"`
-	ClusterName      string `json:"clusterName,omitempty"`
-	DestHost         string `json:"destHost"`
-	DestHostScheme   string `json:"destHostScheme"`
-	TrustSelfSigned  bool   `json:"trustSelfSigned"`
-	NoCopyXForwarded bool   `json:"noCopyXForwarded"`
-	ForceHttps       bool   `json:"forceHttps"`
-	DryRun           bool   `json:"dryRun"`
-	PanicMode        bool   `json:"panicMode"`
+	Name              string `json:"name"`
+	ClusterName       string `json:"clusterName,omitempty"`
+	DestHost          string `json:"destHost"`
+	DestHostScheme    string `json:"destHostScheme"`
+	Port              int    `json:"port,omitempty"`
+	TrustSelfSigned   bool   `json:"trustSelfSigned"`
+	NoCopyXForwarded  bool   `json:"noCopyXForwarded"`
+	ForceHttps        bool   `json:"forceHttps"`
+	DryRun            bool   `json:"dryRun"`
+	PanicMode         bool   `json:"panicMode"`
+	Hsts              string `json:"hsts,omitempty"`
+	LogExport         bool   `json:"logExport,omitempty"`
+	DestHostMtls      bool   `json:"destHostMtls,omitempty"`
+	TlsOptionsUid     string `json:"tlsOptionsUid,omitempty"`
+	PassTlsClientCert string `json:"passTlsClientCert,omitempty"`
+	//Tags              []string `json:"tags,omitempty"`
 }
 
 // Site Create Query

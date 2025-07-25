@@ -1,9 +1,20 @@
 package ogosecurity
 
-// Ogo Reponse Status
-type OgoResponseStatus struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+// Sites Response
+type SitesResponse struct {
+	Sites      []Site            `json:"sites"`
+	SitesItems []Site            `json:"items"`
+	Status     OgoResponseStatus `json:"status"`
+	HasError   bool              `json:"hasError"`
+	Count      int               `json:"count"`
+}
+
+// Site Response
+type SiteResponse struct {
+	Site     Site              `json:"site"`
+	Status   OgoResponseStatus `json:"status"`
+	HasError bool              `json:"hasError"`
+	Count    int               `json:"count"`
 }
 
 // Site
@@ -26,44 +37,31 @@ type Site struct {
 	//Tags              []string `json:"tags,omitempty"`
 }
 
+// Ogo Reponse Status
+type OgoResponseStatus struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
 // Site Create Query
 type SiteQuery struct {
 	Action string `json:"action,omitempty"`
 	Site   Site   `json:"site"`
 }
 
-// Site Response
-type SiteResponse struct {
-	Site     Site              `json:"site"`
-	Status   OgoResponseStatus `json:"status"`
-	HasError bool              `json:"hasError"`
-	Count    int               `json:"count"`
-}
-
-// Sites Response
-type SitesResponse struct {
-	Sites      []Site            `json:"sites"`
-	SitesItems []Site            `json:"items"`
-	Status     OgoResponseStatus `json:"status"`
-	HasError   bool              `json:"hasError"`
-	Count      int               `json:"count"`
+// Clusters Response
+type ClustersResponse struct {
+	Cluster      Cluster  `json:"cluster"`
+	Role         string   `json:"role"`
+	AccessRights []string `json:"accessRights"`
 }
 
 // Cluster
 type Cluster struct {
-	ClusterID           int      `json:"clusterId"`
-	ClusterHost         string   `json:"clusterHost,omitempty"`
-	ClusterName         string   `json:"clusterName"`
+	Id                  int      `json:"id"`
+	ClusterName         string   `json:"name"`
 	SupportsCache       bool     `json:"supportsCache"`
 	SupportsIpv6Origins bool     `json:"supportsIpv6Origins"`
 	SupportsMtls        bool     `json:"supportsMtls"`
 	SupportedCdns       []string `json:"supportedCdns"`
-}
-
-// Clusters Response
-type ClustersResponse struct {
-	Clusters []Cluster         `json:"clusters"`
-	Status   OgoResponseStatus `json:"status"`
-	HasError bool              `json:"hasError"`
-	Count    int               `json:"count"`
 }

@@ -3,6 +3,7 @@ package ogosecurity
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -25,6 +26,11 @@ type Client struct {
 func md5sum(text string) string {
 	hash := md5.Sum([]byte(text))
 	return hex.EncodeToString(hash[:])
+}
+
+func printo(o any) {
+	b, _ := json.MarshalIndent(o, "", "  ")
+	fmt.Printf(string(b) + "\n")
 }
 
 // NewClient
@@ -53,15 +59,15 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 		c.ApiKey = *apikey
 	}
 
-	c.HostBaseURL = *host + "/api/" + *username
+	c.HostBaseURL = *host + "/v2/organizations/" + *username
 	clusters, err := c.GetAllClusters()
-
-	for _, cluster := range clusters {
-		c.Clusters[cluster.ClusterName] = cluster.ClusterID
-	}
 
 	if err != nil {
 		return nil, err
+	}
+
+	for _, cluster := range clusters {
+		c.Clusters[cluster.ClusterName] = cluster.Id
 	}
 
 	return &c, nil
@@ -70,14 +76,15 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	// Set headers
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("X-Ogo-Api-Key", c.ApiKey)
 
 	// Generate token based on URL Path
-	token := md5sum(req.URL.Path + "-" + c.ApiKey)
+	//token := md5sum(req.URL.Path + "-" + c.ApiKey)
 
 	// Set token on query parameters
-	q := req.URL.Query()
-	q.Add("t", token)
-	req.URL.RawQuery = q.Encode()
+	//q := req.URL.Query()
+	//q.Add("t", token)
+	//req.URL.RawQuery = q.Encode()
 
 	//fmt.Printf("req: %+v\n", req)
 

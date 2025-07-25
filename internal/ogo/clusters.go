@@ -8,6 +8,7 @@ import (
 
 // GetAllClusters - Returns all user's cluster
 func (c *Client) GetAllClusters() ([]Cluster, error) {
+	fmt.Printf("c.HostBaseURL: " + c.HostBaseURL + "\n")
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters", c.HostBaseURL), nil)
 	if err != nil {
 		return nil, err
@@ -18,36 +19,42 @@ func (c *Client) GetAllClusters() ([]Cluster, error) {
 		return nil, err
 	}
 
-	sr := ClustersResponse{}
+	var sr []ClustersResponse
 	err = json.Unmarshal(body, &sr)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return sr.Clusters, nil
+	var clusters []Cluster
+	for _, c := range sr {
+		clusters = append(clusters, c.Cluster)
+	}
+
+	return clusters, nil
 }
 
 // GetCluster - Returns a specifc cluster
-func (c *Client) GetCluster(clusterName string) ([]Cluster, error) {
-	if _, ok := c.Clusters[clusterName]; !ok {
-		return nil, fmt.Errorf("Unknown cluster %s", clusterName)
-	}
-
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters/%d", c.HostBaseURL, c.Clusters[clusterName]), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := c.doRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	sr := ClustersResponse{}
-	err = json.Unmarshal(body, &sr)
-	if err != nil {
-		return nil, err
-	}
-
-	return sr.Clusters, nil
-}
+//func (c *Client) GetCluster(clusterName string) ([]Cluster, error) {
+//	if _, ok := c.Clusters[clusterName]; !ok {
+//		return nil, fmt.Errorf("Unknown cluster %s", clusterName)
+//	}
+//
+//	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters/%d", c.HostBaseURL, c.Clusters[clusterName]), nil)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	body, err := c.doRequest(req)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	sr := ClustersResponse{}
+//	err = json.Unmarshal(body, &sr)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return sr.Clusters, nil
+//}

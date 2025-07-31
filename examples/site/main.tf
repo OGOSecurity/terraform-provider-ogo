@@ -34,15 +34,19 @@ data "ogo_shield_clusters" "shield" {}
 //}
 
 resource "ogo_shield_site" "gys_webapp_ogosecurity_com" {
-  name               = "gys-webapp.ogosecurity.com"
-  cluster_name       = "OGO GYS"
-  dest_host          = "192.168.122.13"
-  dest_host_scheme   = "https"
-  trust_selfsigned   = false
-  no_copy_xforwarded = false
-  force_https        = true
-  dry_run            = true
-  panic_mode         = false
+  name                 = "gys-webapp.ogosecurity.com"
+  cluster_name         = "OGO GYS"
+  dest_host            = "192.168.122.13"
+  dest_host_scheme     = "https"
+  trust_selfsigned     = true
+  no_copy_xforwarded   = false
+  force_https          = false
+  dry_run              = false
+  panic_mode           = false
+  dest_host_mtls       = false
+  hsts                 = "hstss"
+  log_export           = false
+  pass_tls_client_cert = "info"
 }
 
 variable "cluster_name" {

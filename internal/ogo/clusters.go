@@ -18,13 +18,13 @@ func (c *Client) GetAllClusters() ([]Cluster, error) {
 		return nil, err
 	}
 
-	sr := ClustersResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := ClustersResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return sr.Clusters, nil
+	return resp.Clusters, nil
 }
 
 // GetCluster - Returns a specifc cluster
@@ -43,11 +43,11 @@ func (c *Client) GetCluster(clusterName string) ([]Cluster, error) {
 		return nil, err
 	}
 
-	sr := ClustersResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := ClustersResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return sr.Clusters, nil
+	return resp.Clusters, nil
 }

@@ -21,13 +21,13 @@ func (c *Client) GetAllSites() ([]Site, error) {
 		return nil, err
 	}
 
-	sr := SitesResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := AllSitesResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return sr.Sites, nil
+	return resp.Sites, nil
 }
 
 // GetSite - Returns a specifc site
@@ -42,13 +42,13 @@ func (c *Client) GetSite(siteName string) (*Site, error) {
 		return nil, err
 	}
 
-	sr := SiteResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := SiteResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &sr.Site, nil
+	return &resp.Site, nil
 }
 
 // CreateSite - Create new site
@@ -72,14 +72,14 @@ func (c *Client) CreateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	sr := SitesResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := AllSitesResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	if sr.Count == 0 {
-		return nil, errors.New("Failed to create site: " + sr.Status.Message)
+	if resp.Count == 0 {
+		return nil, errors.New("Failed to create site: " + resp.Status.Message)
 	}
 
 	s, err := c.GetSite(site.Name)
@@ -102,7 +102,7 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.Name), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.Name), strings.NewReader(string(rb)))
 	if err != nil {
 		return nil, err
 	}
@@ -112,17 +112,17 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	sr := SitesResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := AllSitesResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	if sr.Count == 0 {
-		return nil, errors.New("Failed to update site: " + sr.Status.Message)
+	if resp.Count == 0 {
+		return nil, errors.New("Failed to update site: " + resp.Status.Message)
 	}
 
-	return &sr.SitesItems[0], nil
+	return &resp.SitesItems[0], nil
 }
 
 // DeleteSite - Delete existing site
@@ -139,13 +139,13 @@ func (c *Client) DeleteSite(siteName string) error {
 		return err
 	}
 
-	sr := SitesResponse{}
-	err = json.Unmarshal(body, &sr)
+	resp := AllSitesResponse{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return err
 	}
 
-	if sr.HasError {
+	if resp.HasError {
 		return errors.New(string(body))
 	}
 

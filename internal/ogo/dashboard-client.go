@@ -30,7 +30,7 @@ func md5sum(text string) string {
 // NewClient
 func NewClient(host *string, username *string, apikey *string) (*Client, error) {
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 		Clusters:   map[string]int{},
 	}
 
@@ -54,14 +54,16 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 	}
 
 	c.HostBaseURL = *host + "/api/" + *username
-	clusters, err := c.GetAllClusters()
 
-	for _, cluster := range clusters {
-		c.Clusters[cluster.ClusterName] = cluster.ClusterID
-	}
+	// Provision map cluster Name <=> cluster ID
+	clusters, err := c.GetAllClusters()
 
 	if err != nil {
 		return nil, err
+	}
+
+	for _, cluster := range clusters {
+		c.Clusters[cluster.ClusterName] = cluster.ClusterID
 	}
 
 	return &c, nil

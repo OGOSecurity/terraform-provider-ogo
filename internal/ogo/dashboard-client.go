@@ -3,7 +3,6 @@ package ogosecurity
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -20,7 +19,7 @@ type Client struct {
 	HTTPClient  *http.Client
 	Username    string
 	ApiKey      string
-	Clusters    map[string]int
+	Clusters    map[string]string
 }
 
 func md5sum(text string) string {
@@ -28,16 +27,11 @@ func md5sum(text string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-func printo(o any) {
-	b, _ := json.MarshalIndent(o, "", "  ")
-	fmt.Printf(string(b) + "\n")
-}
-
 // NewClient
 func NewClient(host *string, username *string, apikey *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
-		Clusters:   map[string]int{},
+		Clusters:   map[string]string{},
 	}
 
 	// Check if endpoint, username and password are provided
@@ -78,14 +72,6 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	req.Header.Set("X-Ogo-Api-Key", c.ApiKey)
 
-	// Generate token based on URL Path
-	//token := md5sum(req.URL.Path + "-" + c.ApiKey)
-
-	// Set token on query parameters
-	//q := req.URL.Query()
-	//q.Add("t", token)
-	//req.URL.RawQuery = q.Encode()
-
 	//fmt.Printf("req: %+v\n", req)
 
 	// Lock access to Ogo API to restrict count of concurrent request
@@ -100,12 +86,13 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("err res body: %+v\n", res)
-		return nil, err
+		return nil, fmt.Errorf("Failed to retrieved body: %s (%+v)", string(err.Error()), res)
 	}
 
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
+	if res.StatusCode != http.StatusOK &&
+		res.StatusCode != http.StatusNoContent &&
+		res.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("status: %d, body: %s (%+v)", res.StatusCode, body, res)
 	}
 
 	//fmt.Printf("res: %+v\n", res)

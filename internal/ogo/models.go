@@ -3,10 +3,10 @@ package ogosecurity
 // Site
 type Site struct {
 	Name                 string          `json:"name"`
-	ClusterName          string          `json:"clusterName,omitempty"`
 	Cluster              Cluster         `json:"cluster,omitempty"`
 	DestHost             string          `json:"destHost"`
 	DestHostScheme       string          `json:"destHostScheme"`
+	DestHostMtls         bool            `json:"destHostMtls"`
 	Port                 int             `json:"port,omitempty"`
 	TrustSelfSigned      bool            `json:"trustSelfSigned"`
 	NoCopyXForwarded     bool            `json:"noCopyXForwarded"`
@@ -14,10 +14,8 @@ type Site struct {
 	DryRun               bool            `json:"dryRun"`
 	PanicMode            bool            `json:"panicMode"`
 	Hsts                 string          `json:"hsts,omitempty"`
-	LogExport            bool            `json:"logExport,omitempty"`
-	DestHostMtls         bool            `json:"destHostMtls,omitempty"`
+	LogExport            bool            `json:"logExport"`
 	PassTlsClientCert    string          `json:"passTlsClientCert,omitempty"`
-	TlsOptionsUid        string          `json:"tlsOptionsUid,omitempty"`
 	TlsOptions           *TlsOptions     `json:"tlsOptions,omitempty"`
 	BlacklistedCountries []string        `json:"blacklistedCountries,omitempty"`
 	UrlExceptions        []UrlException  `json:"urlExceptions,omitempty"`
@@ -85,8 +83,10 @@ type TlsOptionsResponse struct {
 
 // Cluster
 type Cluster struct {
-	Id                  string   `json:"clusterId"`
-	ClusterName         string   `json:"name"`
+	Uid                 string   `json:"clusterId"`
+	Name                string   `json:"name"`
+	Host4               string   `json:"ip"`
+	Host6               string   `json:"ip6"`
 	SupportsCache       bool     `json:"supportsCache"`
 	SupportsIpv6Origins bool     `json:"supportsIpv6Origins"`
 	SupportsMtls        bool     `json:"supportsMtls"`

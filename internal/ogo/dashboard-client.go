@@ -61,7 +61,7 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 	}
 
 	for _, cluster := range clusters {
-		c.Clusters[cluster.ClusterName] = cluster.Id
+		c.Clusters[cluster.Name] = cluster.Uid
 	}
 
 	return &c, nil

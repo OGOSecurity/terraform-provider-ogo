@@ -60,19 +60,65 @@ output "default_cluster_uid" {
 # Resources
 ## Resources site
 resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
-  name                 = "gys-tf.ogosecurity.com"
-  cluster_uid          = var.cluster_uid
-  dest_host            = "192.168.122.13"
-  dest_host_scheme     = "https"
-  dest_host_mtls       = false
-  log_export           = false
-  trust_selfsigned     = false
-  no_copy_xforwarded   = false
-  force_https          = true
-  dry_run              = true
-  panic_mode           = false
-  hsts                 = "hstss"
-  pass_tls_client_cert = "info"
-  tls_options_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
-  tags                 = ["staging", "demo"]
+  name                  = "gys-tf.ogosecurity.com"
+  cluster_uid           = var.cluster_uid
+  dest_host             = "192.168.122.13"
 }
+#resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
+#  name                  = "gys-tf.ogosecurity.com"
+#  cluster_uid           = var.cluster_uid
+#  dest_host             = "192.168.122.13"
+#  tags                  = ["test", "dev"]
+#  blacklisted_countries = ["IT", "FR"]
+#  tls_options_uid       = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+#  rewrite_rules = [
+#    {
+#      active              = true
+#      comment             = "Rewrite old to new"
+#      priority            = 1
+#      rewrite_destination = "/new"
+#      rewrite_source      = "^/old"
+#    },
+#    {
+#      active              = true
+#      comment             = "Rewrite from to"
+#      priority            = 2
+#      rewrite_destination = "/to"
+#      rewrite_source      = "^/from"
+#    }
+#  ]
+#  rules = [
+#    {
+#      priority        = 1
+#      comment         = "Admin from home"
+#      paths           = ["/admin", "/backoffice"]
+#      whitelisted_ips = ["2a01:e0a:4:4e30:b001:6e70:cf1e:56df/64", "82.65.146.54/32"]
+#    },
+#    {
+#      priority        = 2
+#      comment         = "Admin from office"
+#      paths           = ["/wp-admin"]
+#      whitelisted_ips = ["10.10.10.1/32"]
+#    }
+#  ]
+#  url_exceptions = [
+#    {
+#      path    = "/demo"
+#      comment = "demo"
+#    },
+#    {
+#      path    = "/monitoring"
+#      comment = "Supervision"
+#    },
+#  ]
+#  whitelisted_ips = [
+#    {
+#      ip      = "82.65.146.54/32"
+#      comment = "Home IPv4"
+#    },
+#    {
+#      ip      = "2a01:e0a:4:4e30:5201:9e56:7417:38c9/64"
+#      comment = "Home IPv6"
+#    },
+#  ]
+#}

@@ -40,17 +40,18 @@ func (c *Client) CreateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	_, err = c.doRequest(req)
+	body, err := c.doRequest(req)
 	if err != nil {
 		return nil, err
 	}
 
-	s, err := c.GetSite(site.Name)
+	resp := Site{}
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return s, nil
+	return &resp, nil
 }
 
 // UpdateSite - Update existing site

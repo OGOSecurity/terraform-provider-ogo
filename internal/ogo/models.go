@@ -7,7 +7,7 @@ type Site struct {
 	DestHost             string          `json:"destHost"`
 	DestHostScheme       string          `json:"destHostScheme"`
 	DestHostMtls         bool            `json:"destHostMtls"`
-	Port                 int             `json:"port,omitempty"`
+	Port                 *int32          `json:"port"`
 	TrustSelfSigned      bool            `json:"trustSelfSigned"`
 	NoCopyXForwarded     bool            `json:"noCopyXForwarded"`
 	ForceHttps           bool            `json:"forceHttps"`
@@ -16,13 +16,13 @@ type Site struct {
 	Hsts                 string          `json:"hsts,omitempty"`
 	LogExport            bool            `json:"logExport"`
 	PassTlsClientCert    string          `json:"passTlsClientCert,omitempty"`
-	TlsOptions           *TlsOptions     `json:"tlsOptions,omitempty"`
-	BlacklistedCountries []string        `json:"blacklistedCountries,omitempty"`
-	UrlExceptions        []UrlException  `json:"urlExceptions,omitempty"`
-	RewriteRules         []RewriteRule   `json:"rewriteRules,omitempty"`
-	Rules                []Rule          `json:"rules,omitempty"`
+	TlsOptions           *TlsOptions     `json:"tlsOptions"`
+	BlacklistedCountries []string        `json:"blacklistedCountries"`
+	UrlExceptions        []UrlException  `json:"urlExceptions"`
+	RewriteRules         []RewriteRule   `json:"rewriteRules"`
+	Rules                []Rule          `json:"rules"`
 	WhitelistedIps       []WhitelistedIp `json:"whitelistedIps,omitempty"`
-	Tags                 []string        `json:"tags,omitempty"`
+	Tags                 []string        `json:"tags"`
 }
 
 // Blacklist Countries
@@ -42,7 +42,7 @@ type RewriteRule struct {
 	Id                 int    `json:"id,omitempty"`
 	Priority           int    `json:"priority"`
 	Active             bool   `json:"active"`
-	Comment            string `json:"comment,omitempty"`
+	Comment            string `json:"comment"`
 	RewriteSource      string `json:"rewriteSource"`
 	RewriteDestination string `json:"rewriteDestination"`
 }
@@ -54,7 +54,7 @@ type Rule struct {
 	Active         bool     `json:"active"`
 	Action         string   `json:"action"`
 	Cache          bool     `json:"cache"`
-	Comment        string   `json:"comment,omitempty"`
+	Comment        string   `json:"comment"`
 	Paths          []string `json:"paths"`
 	WhitelistedIps []string `json:"whitelistedIps"`
 }
@@ -90,6 +90,7 @@ type Cluster struct {
 	SupportsCache       bool     `json:"supportsCache"`
 	SupportsIpv6Origins bool     `json:"supportsIpv6Origins"`
 	SupportsMtls        bool     `json:"supportsMtls"`
+	IpsToWhitelist      []string `json:"ipsToWhitelist"`
 	SupportedCdns       []string `json:"supportedCdns"`
 }
 

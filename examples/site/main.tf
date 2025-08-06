@@ -60,11 +60,6 @@ output "default_cluster_uid" {
 # Resources
 ## Resources site
 #resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
-#  domain_name                  = "gys-tf.ogosecurity.com"
-#  cluster_uid           = var.cluster_uid
-#  origin_server             = "192.168.122.13"
-#}
-#resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
 #  domain_name             = "gys-tf.ogosecurity.com"
 #  cluster_uid             = var.cluster_uid
 #  origin_server           = "192.168.122.13"
@@ -132,3 +127,8 @@ output "default_cluster_uid" {
 #    },
 #  ]
 #}
+resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
+  domain_name          = "gys-tf.ogosecurity.com"
+  cluster_uid          = var.cluster_uid
+  origin_server        = "192.168.122.13"
+}

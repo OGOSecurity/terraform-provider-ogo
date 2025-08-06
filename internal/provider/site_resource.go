@@ -7,6 +7,8 @@ import (
 
 	ogosecurity "terraform-provider-ogo/internal/ogo"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int32validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -110,9 +113,15 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Optional: true,
 				Computed: true,
 				Default:  stringdefault.StaticString("https"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("http", "https"),
+				},
 			},
 			"origin_port": schema.Int32Attribute{
 				Optional: true,
+				Validators: []validator.Int32{
+					int32validator.Between(1, 65535),
+				},
 			},
 			"origin_mtls_enabled": schema.BoolAttribute{
 				Optional: true,
@@ -148,6 +157,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Optional: true,
 				Computed: true,
 				Default:  stringdefault.StaticString("hsts"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
+				},
 			},
 			"log_export_enabled": schema.BoolAttribute{
 				Optional: true,
@@ -161,6 +173,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Optional: true,
 				Computed: true,
 				Default:  stringdefault.StaticString("info"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("all", "cert", "info", "none"),
+				},
 			},
 			"tags": schema.SetAttribute{
 				Optional:    true,

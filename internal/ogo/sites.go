@@ -8,8 +8,8 @@ import (
 )
 
 // GetSite - Returns a specifc site
-func (c *Client) GetSite(siteName string) (*Site, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteName), nil)
+func (c *Client) GetSite(siteDomainName string) (*Site, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.Name), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.DomainName), strings.NewReader(string(rb)))
 	if err != nil {
 		return nil, err
 	}
@@ -81,8 +81,8 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 }
 
 // DeleteSite - Delete existing site
-func (c *Client) DeleteSite(siteName string) error {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteName), nil)
+func (c *Client) DeleteSite(siteDomainName string) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {
 		return err
 	}

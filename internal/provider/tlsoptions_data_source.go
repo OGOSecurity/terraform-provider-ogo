@@ -28,8 +28,8 @@ type tlsoptionsModel struct {
 	Name              types.String   `tfsdk:"name"`
 	ClientAuthType    types.String   `tfsdk:"client_auth_type"`
 	ClientAuthCaCerts []types.String `tfsdk:"client_auth_ca_certs"`
-	MinTlsVersion     types.String   `tfsdk:"min_tls_version"`
-	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"`
+	MinTlsVersion     types.String   `tfsdk:"min_tls_version"` //TLS_1.2 => enum
+	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"` //TLS_1.3 => enum
 }
 
 func NewTlsOptionsDataSource() datasource.DataSource {

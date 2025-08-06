@@ -2,27 +2,27 @@ package ogosecurity
 
 // Site
 type Site struct {
-	Name                 string          `json:"name"`
-	Cluster              Cluster         `json:"cluster,omitempty"`
-	DestHost             string          `json:"destHost"`
-	DestHostScheme       string          `json:"destHostScheme"`
-	DestHostMtls         bool            `json:"destHostMtls"`
-	Port                 *int32          `json:"port"`
-	TrustSelfSigned      bool            `json:"trustSelfSigned"`
-	NoCopyXForwarded     bool            `json:"noCopyXForwarded"`
-	ForceHttps           bool            `json:"forceHttps"`
-	DryRun               bool            `json:"dryRun"`
-	PanicMode            bool            `json:"panicMode"`
-	Hsts                 string          `json:"hsts,omitempty"`
-	LogExport            bool            `json:"logExport"`
-	PassTlsClientCert    string          `json:"passTlsClientCert,omitempty"`
-	TlsOptions           *TlsOptions     `json:"tlsOptions"`
-	BlacklistedCountries []string        `json:"blacklistedCountries"`
-	UrlExceptions        []UrlException  `json:"urlExceptions"`
-	RewriteRules         []RewriteRule   `json:"rewriteRules"`
-	Rules                []Rule          `json:"rules"`
-	WhitelistedIps       []WhitelistedIp `json:"whitelistedIps,omitempty"`
-	Tags                 []string        `json:"tags"`
+	DomainName           string         `json:"domainName"`
+	Cluster              Cluster        `json:"cluster,omitempty"`
+	OriginServer         string         `json:"originServer"`
+	OriginScheme         string         `json:"originScheme"`
+	OriginPort           *int32         `json:"originPort"`
+	OriginSkipCertVerify bool           `json:"originSkipCertVerify"`
+	OriginMtlsEnabled    bool           `json:"originMtlsEnabled"`
+	RemoveXForwarded     bool           `json:"removeXForwarded"`
+	LogExportEnabled     bool           `json:"logExportEnabled"`
+	ForceHttps           bool           `json:"forceHttps"`
+	AuditMode            bool           `json:"auditMode"`
+	PassthroughMode      bool           `json:"passthroughMode"`
+	Hsts                 string         `json:"hsts,omitempty"`
+	PassTlsClientCert    string         `json:"passTlsClientCert,omitempty"`
+	TlsOptions           *TlsOptions    `json:"tlsOptions"`
+	BlacklistedCountries []string       `json:"blacklistedCountries"`
+	IpExceptions         []IpException  `json:"ipExceptions,omitempty"`
+	UrlExceptions        []UrlException `json:"urlExceptions"`
+	RewriteRules         []RewriteRule  `json:"rewriteRules"`
+	Rules                []Rule         `json:"rules"`
+	Tags                 []string       `json:"tags"`
 }
 
 // Blacklist Countries
@@ -39,7 +39,6 @@ type UrlException struct {
 
 // Rewrite Rules
 type RewriteRule struct {
-	Id                 int    `json:"id,omitempty"`
 	Priority           int    `json:"priority"`
 	Active             bool   `json:"active"`
 	Comment            string `json:"comment"`
@@ -49,7 +48,6 @@ type RewriteRule struct {
 
 // Rule
 type Rule struct {
-	Id             int      `json:"id,omitempty"`
 	Priority       int      `json:"priority"`
 	Active         bool     `json:"active"`
 	Action         string   `json:"action"`
@@ -59,8 +57,8 @@ type Rule struct {
 	WhitelistedIps []string `json:"whitelistedIps"`
 }
 
-// Whitelisted IPs
-type WhitelistedIp struct {
+// IP Exception
+type IpException struct {
 	Ip      string `json:"ip"`
 	Comment string `json:"comment"`
 }

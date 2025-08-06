@@ -59,18 +59,28 @@ output "default_cluster_uid" {
 
 # Resources
 ## Resources site
-resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
-  name                  = "gys-tf.ogosecurity.com"
-  cluster_uid           = var.cluster_uid
-  dest_host             = "192.168.122.13"
-}
 #resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
-#  name                  = "gys-tf.ogosecurity.com"
+#  domain_name                  = "gys-tf.ogosecurity.com"
 #  cluster_uid           = var.cluster_uid
-#  dest_host             = "192.168.122.13"
-#  tags                  = ["test", "dev"]
-#  blacklisted_countries = ["IT", "FR"]
-#  tls_options_uid       = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+#  origin_server             = "192.168.122.13"
+#}
+#resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
+#  domain_name             = "gys-tf.ogosecurity.com"
+#  cluster_uid             = var.cluster_uid
+#  origin_server           = "192.168.122.13"
+#  origin_scheme           = "https"
+#  origin_skip_cert_verify = true
+#  origin_mtls_enabled     = false
+#  remove_xforwarded       = false
+#  log_export_enabled      = false
+#  force_https             = true
+#  audit_mode              = false
+#  passthrough_mode        = false
+#  hsts                    = "hstss"
+#  tls_options_uid         = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+#  pass_tls_client_cert    = "info"
+#  tags                    = ["test", "dev"]
+#  blacklisted_countries   = ["IT", "FR"]
 #  rewrite_rules = [
 #    {
 #      active              = true
@@ -111,7 +121,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
 #      comment = "Supervision"
 #    },
 #  ]
-#  whitelisted_ips = [
+#  ip_exceptions = [
 #    {
 #      ip      = "82.65.146.54/32"
 #      comment = "Home IPv4"

@@ -3,7 +3,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"time"
 
 	ogosecurity "terraform-provider-ogo/internal/ogo"
 
@@ -33,7 +32,6 @@ type TlsOptionsResourceModel struct {
 	ClientAuthCaCerts []types.String `tfsdk:"client_auth_ca_certs"`
 	MinTlsVersion     types.String   `tfsdk:"min_tls_version"`
 	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"`
-	LastUpdated       types.String   `tfsdk:"last_updated"`
 }
 
 // NewTlsOptionsResource is a helper function to simplify the provider implementation.
@@ -89,9 +87,6 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				Validators: []validator.String{
 					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
 				},
-			},
-			"last_updated": schema.StringAttribute{
-				Computed: true,
 			},
 		},
 	}
@@ -154,7 +149,6 @@ func (r *tlsOptionsResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 	plan.Uid = types.StringValue(tlsOpt.Uid)
 
 	// Set state to fully populated data
@@ -241,7 +235,6 @@ func (r *tlsOptionsResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
 	diags = resp.State.Set(ctx, plan)

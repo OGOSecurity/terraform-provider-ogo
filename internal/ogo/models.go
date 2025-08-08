@@ -79,36 +79,6 @@ type TlsOptionsResponse struct {
 	Count      int          `json:"totalElements"`
 }
 
-// TLS Options
-type TlsOptions struct {
-	Name              string   `json:"name"`
-	ClientAuthType    string   `json:"clientAuthType,omitempty"`
-	ClientAuthCaCerts []string `json:"clientAuthCaCerts,omitempty"`
-	MinTlsVersion     string   `json:"minTlsVersion,omitempty"`
-	MaxTlsVersion     string   `json:"maxTlsVersion,omitempty"`
-	Uid               string   `json:"uid,omitempty"`
-}
-
-// TLS Options Create Query
-type TlsOptionsQuery struct {
-	TlsOptions TlsOptions `json:"tlsOptions"`
-}
-
-// TLS Options Response
-type TlsOptionsResponse struct {
-	TlsOptions TlsOptions        `json:"tlsOptions"`
-	Status     OgoResponseStatus `json:"status"`
-	HasError   bool              `json:"hasError"`
-}
-
-// All TLS Options Response
-type AllTlsOptionsResponse struct {
-	TlsOptions []TlsOptions      `json:"items"`
-	Status     OgoResponseStatus `json:"status"`
-	HasError   bool              `json:"hasError"`
-	Count      int               `json:"count"`
-}
-
 // Cluster
 type Cluster struct {
 	Uid                 string   `json:"clusterId"`

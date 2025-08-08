@@ -7,9 +7,16 @@ import (
 
 	ogosecurity "terraform-provider-ogo/internal/ogo"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/int32validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
@@ -20,25 +27,58 @@ var (
 	_ resource.ResourceWithImportState = &siteResource{}
 )
 
-// siteResourceModel maps the resource schema data.
-type siteResourceModel struct {
-	Name           types.String `tfsdk:"name"`
-	ClusterName    types.String `tfsdk:"cluster_name"`
-	DestHost       types.String `tfsdk:"dest_host"`
-	DestHostScheme types.String `tfsdk:"dest_host_scheme"`
-	//Port             types.Int32  `tfsdk:"port"`
-	TrustSelfSigned   types.Bool   `tfsdk:"trust_selfsigned"`
-	NoCopyXForwarded  types.Bool   `tfsdk:"no_copy_xforwarded"`
-	ForceHttps        types.Bool   `tfsdk:"force_https"`
-	DryRun            types.Bool   `tfsdk:"dry_run"`
-	PanicMode         types.Bool   `tfsdk:"panic_mode"`
-	LastUpdated       types.String `tfsdk:"last_updated"`
-	Hsts              types.String `tfsdk:"hsts"`
-	LogExport         types.Bool   `tfsdk:"log_export"`
-	DestHostMtls      types.Bool   `tfsdk:"dest_host_mtls"`
-	TlsOptionsUid     types.String `tfsdk:"tls_options_uid"`
-	PassTlsClientCert types.String `tfsdk:"pass_tls_client_cert"`
-	//Tags              []types.String `tfsdk:"tags"`
+// SiteResourceModel maps the resource schema data.
+type SiteResourceModel struct {
+	DomainName           types.String        `tfsdk:"domain_name"`
+	ClusterUid           types.String        `tfsdk:"cluster_uid"`
+	OriginServer         types.String        `tfsdk:"origin_server"`
+	OriginScheme         types.String        `tfsdk:"origin_scheme"`
+	OriginPort           types.Int32         `tfsdk:"origin_port"`
+	OriginSkipCertVerify types.Bool          `tfsdk:"origin_skip_cert_verify"`
+	OriginMtlsEnabled    types.Bool          `tfsdk:"origin_mtls_enabled"`
+	RemoveXForwarded     types.Bool          `tfsdk:"remove_xforwarded"`
+	LogExportEnabled     types.Bool          `tfsdk:"log_export_enabled"`
+	ForceHttps           types.Bool          `tfsdk:"force_https"`
+	AuditMode            types.Bool          `tfsdk:"audit_mode"`
+	PassthroughMode      types.Bool          `tfsdk:"passthrough_mode"`
+	Hsts                 types.String        `tfsdk:"hsts"`
+	PassTlsClientCert    types.String        `tfsdk:"pass_tls_client_cert"`
+	TlsOptionsUid        types.String        `tfsdk:"tls_options_uid"`
+	Tags                 []types.String      `tfsdk:"tags"`
+	BlacklistedCountries []types.String      `tfsdk:"blacklisted_countries"`
+	IpExceptions         []IpExceptionModel  `tfsdk:"ip_exceptions"`
+	UrlExceptions        []UrlExceptionModel `tfsdk:"url_exceptions"`
+	RewriteRules         []RewriteRuleModel  `tfsdk:"rewrite_rules"`
+	Rules                []RuleModel         `tfsdk:"rules"`
+	LastUpdated          types.String        `tfsdk:"last_updated"`
+}
+
+type RewriteRuleModel struct {
+	Priority           types.Int32  `tfsdk:"priority"`
+	Active             types.Bool   `tfsdk:"active"`
+	Comment            types.String `tfsdk:"comment"`
+	RewriteSource      types.String `tfsdk:"rewrite_source"`
+	RewriteDestination types.String `tfsdk:"rewrite_destination"`
+}
+
+type RuleModel struct {
+	Priority       types.Int32    `tfsdk:"priority"`
+	Active         types.Bool     `tfsdk:"active"`
+	Action         types.String   `tfsdk:"action"`
+	Cache          types.Bool     `tfsdk:"cache"`
+	Comment        types.String   `tfsdk:"comment"`
+	Paths          []types.String `tfsdk:"paths"`
+	WhitelistedIps []types.String `tfsdk:"whitelisted_ips"`
+}
+
+type UrlExceptionModel struct {
+	Path    types.String `tfsdk:"path"`
+	Comment types.String `tfsdk:"comment"`
+}
+
+type IpExceptionModel struct {
+	Ip      types.String `tfsdk:"ip"`
+	Comment types.String `tfsdk:"comment"`
 }
 
 // NewSiteResource is a helper function to simplify the provider implementation.
@@ -60,60 +100,250 @@ func (r *siteResource) Metadata(_ context.Context, req resource.MetadataRequest,
 func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"name": schema.StringAttribute{
+			"domain_name": schema.StringAttribute{
 				Required: true,
 			},
-			"cluster_name": schema.StringAttribute{
+			"cluster_uid": schema.StringAttribute{
 				Required: true,
 			},
-			"dest_host": schema.StringAttribute{
+			"origin_server": schema.StringAttribute{
 				Required: true,
 			},
-			"dest_host_scheme": schema.StringAttribute{
-				Required: true,
+			"origin_scheme": schema.StringAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  stringdefault.StaticString("https"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("http", "https"),
+				},
 			},
-			//"port": schema.Int32Attribute{
-			//	Optional: true,
-			//},
-			"trust_selfsigned": schema.BoolAttribute{
-				Required: true,
+			"origin_port": schema.Int32Attribute{
+				Optional: true,
+				Validators: []validator.Int32{
+					int32validator.Between(1, 65535),
+				},
 			},
-			"no_copy_xforwarded": schema.BoolAttribute{
-				Required: true,
+			"origin_mtls_enabled": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
+			},
+			"origin_skip_cert_verify": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
+			},
+			"remove_xforwarded": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
 			},
 			"force_https": schema.BoolAttribute{
-				Required: true,
-			},
-			"dry_run": schema.BoolAttribute{
-				Required: true,
-			},
-			"panic_mode": schema.BoolAttribute{
-				Required: true,
-			},
-			"last_updated": schema.StringAttribute{
+				Optional: true,
 				Computed: true,
+				Default:  booldefault.StaticBool(true),
+			},
+			"audit_mode": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
+			},
+			"passthrough_mode": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
 			},
 			"hsts": schema.StringAttribute{
 				Optional: true,
+				Computed: true,
+				Default:  stringdefault.StaticString("hsts"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
+				},
 			},
-			"log_export": schema.BoolAttribute{
+			"log_export_enabled": schema.BoolAttribute{
 				Optional: true,
-			},
-			"dest_host_mtls": schema.BoolAttribute{
-				Optional: true,
+				Computed: true,
+				Default:  booldefault.StaticBool(false),
 			},
 			"tls_options_uid": schema.StringAttribute{
 				Optional: true,
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
 				Optional: true,
+				Computed: true,
+				Default:  stringdefault.StaticString("info"),
+				Validators: []validator.String{
+					stringvalidator.OneOf("all", "cert", "info", "none"),
+				},
 			},
-			//"tags": schema.ListAttribute{
-			//	ElementType: types.ListType{
-			//		ElemType: types.StringType,
-			//	},
-			//	Optional: true,
-			//},
+			"tags": schema.SetAttribute{
+				Optional:    true,
+				Computed:    true,
+				ElementType: types.StringType,
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.StringType,
+						[]attr.Value{},
+					),
+				),
+			},
+			"blacklisted_countries": schema.SetAttribute{
+				Optional:    true,
+				Computed:    true,
+				ElementType: types.StringType,
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.StringType,
+						[]attr.Value{},
+					),
+				),
+			},
+			"ip_exceptions": schema.SetNestedAttribute{
+				Optional: true,
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"ip": schema.StringAttribute{
+							Required: true,
+						},
+						"comment": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"ip":      types.StringType,
+								"comment": types.StringType,
+							},
+						},
+						[]attr.Value{},
+					),
+				),
+			},
+			"rewrite_rules": schema.SetNestedAttribute{
+				Optional: true,
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"priority": schema.Int32Attribute{
+							Required: true,
+						},
+						"active": schema.BoolAttribute{
+							Optional: true,
+							Computed: true,
+							Default:  booldefault.StaticBool(true),
+						},
+						"comment": schema.StringAttribute{
+							Optional: true,
+						},
+						"rewrite_source": schema.StringAttribute{
+							Required: true,
+						},
+						"rewrite_destination": schema.StringAttribute{
+							Required: true,
+						},
+					},
+				},
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"priority":            types.Int32Type,
+								"active":              types.BoolType,
+								"comment":             types.StringType,
+								"rewrite_source":      types.StringType,
+								"rewrite_destination": types.StringType,
+							},
+						},
+						[]attr.Value{},
+					),
+				),
+			},
+			"rules": schema.SetNestedAttribute{
+				Optional: true,
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"priority": schema.Int32Attribute{
+							Required: true,
+						},
+						"active": schema.BoolAttribute{
+							Optional: true,
+							Computed: true,
+							Default:  booldefault.StaticBool(true),
+						},
+						"action": schema.StringAttribute{
+							Optional: true,
+							Computed: true,
+							Default:  stringdefault.StaticString("brain"),
+						},
+						"cache": schema.BoolAttribute{
+							Optional: true,
+							Computed: true,
+							Default:  booldefault.StaticBool(false),
+						},
+						"comment": schema.StringAttribute{
+							Optional: true,
+						},
+						"paths": schema.SetAttribute{
+							Required:    true,
+							ElementType: types.StringType,
+						},
+						"whitelisted_ips": schema.SetAttribute{
+							Required:    true,
+							ElementType: types.StringType,
+						},
+					},
+				},
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"priority":        types.Int32Type,
+								"active":          types.BoolType,
+								"action":          types.StringType,
+								"cache":           types.BoolType,
+								"comment":         types.StringType,
+								"paths":           types.SetType{types.StringType},
+								"whitelisted_ips": types.SetType{types.StringType},
+							},
+						},
+						[]attr.Value{},
+					),
+				),
+			},
+			"url_exceptions": schema.SetNestedAttribute{
+				Optional: true,
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"path": schema.StringAttribute{
+							Required: true,
+						},
+						"comment": schema.StringAttribute{
+							Optional: true,
+						},
+					},
+				},
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.ObjectType{
+							AttrTypes: map[string]attr.Type{
+								"path":    types.StringType,
+								"comment": types.StringType,
+							},
+						},
+						[]attr.Value{},
+					),
+				),
+			},
+			"last_updated": schema.StringAttribute{
+				Computed: true,
+			},
 		},
 	}
 }
@@ -143,7 +373,7 @@ func (r *siteResource) Configure(_ context.Context, req resource.ConfigureReques
 // Create creates the resource and sets the initial Terraform state.
 func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var plan siteResourceModel
+	var plan SiteResourceModel
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -151,29 +381,101 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	// Create new site
+	var tlsOpt *ogosecurity.TlsOptions
 	s := ogosecurity.Site{
-		Name:           string(plan.Name.ValueString()),
-		ClusterName:    string(plan.ClusterName.ValueString()),
-		DestHost:       string(plan.DestHost.ValueString()),
-		DestHostScheme: string(plan.DestHostScheme.ValueString()),
-		//Port:             int(plan.Port.ValueInt32()),
-		TrustSelfSigned:   bool(plan.TrustSelfSigned.ValueBool()),
-		NoCopyXForwarded:  bool(plan.NoCopyXForwarded.ValueBool()),
-		ForceHttps:        bool(plan.ForceHttps.ValueBool()),
-		DryRun:            bool(plan.DryRun.ValueBool()),
-		PanicMode:         bool(plan.PanicMode.ValueBool()),
-		Hsts:              string(plan.Hsts.ValueString()),
-		LogExport:         bool(plan.LogExport.ValueBool()),
-		DestHostMtls:      bool(plan.DestHostMtls.ValueBool()),
-		TlsOptionsUid:     string(plan.TlsOptionsUid.ValueString()),
-		PassTlsClientCert: string(plan.PassTlsClientCert.ValueString()),
+		DomainName: string(plan.DomainName.ValueString()),
+		Cluster: ogosecurity.Cluster{
+			Uid: string(plan.ClusterUid.ValueString()),
+		},
+		OriginServer:         string(plan.OriginServer.ValueString()),
+		OriginScheme:         string(plan.OriginScheme.ValueString()),
+		OriginMtlsEnabled:    bool(plan.OriginMtlsEnabled.ValueBool()),
+		OriginSkipCertVerify: bool(plan.OriginSkipCertVerify.ValueBool()),
+		RemoveXForwarded:     bool(plan.RemoveXForwarded.ValueBool()),
+		ForceHttps:           bool(plan.ForceHttps.ValueBool()),
+		AuditMode:            bool(plan.AuditMode.ValueBool()),
+		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
+		Hsts:                 string(plan.Hsts.ValueString()),
+		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
+		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
+		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
+		TlsOptions:           tlsOpt,
 	}
 
-	//for _, tag := range plan.Tags {
-	//	s.Tags = append(s.Tags, string(tag.ValueString()))
-	//}
+	// TLS Options
+	if plan.TlsOptionsUid.ValueString() != "" {
+		s.TlsOptions = &ogosecurity.TlsOptions{
+			Uid: string(plan.TlsOptionsUid.ValueString()),
+		}
+	}
 
-	site, err := r.client.CreateSite(s)
+	// Blacklist Countries
+	s.BlacklistedCountries = []string{}
+	for _, country := range plan.BlacklistedCountries {
+		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+	}
+
+	// IP Exceptions
+	s.IpExceptions = []ogosecurity.IpException{}
+	for _, wlip := range plan.IpExceptions {
+		s.IpExceptions = append(s.IpExceptions, ogosecurity.IpException{
+			Ip:      string(wlip.Ip.ValueString()),
+			Comment: string(wlip.Comment.ValueString()),
+		})
+	}
+
+	// Rewrite Rules
+	s.RewriteRules = []ogosecurity.RewriteRule{}
+	for _, rewrite := range plan.RewriteRules {
+		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
+			Priority:           int(rewrite.Priority.ValueInt32()),
+			Active:             bool(rewrite.Active.ValueBool()),
+			Comment:            string(rewrite.Comment.ValueString()),
+			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
+			RewriteDestination: string(rewrite.RewriteDestination.ValueString()),
+		})
+	}
+
+	// Rules access
+	s.Rules = []ogosecurity.Rule{}
+	for _, rule := range plan.Rules {
+		r := ogosecurity.Rule{
+			Priority:       int(rule.Priority.ValueInt32()),
+			Active:         bool(rule.Active.ValueBool()),
+			Action:         string(rule.Action.ValueString()),
+			Cache:          bool(rule.Cache.ValueBool()),
+			Comment:        string(rule.Comment.ValueString()),
+			Paths:          []string{},
+			WhitelistedIps: []string{},
+		}
+
+		for _, path := range rule.Paths {
+			r.Paths = append(r.Paths, string(path.ValueString()))
+		}
+
+		for _, ip := range rule.WhitelistedIps {
+			r.WhitelistedIps = append(r.WhitelistedIps, string(ip.ValueString()))
+		}
+
+		s.Rules = append(s.Rules, r)
+	}
+
+	// URL Exceptions
+	s.UrlExceptions = []ogosecurity.UrlException{}
+	for _, url := range plan.UrlExceptions {
+		s.UrlExceptions = append(s.UrlExceptions, ogosecurity.UrlException{
+			Path:    string(url.Path.ValueString()),
+			Comment: string(url.Comment.ValueString()),
+		})
+	}
+
+	// Tags
+	s.Tags = []string{}
+	for _, tag := range plan.Tags {
+		s.Tags = append(s.Tags, string(tag.ValueString()))
+	}
+
+	_, err := r.client.CreateSite(s)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating site",
@@ -183,7 +485,6 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.ClusterName = types.StringValue(string(site.ClusterName))
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
@@ -197,7 +498,7 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 // Read refreshes the Terraform state with the latest data.
 func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var state siteResourceModel
+	var state SiteResourceModel
 	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -205,34 +506,100 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	}
 
 	// Get refreshed site value from Ogo
-	site, err := r.client.GetSite(state.Name.ValueString())
+	site, err := r.client.GetSite(state.DomainName.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error Reading Ogo Site",
-			"Could not read Ogo site Name "+state.Name.ValueString()+": "+err.Error(),
+			"Error reading Ogo site",
+			"Could not read Ogo site domain name "+state.DomainName.ValueString()+": "+err.Error(),
 		)
 		return
 	}
 
 	// Overwrite properties with refreshed state
-	state.ClusterName = types.StringValue(site.ClusterName)
-	state.DestHost = types.StringValue(site.DestHost)
-	state.DestHostScheme = types.StringValue(site.DestHostScheme)
-	//state.Port = types.Int32Value(int32(site.Port))
-	state.TrustSelfSigned = types.BoolValue(site.TrustSelfSigned)
-	state.NoCopyXForwarded = types.BoolValue(site.NoCopyXForwarded)
+	state.ClusterUid = types.StringValue(site.Cluster.Uid)
+	state.OriginServer = types.StringValue(site.OriginServer)
+	state.OriginScheme = types.StringValue(site.OriginScheme)
+	state.OriginMtlsEnabled = types.BoolValue(site.OriginMtlsEnabled)
+	state.OriginPort = types.Int32PointerValue(site.OriginPort)
+	state.OriginSkipCertVerify = types.BoolValue(site.OriginSkipCertVerify)
+	state.RemoveXForwarded = types.BoolValue(site.RemoveXForwarded)
 	state.ForceHttps = types.BoolValue(site.ForceHttps)
-	state.DryRun = types.BoolValue(site.DryRun)
-	state.PanicMode = types.BoolValue(site.PanicMode)
+	state.AuditMode = types.BoolValue(site.AuditMode)
+	state.PassthroughMode = types.BoolValue(site.PassthroughMode)
 	state.Hsts = types.StringValue(site.Hsts)
-	state.LogExport = types.BoolValue(site.LogExport)
-	state.DestHostMtls = types.BoolValue(site.DestHostMtls)
-	state.TlsOptionsUid = types.StringValue(site.TlsOptionsUid)
+	state.LogExportEnabled = types.BoolValue(site.LogExportEnabled)
 	state.PassTlsClientCert = types.StringValue(site.PassTlsClientCert)
 
-	//for _, tag := range site.Tags {
-	//	state.Tags = append(state.Tags, types.StringValue(tag))
-	//}
+	// TLS Options
+	if site.TlsOptions != nil {
+		state.TlsOptionsUid = types.StringValue(site.TlsOptions.Uid)
+	}
+
+	// Blacklist Countries
+	state.BlacklistedCountries = []types.String{}
+	for _, country := range site.BlacklistedCountries {
+		state.BlacklistedCountries = append(state.BlacklistedCountries, types.StringValue(country))
+	}
+
+	// IP Exceptions
+	state.IpExceptions = []IpExceptionModel{}
+	for _, wlip := range site.IpExceptions {
+		state.IpExceptions = append(state.IpExceptions, IpExceptionModel{
+			Ip:      types.StringValue(wlip.Ip),
+			Comment: types.StringValue(wlip.Comment),
+		})
+	}
+
+	// Rewrite rules
+	state.RewriteRules = []RewriteRuleModel{}
+	for _, rewrite := range site.RewriteRules {
+		state.RewriteRules = append(state.RewriteRules, RewriteRuleModel{
+			Priority:           types.Int32Value(int32(rewrite.Priority)),
+			Active:             types.BoolValue(rewrite.Active),
+			Comment:            types.StringValue(rewrite.Comment),
+			RewriteSource:      types.StringValue(rewrite.RewriteSource),
+			RewriteDestination: types.StringValue(rewrite.RewriteDestination),
+		})
+	}
+
+	// Rules access
+	state.Rules = []RuleModel{}
+	for _, rule := range site.Rules {
+		r := RuleModel{
+			Priority:       types.Int32Value(int32(rule.Priority)),
+			Active:         types.BoolValue(rule.Active),
+			Action:         types.StringValue(rule.Action),
+			Cache:          types.BoolValue(rule.Cache),
+			Comment:        types.StringValue(rule.Comment),
+			Paths:          []types.String{},
+			WhitelistedIps: []types.String{},
+		}
+
+		for _, path := range rule.Paths {
+			r.Paths = append(r.Paths, types.StringValue(path))
+		}
+
+		for _, ip := range rule.WhitelistedIps {
+			r.WhitelistedIps = append(r.WhitelistedIps, types.StringValue(ip))
+		}
+
+		state.Rules = append(state.Rules, r)
+	}
+
+	// URL Exceptions
+	state.UrlExceptions = []UrlExceptionModel{}
+	for _, url := range site.UrlExceptions {
+		state.UrlExceptions = append(state.UrlExceptions, UrlExceptionModel{
+			Path:    types.StringValue(url.Path),
+			Comment: types.StringValue(url.Comment),
+		})
+	}
+
+	// Tags
+	state.Tags = []types.String{}
+	for _, tag := range site.Tags {
+		state.Tags = append(state.Tags, types.StringValue(tag))
+	}
 
 	// Set refreshed state
 	diags = resp.State.Set(ctx, &state)
@@ -245,7 +612,7 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 // Update updates the resource and sets the updated Terraform state on success.
 func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Retrieve values from plan
-	var plan siteResourceModel
+	var plan SiteResourceModel
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -253,29 +620,110 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	// Create new site
+	var tlsOpt *ogosecurity.TlsOptions
 	s := ogosecurity.Site{
-		Name:             string(plan.Name.ValueString()),
-		ClusterName:      string(plan.ClusterName.ValueString()),
-		DestHost:         string(plan.DestHost.ValueString()),
-		DestHostScheme:   string(plan.DestHostScheme.ValueString()),
-		TrustSelfSigned:  bool(plan.TrustSelfSigned.ValueBool()),
-		NoCopyXForwarded: bool(plan.NoCopyXForwarded.ValueBool()),
-		ForceHttps:       bool(plan.ForceHttps.ValueBool()),
-		DryRun:           bool(plan.DryRun.ValueBool()),
-		PanicMode:        bool(plan.PanicMode.ValueBool()),
+		DomainName: string(plan.DomainName.ValueString()),
+		Cluster: ogosecurity.Cluster{
+			Uid: string(plan.ClusterUid.ValueString()),
+		},
+		OriginServer:         string(plan.OriginServer.ValueString()),
+		OriginScheme:         string(plan.OriginScheme.ValueString()),
+		OriginMtlsEnabled:    bool(plan.OriginMtlsEnabled.ValueBool()),
+		OriginSkipCertVerify: bool(plan.OriginSkipCertVerify.ValueBool()),
+		RemoveXForwarded:     bool(plan.RemoveXForwarded.ValueBool()),
+		ForceHttps:           bool(plan.ForceHttps.ValueBool()),
+		AuditMode:            bool(plan.AuditMode.ValueBool()),
+		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
+		Hsts:                 string(plan.Hsts.ValueString()),
+		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
+		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
+		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
+		TlsOptions:           tlsOpt,
 	}
 
-	site, err := r.client.UpdateSite(s)
+	// TLS Options
+	if plan.TlsOptionsUid.ValueString() != "" {
+		s.TlsOptions = &ogosecurity.TlsOptions{
+			Uid: string(plan.TlsOptionsUid.ValueString()),
+		}
+	}
+
+	// Blacklist Countries
+	s.BlacklistedCountries = []string{}
+	for _, country := range plan.BlacklistedCountries {
+		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+	}
+
+	// IP Exceptions
+	s.IpExceptions = []ogosecurity.IpException{}
+	for _, wlip := range plan.IpExceptions {
+		s.IpExceptions = append(s.IpExceptions, ogosecurity.IpException{
+			Ip:      string(wlip.Ip.ValueString()),
+			Comment: string(wlip.Comment.ValueString()),
+		})
+	}
+
+	// Rewrite Rules
+	s.RewriteRules = []ogosecurity.RewriteRule{}
+	for _, rewrite := range plan.RewriteRules {
+		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
+			Priority:           int(rewrite.Priority.ValueInt32()),
+			Active:             bool(rewrite.Active.ValueBool()),
+			Comment:            string(rewrite.Comment.ValueString()),
+			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
+			RewriteDestination: string(rewrite.RewriteDestination.ValueString()),
+		})
+	}
+
+	// Rules access
+	s.Rules = []ogosecurity.Rule{}
+	for _, rule := range plan.Rules {
+		r := ogosecurity.Rule{
+			Priority:       int(rule.Priority.ValueInt32()),
+			Active:         bool(rule.Active.ValueBool()),
+			Action:         string(rule.Action.ValueString()),
+			Cache:          bool(rule.Cache.ValueBool()),
+			Comment:        string(rule.Comment.ValueString()),
+			Paths:          []string{},
+			WhitelistedIps: []string{},
+		}
+
+		for _, path := range rule.Paths {
+			r.Paths = append(r.Paths, string(path.ValueString()))
+		}
+
+		for _, ip := range rule.WhitelistedIps {
+			r.WhitelistedIps = append(r.WhitelistedIps, string(ip.ValueString()))
+		}
+
+		s.Rules = append(s.Rules, r)
+	}
+
+	// URL Exceptions
+	s.UrlExceptions = []ogosecurity.UrlException{}
+	for _, url := range plan.UrlExceptions {
+		s.UrlExceptions = append(s.UrlExceptions, ogosecurity.UrlException{
+			Path:    string(url.Path.ValueString()),
+			Comment: string(url.Comment.ValueString()),
+		})
+	}
+
+	// Tags
+	s.Tags = []string{}
+	for _, tag := range plan.Tags {
+		s.Tags = append(s.Tags, string(tag.ValueString()))
+	}
+
+	_, err := r.client.UpdateSite(s)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error creating site",
-			"Could not create site, unexpected error: "+err.Error(),
+			"Error updating site",
+			"Could not update site, unexpected error: "+err.Error(),
 		)
 		return
 	}
 
 	// Map response body to schema and populate Computed attribute values
-	plan.ClusterName = types.StringValue(string(site.ClusterName))
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
@@ -289,7 +737,7 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 // Delete deletes the resource and removes the Terraform state on success.
 func (r *siteResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	// Retrieve values from state
-	var state siteResourceModel
+	var state SiteResourceModel
 	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -297,10 +745,10 @@ func (r *siteResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	}
 
 	// Delete existing site
-	err := r.client.DeleteSite(state.Name.ValueString())
+	err := r.client.DeleteSite(state.DomainName.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error Deleting Ogo Site",
+			"Error deleting Ogo Site",
 			"Could not delete site, unexpected error: "+err.Error(),
 		)
 		return
@@ -308,6 +756,6 @@ func (r *siteResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 }
 
 func (r *siteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Retrieve import Name and save to name attribute
-	resource.ImportStatePassthroughID(ctx, path.Root("name"), req, resp)
+	// Retrieve import domain name and save to name attribute
+	resource.ImportStatePassthroughID(ctx, path.Root("domain_name"), req, resp)
 }

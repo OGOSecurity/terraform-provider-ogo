@@ -1,38 +1,15 @@
 package ogosecurity
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-// GetAllSites - Returns all user's site
-func (c *Client) GetAllSites() ([]Site, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites", c.HostBaseURL), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := c.doRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	resp := AllSitesResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp.Sites, nil
-}
-
 // GetSite - Returns a specifc site
-func (c *Client) GetSite(siteName string) (*Site, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteName), nil)
+func (c *Client) GetSite(siteDomainName string) (*Site, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -42,22 +19,18 @@ func (c *Client) GetSite(siteName string) (*Site, error) {
 		return nil, err
 	}
 
-	resp := SiteResponse{}
+	resp := Site{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resp.Site, nil
+	return &resp, nil
 }
 
 // CreateSite - Create new site
 func (c *Client) CreateSite(site Site) (*Site, error) {
-	sq := SiteQuery{
-		Site: site,
-	}
-
-	rb, err := json.Marshal(sq)
+	rb, err := json.Marshal(site)
 	if err != nil {
 		return nil, err
 	}
@@ -72,37 +45,23 @@ func (c *Client) CreateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	resp := AllSitesResponse{}
+	resp := Site{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Count == 0 {
-		return nil, errors.New("Failed to create site: " + resp.Status.Message)
-	}
-
-	s, err := c.GetSite(site.Name)
-	if err != nil {
-		return nil, err
-	}
-
-	return s, nil
+	return &resp, nil
 }
 
 // UpdateSite - Update existing site
 func (c *Client) UpdateSite(site Site) (*Site, error) {
-	sq := SiteQuery{
-		Action: "update",
-		Site:   site,
-	}
-
-	rb, err := json.Marshal(sq)
+	rb, err := json.Marshal(site)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.Name), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("PATCH", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, site.DomainName), strings.NewReader(string(rb)))
 	if err != nil {
 		return nil, err
 	}
@@ -112,41 +71,25 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 		return nil, err
 	}
 
-	resp := AllSitesResponse{}
+	resp := Site{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Count == 0 {
-		return nil, errors.New("Failed to update site: " + resp.Status.Message)
-	}
-
-	return &resp.SitesItems[0], nil
+	return &resp, nil
 }
 
 // DeleteSite - Delete existing site
-func (c *Client) DeleteSite(siteName string) error {
-	rb := `{"action":"delete","site":{"name":"` + siteName + `"}}`
-
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteName), bytes.NewBufferString(rb))
+func (c *Client) DeleteSite(siteDomainName string) error {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {
 		return err
 	}
 
-	body, err := c.doRequest(req)
+	_, err = c.doRequest(req)
 	if err != nil {
 		return err
-	}
-
-	resp := AllSitesResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return err
-	}
-
-	if resp.HasError {
-		return errors.New(string(body))
 	}
 
 	return nil

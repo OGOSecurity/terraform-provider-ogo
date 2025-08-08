@@ -161,11 +161,13 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *ogoProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewClustersDataSource,
+		NewTlsOptionsDataSource,
 	}
 }
 
 func (p *ogoProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewSiteResource,
+		NewTlsOptionsResource,
 	}
 }

@@ -24,11 +24,15 @@ type clustersDataSourceModel struct {
 
 // clusterModel maps cluster schema data
 type clustersModel struct {
-	ClusterHost         types.String `tfsdk:"cluster_host"`
-	ClusterName         types.String `tfsdk:"cluster_name"`
-	SupportsCache       types.Bool   `tfsdk:"supports_cache"`
-	SupportsIpv6Origins types.Bool   `tfsdk:"supports_ipv6_origins"`
-	SupportsMtls        types.Bool   `tfsdk:"supports_mtls"`
+	Uid                 types.String   `tfsdk:"uid"`
+	Name                types.String   `tfsdk:"name"`
+	Host4               types.String   `tfsdk:"host4"`
+	Host6               types.String   `tfsdk:"host6"`
+	IpsToWhitelist      []types.String `tfsdk:"ips_to_whitelist"`
+	SupportsCache       types.Bool     `tfsdk:"supports_cache"`
+	SupportsIpv6Origins types.Bool     `tfsdk:"supports_ipv6_origins"`
+	SupportsMtls        types.Bool     `tfsdk:"supports_mtls"`
+	SupportedCdns       []types.String `tfsdk:"supported_cdns"`
 }
 
 func NewClustersDataSource() datasource.DataSource {
@@ -50,11 +54,21 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"cluster_host": schema.StringAttribute{
+						"uid": schema.StringAttribute{
 							Computed: true,
 						},
-						"cluster_name": schema.StringAttribute{
+						"name": schema.StringAttribute{
 							Computed: true,
+						},
+						"host4": schema.StringAttribute{
+							Computed: true,
+						},
+						"host6": schema.StringAttribute{
+							Computed: true,
+						},
+						"ips_to_whitelist": schema.SetAttribute{
+							ElementType: types.StringType,
+							Computed:    true,
 						},
 						"supports_cache": schema.BoolAttribute{
 							Computed: true,
@@ -64,6 +78,10 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 						},
 						"supports_mtls": schema.BoolAttribute{
 							Computed: true,
+						},
+						"supported_cdns": schema.SetAttribute{
+							ElementType: types.StringType,
+							Computed:    true,
 						},
 					},
 				},
@@ -106,13 +124,25 @@ func (d *clustersDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 
 	// Map response body to model
-	for _, cluster := range clusters {
+	for _, c := range clusters {
 		clusterState := clustersModel{
-			ClusterHost:         types.StringValue(cluster.ClusterHost),
-			ClusterName:         types.StringValue(cluster.ClusterName),
-			SupportsCache:       types.BoolValue(cluster.SupportsCache),
-			SupportsIpv6Origins: types.BoolValue(cluster.SupportsIpv6Origins),
-			SupportsMtls:        types.BoolValue(cluster.SupportsMtls),
+			Uid:                 types.StringValue(c.Uid),
+			Name:                types.StringValue(c.Name),
+			Host4:               types.StringValue(c.Host4),
+			Host6:               types.StringValue(c.Host6),
+			SupportsCache:       types.BoolValue(c.SupportsCache),
+			SupportsIpv6Origins: types.BoolValue(c.SupportsIpv6Origins),
+			SupportsMtls:        types.BoolValue(c.SupportsMtls),
+			IpsToWhitelist:      []types.String{},
+			SupportedCdns:       []types.String{},
+		}
+
+		for _, ips := range c.IpsToWhitelist {
+			clusterState.IpsToWhitelist = append(clusterState.IpsToWhitelist, types.StringValue(ips))
+		}
+
+		for _, cdns := range c.SupportedCdns {
+			clusterState.SupportedCdns = append(clusterState.SupportedCdns, types.StringValue(cdns))
 		}
 
 		state.Clusters = append(state.Clusters, clusterState)

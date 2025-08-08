@@ -18,36 +18,16 @@ func (c *Client) GetAllClusters() ([]Cluster, error) {
 		return nil, err
 	}
 
-	resp := ClustersResponse{}
+	var resp []ClustersResponse
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return resp.Clusters, nil
-}
-
-// GetCluster - Returns a specifc cluster
-func (c *Client) GetCluster(clusterName string) ([]Cluster, error) {
-	if _, ok := c.Clusters[clusterName]; !ok {
-		return nil, fmt.Errorf("Unknown cluster %s", clusterName)
+	var clusters []Cluster
+	for _, c := range resp {
+		clusters = append(clusters, c.Cluster)
 	}
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters/%d", c.HostBaseURL, c.Clusters[clusterName]), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := c.doRequest(req)
-	if err != nil {
-		return nil, err
-	}
-
-	resp := ClustersResponse{}
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp.Clusters, nil
+	return clusters, nil
 }

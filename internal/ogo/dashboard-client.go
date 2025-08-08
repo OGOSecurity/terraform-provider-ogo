@@ -19,7 +19,7 @@ type Client struct {
 	HTTPClient  *http.Client
 	Username    string
 	ApiKey      string
-	Clusters    map[string]int
+	Clusters    map[string]string
 }
 
 func md5sum(text string) string {
@@ -30,8 +30,8 @@ func md5sum(text string) string {
 // NewClient
 func NewClient(host *string, username *string, apikey *string) (*Client, error) {
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 30 * time.Second},
-		Clusters:   map[string]int{},
+		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		Clusters:   map[string]string{},
 	}
 
 	// Check if endpoint, username and password are provided
@@ -53,9 +53,7 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 		c.ApiKey = *apikey
 	}
 
-	c.HostBaseURL = *host + "/api/" + *username
-
-	// Provision map cluster Name <=> cluster ID
+	c.HostBaseURL = *host + "/v2/organizations/" + *username
 	clusters, err := c.GetAllClusters()
 
 	if err != nil {
@@ -63,7 +61,7 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 	}
 
 	for _, cluster := range clusters {
-		c.Clusters[cluster.ClusterName] = cluster.ClusterID
+		c.Clusters[cluster.Name] = cluster.Uid
 	}
 
 	return &c, nil
@@ -72,16 +70,7 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	// Set headers
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-	// Generate token based on URL Path
-	token := md5sum(req.URL.Path + "-" + c.ApiKey)
-
-	// Set token on query parameters
-	q := req.URL.Query()
-	q.Add("t", token)
-	req.URL.RawQuery = q.Encode()
-
-	//fmt.Printf("req: %+v\n", req)
+	req.Header.Set("X-Ogo-Api-Key", c.ApiKey)
 
 	// Lock access to Ogo API to restrict count of concurrent request
 	sem <- 1
@@ -95,16 +84,14 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("err res body: %+v\n", res)
-		return nil, err
+		return nil, fmt.Errorf("Failed to retrieved body: %s (%+v)", string(err.Error()), res)
 	}
 
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
+	if res.StatusCode != http.StatusOK &&
+		res.StatusCode != http.StatusNoContent &&
+		res.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("status: %d, body: %s (%+v)", res.StatusCode, body, res)
 	}
-
-	//fmt.Printf("res: %+v\n", res)
-	//fmt.Printf("body res: %s\n", body)
 
 	return body, err
 }

@@ -168,5 +168,6 @@ func (p *ogoProvider) DataSources(ctx context.Context) []func() datasource.DataS
 func (p *ogoProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewSiteResource,
+		NewTlsOptionsResource,
 	}
 }

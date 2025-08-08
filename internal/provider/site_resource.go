@@ -509,7 +509,7 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	site, err := r.client.GetSite(state.DomainName.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error Reading Ogo Site",
+			"Error reading Ogo site",
 			"Could not read Ogo site domain name "+state.DomainName.ValueString()+": "+err.Error(),
 		)
 		return
@@ -717,8 +717,8 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	_, err := r.client.UpdateSite(s)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error creating site",
-			"Could not create site, unexpected error: "+err.Error(),
+			"Error updating site",
+			"Could not update site, unexpected error: "+err.Error(),
 		)
 		return
 	}
@@ -748,7 +748,7 @@ func (r *siteResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 	err := r.client.DeleteSite(state.DomainName.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Error Deleting Ogo Site",
+			"Error deleting Ogo Site",
 			"Could not delete site, unexpected error: "+err.Error(),
 		)
 		return

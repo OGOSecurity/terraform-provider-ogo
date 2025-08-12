@@ -52,18 +52,18 @@ description: |-
 
 ### Read-Only
 
-- `last_updated` (String) Last resources update by terraform
+- `last_updated` (String) Last resource update by terraform
 
 <a id="nestedatt--ip_exceptions"></a>
 ### Nested Schema for `ip_exceptions`
 
 Required:
 
-- `ip` (String)
+- `ip` (String) IP address list never blocked by Ogo Shield
 
 Optional:
 
-- `comment` (String)
+- `comment` (String) Description associated to this IP list
 
 
 <a id="nestedatt--rewrite_rules"></a>
@@ -71,14 +71,14 @@ Optional:
 
 Required:
 
-- `priority` (Number)
-- `rewrite_destination` (String)
-- `rewrite_source` (String)
+- `priority` (Number) Rewrite rule priority
+- `rewrite_destination` (String) Rewrited destination path
+- `rewrite_source` (String) Source path to be rewrited
 
 Optional:
 
-- `active` (Boolean)
-- `comment` (String)
+- `active` (Boolean) Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**)
+- `comment` (String) Description associated to this rewrite rule
 
 
 <a id="nestedatt--rules"></a>
@@ -86,16 +86,18 @@ Optional:
 
 Required:
 
-- `paths` (Set of String)
-- `priority` (Number)
-- `whitelisted_ips` (Set of String)
+- `paths` (Set of String) List of URL path for which rule is applied
+- `priority` (Number) Rule priority
+- `whitelisted_ips` (Set of String) Authorized IP addresses list
 
 Optional:
 
-- `action` (String)
-- `active` (Boolean)
+- `action` (String) Action to applied when rule match (Default: **brain**). Supported values:
+  * **brain**: Rule analysed by ogo Shield brain
+  * **bypass**: Rule not analysed by Ogo Shield brain
+- `active` (Boolean) Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**)
 - `cache` (Boolean)
-- `comment` (String)
+- `comment` (String) Description associated to this rule
 
 
 <a id="nestedatt--url_exceptions"></a>
@@ -103,8 +105,8 @@ Optional:
 
 Required:
 
-- `path` (String)
+- `path` (String) Path of URL never blocked by Ogo Shield
 
 Optional:
 
-- `comment` (String)
+- `comment` (String) Description associated to this URL exception

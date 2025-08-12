@@ -224,11 +224,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"ip": schema.StringAttribute{
 							Required:    true,
-							Description: "",
+							Description: "IP address list never blocked by Ogo Shield",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "",
+							Description: "Description associated to this IP list",
 						},
 					},
 				},
@@ -252,25 +252,25 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
 							Required:    true,
-							Description: "",
+							Description: "Rewrite rule priority",
 						},
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "",
+							Description: "Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**)",
 							Default:     booldefault.StaticBool(true),
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "",
+							Description: "Description associated to this rewrite rule",
 						},
 						"rewrite_source": schema.StringAttribute{
 							Required:    true,
-							Description: "",
+							Description: "Source path to be rewrited",
 						},
 						"rewrite_destination": schema.StringAttribute{
 							Required:    true,
-							Description: "",
+							Description: "Rewrited destination path",
 						},
 					},
 				},
@@ -297,19 +297,22 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
 							Required:    true,
-							Description: "",
+							Description: "Rule priority",
 						},
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "",
+							Description: "Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**)",
 							Default:     booldefault.StaticBool(true),
 						},
 						"action": schema.StringAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "",
+							Description: "Action to applied when rule match (Default: **brain**). Supported values:\n  * **brain**: Rule analysed by ogo Shield brain\n  * **bypass**: Rule not analysed by Ogo Shield brain",
 							Default:     stringdefault.StaticString("brain"),
+							Validators: []validator.String{
+								stringvalidator.OneOf("brain", "bypass"),
+							},
 						},
 						"cache": schema.BoolAttribute{
 							Optional:    true,
@@ -319,16 +322,16 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "",
+							Description: "Description associated to this rule",
 						},
 						"paths": schema.SetAttribute{
 							Required:    true,
-							Description: "",
+							Description: "List of URL path for which rule is applied",
 							ElementType: types.StringType,
 						},
 						"whitelisted_ips": schema.SetAttribute{
 							Required:    true,
-							Description: "",
+							Description: "Authorized IP addresses list",
 							ElementType: types.StringType,
 						},
 					},
@@ -358,11 +361,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"path": schema.StringAttribute{
 							Required:    true,
-							Description: "",
+							Description: "Path of URL never blocked by Ogo Shield",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "",
+							Description: "Description associated to this URL exception",
 						},
 					},
 				},
@@ -380,7 +383,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"last_updated": schema.StringAttribute{
 				Computed:    true,
-				Description: "Last resources update by terraform",
+				Description: "Last resource update by terraform",
 			},
 		},
 	}

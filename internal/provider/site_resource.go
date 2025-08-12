@@ -106,7 +106,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID to deployed site",
+				Description: "Cluster UID on which site is deployed",
 			},
 			"origin_server": schema.StringAttribute{
 				Required:    true,

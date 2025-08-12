@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- `cluster_uid` (String) Cluster UID to deployed site
+- `cluster_uid` (String) Cluster UID on which site is deployed
 - `domain_name` (String) Site DNS domain name
 - `origin_server` (String) Origin server address (IP address or domain name)
 

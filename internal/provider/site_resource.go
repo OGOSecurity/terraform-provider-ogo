@@ -101,32 +101,38 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"domain_name": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "Site DNS domain name",
 			},
 			"cluster_uid": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "Cluster UID to deployed site",
 			},
 			"origin_server": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "Origin server address (IP address or domain name)",
 			},
 			"origin_scheme": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("https"),
+				Optional:    true,
+				Computed:    true,
+				Description: "Scheme to used to access origin server. Supported values: **https** or **http**. Default: **https**",
+				Default:     stringdefault.StaticString("https"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("http", "https"),
 				},
 			},
 			"origin_port": schema.Int32Attribute{
-				Optional: true,
+				Optional:    true,
+				Description: "",
 				Validators: []validator.Int32{
 					int32validator.Between(1, 65535),
 				},
 			},
 			"origin_mtls_enabled": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(false),
 			},
 			"origin_skip_cert_verify": schema.BoolAttribute{
 				Optional: true,
@@ -134,45 +140,53 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Default:  booldefault.StaticBool(false),
 			},
 			"remove_xforwarded": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(false),
 			},
 			"force_https": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(true),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(true),
 			},
 			"audit_mode": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(false),
 			},
 			"passthrough_mode": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(false),
 			},
 			"hsts": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("hsts"),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     stringdefault.StaticString("hsts"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
 				},
 			},
 			"log_export_enabled": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     booldefault.StaticBool(false),
 			},
 			"tls_options_uid": schema.StringAttribute{
-				Optional: true,
+				Optional:    true,
+				Description: "",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("info"),
+				Optional:    true,
+				Computed:    true,
+				Description: "",
+				Default:     stringdefault.StaticString("info"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("all", "cert", "info", "none"),
 				},
@@ -180,6 +194,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"tags": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
+				Description: "",
 				ElementType: types.StringType,
 				Default: setdefault.StaticValue(
 					types.SetValueMust(
@@ -191,6 +206,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"blacklisted_countries": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
+				Description: "",
 				ElementType: types.StringType,
 				Default: setdefault.StaticValue(
 					types.SetValueMust(
@@ -200,15 +216,18 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				),
 			},
 			"ip_exceptions": schema.SetNestedAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"ip": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 						"comment": schema.StringAttribute{
-							Optional: true,
+							Optional:    true,
+							Description: "",
 						},
 					},
 				},
@@ -225,26 +244,32 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				),
 			},
 			"rewrite_rules": schema.SetNestedAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 						"active": schema.BoolAttribute{
-							Optional: true,
-							Computed: true,
-							Default:  booldefault.StaticBool(true),
+							Optional:    true,
+							Computed:    true,
+							Description: "",
+							Default:     booldefault.StaticBool(true),
 						},
 						"comment": schema.StringAttribute{
-							Optional: true,
+							Optional:    true,
+							Description: "",
 						},
 						"rewrite_source": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 						"rewrite_destination": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 					},
 				},
@@ -264,37 +289,45 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				),
 			},
 			"rules": schema.SetNestedAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 						"active": schema.BoolAttribute{
-							Optional: true,
-							Computed: true,
-							Default:  booldefault.StaticBool(true),
+							Optional:    true,
+							Computed:    true,
+							Description: "",
+							Default:     booldefault.StaticBool(true),
 						},
 						"action": schema.StringAttribute{
-							Optional: true,
-							Computed: true,
-							Default:  stringdefault.StaticString("brain"),
+							Optional:    true,
+							Computed:    true,
+							Description: "",
+							Default:     stringdefault.StaticString("brain"),
 						},
 						"cache": schema.BoolAttribute{
-							Optional: true,
-							Computed: true,
-							Default:  booldefault.StaticBool(false),
+							Optional:    true,
+							Computed:    true,
+							Description: "",
+							Default:     booldefault.StaticBool(false),
 						},
 						"comment": schema.StringAttribute{
-							Optional: true,
+							Optional:    true,
+							Description: "",
 						},
 						"paths": schema.SetAttribute{
 							Required:    true,
+							Description: "",
 							ElementType: types.StringType,
 						},
 						"whitelisted_ips": schema.SetAttribute{
 							Required:    true,
+							Description: "",
 							ElementType: types.StringType,
 						},
 					},
@@ -317,15 +350,18 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				),
 			},
 			"url_exceptions": schema.SetNestedAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:    true,
+				Computed:    true,
+				Description: "",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"path": schema.StringAttribute{
-							Required: true,
+							Required:    true,
+							Description: "",
 						},
 						"comment": schema.StringAttribute{
-							Optional: true,
+							Optional:    true,
+							Description: "",
 						},
 					},
 				},
@@ -342,7 +378,8 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				),
 			},
 			"last_updated": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: "Last resources update by terraform",
 			},
 		},
 	}

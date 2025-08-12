@@ -17,9 +17,9 @@ description: |-
 
 ### Required
 
-- `cluster_uid` (String)
-- `domain_name` (String)
-- `origin_server` (String)
+- `cluster_uid` (String) Cluster UID to deployed site
+- `domain_name` (String) Site DNS domain name
+- `origin_server` (String) Origin server address (IP address or domain name)
 
 ### Optional
 
@@ -31,7 +31,7 @@ description: |-
 - `log_export_enabled` (Boolean)
 - `origin_mtls_enabled` (Boolean)
 - `origin_port` (Number)
-- `origin_scheme` (String)
+- `origin_scheme` (String) Scheme to used to access origin server. Supported values: **https** or **http**. Default: **https**
 - `origin_skip_cert_verify` (Boolean)
 - `pass_tls_client_cert` (String)
 - `passthrough_mode` (Boolean)
@@ -44,7 +44,7 @@ description: |-
 
 ### Read-Only
 
-- `last_updated` (String)
+- `last_updated` (String) Last resources update by terraform
 
 <a id="nestedatt--ip_exceptions"></a>
 ### Nested Schema for `ip_exceptions`

@@ -132,7 +132,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   cluster_uid          = var.cluster_uid
   origin_server        = "192.168.122.13"
   tls_options_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
-  pass_tls_client_cert = "all"
+  pass_tls_client_cert = "none"
 }
 
 resource "ogo_shield_tls_options" "gys_tf" {

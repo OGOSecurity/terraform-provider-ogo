@@ -61,7 +61,7 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 						},
 						"client_auth_type": schema.StringAttribute{
 							Computed:    true,
-							Description: "Authentication type needed to authenticate client.\n  * *VerifyClientCertIfGiven*: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.\n  * *RequireAndVerifyClientCert*: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
+							Description: "Authentication type needed to authenticate client.\n  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.\n  * *RequireAndVerifyClientCert*: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
 						},
 						"client_auth_ca_certs": schema.ListAttribute{
 							Computed:    true,

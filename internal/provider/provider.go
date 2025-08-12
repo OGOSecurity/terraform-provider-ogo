@@ -38,9 +38,9 @@ type ogoProvider struct {
 
 // ogoProviderModel describes the provider data model.
 type ogoProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
-	Username types.String `tfsdk:"username"`
-	ApiKey   types.String `tfsdk:"apikey"`
+	Endpoint     types.String `tfsdk:"endpoint"`
+	Organization types.String `tfsdk:"organization"`
+	ApiKey       types.String `tfsdk:"apikey"`
 }
 
 func (p *ogoProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -55,8 +55,8 @@ func (p *ogoProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *
 				MarkdownDescription: "Ogo API endpoint",
 				Required:            true,
 			},
-			"username": schema.StringAttribute{
-				MarkdownDescription: "Username used to authenticate to Ogo Dashboard (usualy user email address)",
+			"organization": schema.StringAttribute{
+				MarkdownDescription: "Organization used to authenticate to Ogo Dashboard (usualy user email address)",
 				Required:            true,
 			},
 			"apikey": schema.StringAttribute{
@@ -81,7 +81,7 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	// Default values to environment variables, but override
 	// with Terraform configuration value if set.
 	endpoint := os.Getenv("OGO_ENDPOINT")
-	username := os.Getenv("OGO_USERNAME")
+	organization := os.Getenv("OGO_ORGANIZATION")
 	apikey := os.Getenv("OGO_APIKEY")
 
 	// Configuration values are now available.
@@ -89,8 +89,8 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		endpoint = config.Endpoint.ValueString()
 	}
 
-	if !config.Username.IsNull() {
-		username = config.Username.ValueString()
+	if !config.Organization.IsNull() {
+		organization = config.Organization.ValueString()
 	}
 
 	if !config.ApiKey.IsNull() {
@@ -108,12 +108,12 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		)
 	}
 
-	if username == "" {
+	if organization == "" {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("username"),
-			"Missing Ogo API username",
-			"The provider cannot create the Ogo API client as there is a missing or empty value for the Ogo API username. "+
-				"Set the username value in the configuration or use the OGO_USERNAME environment variable. "+
+			path.Root("organization"),
+			"Missing Ogo API organization",
+			"The provider cannot create the Ogo API client as there is a missing or empty value for the Ogo API organization. "+
+				"Set the organization value in the configuration or use the OGO_ORGANIZATION environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -133,14 +133,14 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	}
 
 	ctx = tflog.SetField(ctx, "ogo_endpoint", endpoint)
-	ctx = tflog.SetField(ctx, "ogo_username", username)
+	ctx = tflog.SetField(ctx, "ogo_organization", organization)
 	ctx = tflog.SetField(ctx, "ogo_apikey", apikey)
 	ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "ogo_apikey")
 
 	tflog.Debug(ctx, "Creating Ogo client")
 
 	// Create a new HashiCups client using the configuration values
-	client, err := ogosecurity.NewClient(&endpoint, &username, &apikey)
+	client, err := ogosecurity.NewClient(&endpoint, &organization, &apikey)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to Create OgoSecurity Dashboard API Client",

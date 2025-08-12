@@ -14,12 +14,12 @@ var sem = make(chan int, 1)
 
 // Client
 type Client struct {
-	Endpoint    string
-	HostBaseURL string
-	HTTPClient  *http.Client
-	Username    string
-	ApiKey      string
-	Clusters    map[string]string
+	Endpoint     string
+	HostBaseURL  string
+	HTTPClient   *http.Client
+	Organization string
+	ApiKey       string
+	Clusters     map[string]string
 }
 
 func md5sum(text string) string {
@@ -28,23 +28,23 @@ func md5sum(text string) string {
 }
 
 // NewClient
-func NewClient(host *string, username *string, apikey *string) (*Client, error) {
+func NewClient(host *string, organization *string, apikey *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 		Clusters:   map[string]string{},
 	}
 
-	// Check if endpoint, username and password are provided
+	// Check if endpoint, organization and password are provided
 	if host == nil {
 		return &c, errors.New("Endpoint must be provided")
 	} else {
 		c.Endpoint = *host
 	}
 
-	if username == nil {
-		return &c, errors.New("Username must be provided")
+	if organization == nil {
+		return &c, errors.New("Organization must be provided")
 	} else {
-		c.Username = *username
+		c.Organization = *organization
 	}
 
 	if apikey == nil {
@@ -53,7 +53,7 @@ func NewClient(host *string, username *string, apikey *string) (*Client, error) 
 		c.ApiKey = *apikey
 	}
 
-	c.HostBaseURL = *host + "/v2/organizations/" + *username
+	c.HostBaseURL = *host + "/v2/organizations/" + *organization
 	clusters, err := c.GetAllClusters()
 
 	if err != nil {

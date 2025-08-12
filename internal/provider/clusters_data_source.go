@@ -55,33 +55,42 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"uid": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "UID used to reference this cluster",
 						},
 						"name": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "Name of the cluster",
 						},
 						"host4": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "Ogo Shield public IPv4 address",
 						},
 						"host6": schema.StringAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "Ogo Shield public IPv6 address",
 						},
 						"ips_to_whitelist": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
+							Description: "Outgoing Ogo Shield IP addresses",
 						},
 						"supports_cache": schema.BoolAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "Cache support features",
 						},
 						"supports_ipv6_origins": schema.BoolAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "",
 						},
 						"supports_mtls": schema.BoolAttribute{
-							Computed: true,
+							Computed:    true,
+							Description: "mTLS support features",
 						},
 						"supported_cdns": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
+							Description: "Supported list of CDN",
 						},
 					},
 				},

@@ -24,12 +24,12 @@ description: |-
 
 Read-Only:
 
-- `host4` (String)
-- `host6` (String)
-- `ips_to_whitelist` (Set of String)
-- `name` (String)
-- `supported_cdns` (Set of String)
-- `supports_cache` (Boolean)
+- `host4` (String) Ogo Shield public IPv4 address
+- `host6` (String) Ogo Shield public IPv6 address
+- `ips_to_whitelist` (Set of String) Outgoing Ogo Shield IP addresses
+- `name` (String) Name of the cluster
+- `supported_cdns` (Set of String) Supported list of CDN
+- `supports_cache` (Boolean) Cache support features
 - `supports_ipv6_origins` (Boolean)
-- `supports_mtls` (Boolean)
-- `uid` (String)
+- `supports_mtls` (Boolean) mTLS support features
+- `uid` (String) UID used to reference this cluster

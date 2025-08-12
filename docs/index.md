@@ -18,4 +18,4 @@ description: |-
 
 - `apikey` (String, Sensitive) API Key
 - `endpoint` (String) Ogo API endpoint
-- `organization` (String) Organization used to authenticate to Ogo Dashboard (usualy user email address)
+- `organization` (String) Organization code used to authenticate to Ogo Dashboard

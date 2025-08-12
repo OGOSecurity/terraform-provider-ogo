@@ -195,7 +195,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"tags": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "List of tags",
 				ElementType: types.StringType,
 				Default: setdefault.StaticValue(
 					types.SetValueMust(
@@ -207,7 +207,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"blacklisted_countries": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "List of countries to blacklist",
 				ElementType: types.StringType,
 				Default: setdefault.StaticValue(
 					types.SetValueMust(

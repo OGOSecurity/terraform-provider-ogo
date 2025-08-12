@@ -24,7 +24,7 @@ description: |-
 ### Optional
 
 - `audit_mode` (Boolean) Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**)
-- `blacklisted_countries` (Set of String)
+- `blacklisted_countries` (Set of String) List of countries to blacklist
 - `force_https` (Boolean) Redirect HTTP request to HTTPS (Default: **true** )
 - `hsts` (String) Enable HSTS (Default: **hsts**). Supported values:
   * **hsts**: Enable HSTS
@@ -46,7 +46,7 @@ description: |-
 - `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (Default: **false** )
 - `rewrite_rules` (Attributes Set) (see [below for nested schema](#nestedatt--rewrite_rules))
 - `rules` (Attributes Set) (see [below for nested schema](#nestedatt--rules))
-- `tags` (Set of String)
+- `tags` (Set of String) List of tags
 - `tls_options_uid` (String) UID of TLS options to be applied to this site
 - `url_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--url_exceptions))
 

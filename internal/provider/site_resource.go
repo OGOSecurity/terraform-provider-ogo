@@ -102,7 +102,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 		Attributes: map[string]schema.Attribute{
 			"domain_name": schema.StringAttribute{
 				Required:    true,
-				Description: "Site DNS domain name",
+				Description: "DNS domain name of site",
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,

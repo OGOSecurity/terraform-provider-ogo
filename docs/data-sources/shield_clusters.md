@@ -28,8 +28,8 @@ Read-Only:
 - `host6` (String) Ogo Shield public IPv6 address
 - `ips_to_whitelist` (Set of String) Outgoing Ogo Shield IP addresses
 - `name` (String) Name of the cluster
-- `supported_cdns` (Set of String) Supported list of CDN
+- `supported_cdns` (Set of String) List of supported CDN
 - `supports_cache` (Boolean) Cache support features
-- `supports_ipv6_origins` (Boolean)
+- `supports_ipv6_origins` (Boolean) Support of IPv6 origins
 - `supports_mtls` (Boolean) mTLS support features
 - `uid` (String) UID used to reference this cluster

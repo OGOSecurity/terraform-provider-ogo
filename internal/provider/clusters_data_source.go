@@ -81,7 +81,7 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 						},
 						"supports_ipv6_origins": schema.BoolAttribute{
 							Computed:    true,
-							Description: "",
+							Description: "Support of IPv6 origins",
 						},
 						"supports_mtls": schema.BoolAttribute{
 							Computed:    true,
@@ -90,7 +90,7 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 						"supported_cdns": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
-							Description: "Supported list of CDN",
+							Description: "List of supported CDN",
 						},
 					},
 				},

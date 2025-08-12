@@ -52,29 +52,28 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"uid": schema.StringAttribute{
-							Computed:    true,
+							Computed: true,
 							Description: "UID used to reference this TLS Options",
 						},
 						"name": schema.StringAttribute{
-							Computed:    true,
+							Computed: true,
 							Description: "Name of the TLS Options",
 						},
 						"client_auth_type": schema.StringAttribute{
-							Computed:    true,
-							Description: "Authentication type needed to authenticate client. *VerifyClientCertIfGiven*: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate. *RequireAndVerifyClientCert*: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
+							Computed: true,
+							Description: "Authentication type needed to authenticate client. *VerifyClientCertIfGiven*: Client certificate is optionnal. *RequireAndVerifyClientCert*: Valide client certificate is required to allow user access",
 						},
 						"client_auth_ca_certs": schema.ListAttribute{
 							Computed:    true,
-							Description: "List of certificate authority used to verify client certificate",
+							Description: "",
 							ElementType: types.StringType,
 						},
 						"min_tls_version": schema.StringAttribute{
-							Computed:    true,
-							Description: "Minimum TLS version accepted",
+							Computed: true,
 						},
 						"max_tls_version": schema.StringAttribute{
-							Computed:    true,
-							Description: "Maximum TLS version accepted",
+							Computed: true,
+							Description: "",
 						},
 					},
 				},

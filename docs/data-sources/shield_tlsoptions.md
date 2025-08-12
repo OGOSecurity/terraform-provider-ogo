@@ -24,9 +24,9 @@ description: |-
 
 Read-Only:
 
-- `client_auth_ca_certs` (List of String)
-- `client_auth_type` (String)
-- `max_tls_version` (String)
-- `min_tls_version` (String)
-- `name` (String)
-- `uid` (String)
+- `client_auth_ca_certs` (List of String) List of certificate authority used to verify client certificate
+- `client_auth_type` (String) Authentication type needed to authenticate client. *VerifyClientCertIfGiven*: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate. *RequireAndVerifyClientCert*: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
+- `max_tls_version` (String) Maximum TLS version accepted
+- `min_tls_version` (String) Minimum TLS version accepted
+- `name` (String) Name of the TLS Options
+- `uid` (String) UID used to reference this TLS Options

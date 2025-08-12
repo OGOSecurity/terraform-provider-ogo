@@ -54,36 +54,42 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: "Name of the TLS Options",
 			},
 			"uid": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: "UID used to reference this TLS Options",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"client_auth_type": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("VerifyClientCertIfGiven"),
+				Optional:    true,
+				Computed:    true,
+				Description: "Authentication type needed to authenticate client. Supported values:\n  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.\n  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
+				Default:     stringdefault.StaticString("VerifyClientCertIfGiven"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("VerifyClientCertIfGiven", "RequireAndVerifyClientCert"),
 				},
 			},
 			"client_auth_ca_certs": schema.SetAttribute{
 				Required:    true,
+				Description: "List of certificate authority used to verify client certificate",
 				ElementType: types.StringType,
 			},
 			"min_tls_version": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  stringdefault.StaticString("TLS_12"),
+				Optional:    true,
+				Computed:    true,
+				Description: "Minimum TLS version accepted. Supported values: *TLS_10*, *TLS_11*, *TLS_12*, *TLS_13*",
+				Default:     stringdefault.StaticString("TLS_12"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
 				},
 			},
 			"max_tls_version": schema.StringAttribute{
-				Optional: true,
+				Optional:    true,
+				Description: "Maximum TLS version accepted. Supported values: *TLS_10*, *TLS_11*, *TLS_12*, *TLS_13*",
 				Validators: []validator.String{
 					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
 				},

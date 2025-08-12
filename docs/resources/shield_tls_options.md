@@ -17,15 +17,17 @@ description: |-
 
 ### Required
 
-- `client_auth_ca_certs` (Set of String)
-- `name` (String)
+- `client_auth_ca_certs` (Set of String) List of certificate authority used to verify client certificate
+- `name` (String) Name of the TLS Options
 
 ### Optional
 
-- `client_auth_type` (String)
-- `max_tls_version` (String)
-- `min_tls_version` (String)
+- `client_auth_type` (String) Authentication type needed to authenticate client. Supported values:
+  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.
+  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
+- `max_tls_version` (String) Maximum TLS version accepted. Supported values: *TLS_10*, *TLS_11*, *TLS_12*, *TLS_13*
+- `min_tls_version` (String) Minimum TLS version accepted. Supported values: *TLS_10*, *TLS_11*, *TLS_12*, *TLS_13*
 
 ### Read-Only
 
-- `uid` (String)
+- `uid` (String) UID used to reference this TLS Options

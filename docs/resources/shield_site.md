@@ -23,23 +23,31 @@ description: |-
 
 ### Optional
 
-- `audit_mode` (Boolean)
+- `audit_mode` (Boolean) Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**)
 - `blacklisted_countries` (Set of String)
-- `force_https` (Boolean)
-- `hsts` (String)
+- `force_https` (Boolean) Redirect HTTP request to HTTPS (Default: **true** )
+- `hsts` (String) Enable HSTS (Default: **hsts**). Supported values:
+  * **hsts**: Enable HSTS
+  * **hstss**: Enable HSTS including subdomains
+  * **hstsp**: Enable HSTS including subdomains and preloading
+  * **none**: Disable HSTS
 - `ip_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--ip_exceptions))
-- `log_export_enabled` (Boolean)
-- `origin_mtls_enabled` (Boolean)
-- `origin_port` (Number)
-- `origin_scheme` (String) Scheme to used to access origin server. Supported values: **https** or **http**. Default: **https**
-- `origin_skip_cert_verify` (Boolean)
-- `pass_tls_client_cert` (String)
-- `passthrough_mode` (Boolean)
-- `remove_xforwarded` (Boolean)
+- `log_export_enabled` (Boolean) Enable log export for this site (Default: **false**)
+- `origin_mtls_enabled` (Boolean) Enable mTLS between Ogo and origin server (Default: **false**)
+- `origin_port` (Number) Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port
+- `origin_scheme` (String) Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**)
+- `origin_skip_cert_verify` (Boolean) Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**)
+- `pass_tls_client_cert` (String) Client certificate information to pass to origin server (Default: **info**). Supported values:
+  * **all**: Send certificate and certificate information
+  * **cert**: Send only certificate
+  * **info**: Send only certificate information
+  * **none***: Nothing send
+- `passthrough_mode` (Boolean) Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**)
+- `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (Default: **false** )
 - `rewrite_rules` (Attributes Set) (see [below for nested schema](#nestedatt--rewrite_rules))
 - `rules` (Attributes Set) (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String)
-- `tls_options_uid` (String)
+- `tls_options_uid` (String) UID of TLS options to be applied to this site
 - `url_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--url_exceptions))
 
 ### Read-Only

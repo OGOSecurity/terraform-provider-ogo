@@ -115,7 +115,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"origin_scheme": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Scheme to used to access origin server. Supported values: **https** or **http**. Default: **https**",
+				Description: "Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**)",
 				Default:     stringdefault.StaticString("https"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("http", "https"),
@@ -123,7 +123,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"origin_port": schema.Int32Attribute{
 				Optional:    true,
-				Description: "",
+				Description: "Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port",
 				Validators: []validator.Int32{
 					int32validator.Between(1, 65535),
 				},
@@ -131,42 +131,43 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"origin_mtls_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Enable mTLS between Ogo and origin server (Default: **false**)",
 				Default:     booldefault.StaticBool(false),
 			},
 			"origin_skip_cert_verify": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-				Default:  booldefault.StaticBool(false),
+				Optional:    true,
+				Computed:    true,
+				Description: "Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**)",
+				Default:     booldefault.StaticBool(false),
 			},
 			"remove_xforwarded": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Remove X-Forwarded-* headers. (Default: **false** )",
 				Default:     booldefault.StaticBool(false),
 			},
 			"force_https": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Redirect HTTP request to HTTPS (Default: **true** )",
 				Default:     booldefault.StaticBool(true),
 			},
 			"audit_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**)",
 				Default:     booldefault.StaticBool(false),
 			},
 			"passthrough_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**)",
 				Default:     booldefault.StaticBool(false),
 			},
 			"hsts": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Enable HSTS (Default: **hsts**). Supported values:\n  * **hsts**: Enable HSTS\n  * **hstss**: Enable HSTS including subdomains\n  * **hstsp**: Enable HSTS including subdomains and preloading\n  * **none**: Disable HSTS",
 				Default:     stringdefault.StaticString("hsts"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
@@ -175,17 +176,17 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"log_export_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Enable log export for this site (Default: **false**)",
 				Default:     booldefault.StaticBool(false),
 			},
 			"tls_options_uid": schema.StringAttribute{
 				Optional:    true,
-				Description: "",
+				Description: "UID of TLS options to be applied to this site",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Client certificate information to pass to origin server (Default: **info**). Supported values:\n  * **all**: Send certificate and certificate information\n  * **cert**: Send only certificate\n  * **info**: Send only certificate information\n  * **none***: Nothing send",
 				Default:     stringdefault.StaticString("info"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("all", "cert", "info", "none"),

@@ -56,7 +56,7 @@ func (p *ogoProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *
 				Required:            true,
 			},
 			"organization": schema.StringAttribute{
-				MarkdownDescription: "Organization used to authenticate to Ogo Dashboard (usualy user email address)",
+				MarkdownDescription: "Organization code used to authenticate to Ogo Dashboard",
 				Required:            true,
 			},
 			"apikey": schema.StringAttribute{

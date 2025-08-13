@@ -3,14 +3,17 @@ page_title: "ogo_shield_site Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
   Resource site can be used to create, update or delete site configuration in Ogo Dashboard.
-  !> This resource allowed to manage all site settings.
+  This resource allowed to manage all site settings.
+  cluster and tlsoptions data source can be used to retrieve UID needed in site resource configuration.
 ---
 
 # ogo_shield_site (Resource)
 
 Resource *site* can be used to create, update or delete site configuration in Ogo Dashboard.
 
-!> This resource allowed to manage all site settings.
+This resource allowed to manage all site settings.
+
+`cluster` and `tlsoptions` data source can be used to retrieve UID needed in `site` resource configuration.
 
 ## Example Usage
 
@@ -36,7 +39,7 @@ resource "ogo_shield_site" "bar_example_com" {
   audit_mode              = false
   passthrough_mode        = false
   hsts                    = "hstss"
-  tls_options_uid         = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
+  tlsoptions_uid         = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
   blacklisted_countries   = ["DE", "EN", "FR", "IT"]
@@ -98,7 +101,7 @@ resource "ogo_shield_site" "bar_example_com" {
 
 ### Required
 
-- `cluster_uid` (String) Cluster UID on which site is deployed (force site recreation if modified)
+- `cluster_uid` (String) Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `cluster` data source
 - `domain_name` (String) DNS domain name of site
 - `origin_server` (String) Origin server address (IP address or domain name)
 
@@ -128,7 +131,7 @@ resource "ogo_shield_site" "bar_example_com" {
 - `rewrite_rules` (Attributes Set) (see [below for nested schema](#nestedatt--rewrite_rules))
 - `rules` (Attributes Set) (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String) List of tags
-- `tls_options_uid` (String) UID of TLS options to be applied to this site
+- `tlsoptions_uid` (String) UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `tlsoptions` data source
 - `url_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--url_exceptions))
 
 ### Read-Only

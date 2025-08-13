@@ -1,23 +1,23 @@
 ---
-page_title: "ogo_shield_tls_options Resource - terraform-provider-ogo"
+page_title: "ogo_shield_tlsoptions Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
-  This tls_options resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
-  TLS options is intended to be used in site resource definition to override default Ogo shield TLS settings.
+  This ogo_shield_tlsoptions resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
+  TLS options is intended to be used in ogo_shield_site resource definition to override default Ogo shield TLS settings.
 ---
 
-# ogo_shield_tls_options (Resource)
+# ogo_shield_tlsoptions (Resource)
 
-This *tls_options* resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
+This *ogo_shield_tlsoptions* resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
 
-TLS options is intended to be used in *site* resource definition to override default Ogo shield TLS settings.
+TLS options is intended to be used in `ogo_shield_site` resource definition to override default Ogo shield TLS settings.
 
 ## Example Usage
 
 ```terraform
 # Declare TLS options with minimum supported version of TLS 1.2
 # and list of 2 accepted certificate authority
-resource "ogo_shield_tls_options" "mtls_foobar" {
+resource "ogo_shield_tlsoptions" "mtls_foobar" {
   name            = "mTLS foo bar"
   min_tls_version = "TLS_12"
   client_auth_ca_certs = [
@@ -104,6 +104,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 ```shell
 # Import 'mTLS foo bar' TLS options reference by UID example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1 from OGO Dashboard to resource mtls_foobar in terraform state
 # Note: TLS options UID can be retrieved from data source
-terraform import ogo_shield_tls_options.mtls_foobar example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1
+terraform import ogo_shield_tlsoptions.mtls_foobar example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1
 ```
 

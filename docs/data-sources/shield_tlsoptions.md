@@ -3,14 +3,14 @@ page_title: "ogo_shield_tlsoptions Data Source - terraform-provider-ogo"
 subcategory: ""
 description: |-
   Get list of organization TLS options and associated configuration.
-  Use this data source to retrieve informations, in particular TLS options UID, to be used in site resource configuration for which TLS default settings need to be override.
+  Use this data source to retrieve informations, in particular TLS options UID, to be used in ogo_shield_site resource configuration for which TLS default settings need to be override.
 ---
 
 # ogo_shield_tlsoptions (Data Source)
 
 Get list of organization TLS options and associated configuration.
 
-Use this data source to retrieve informations, in particular TLS options UID, to be used in *site* resource configuration for which TLS default settings need to be override.
+Use this data source to retrieve informations, in particular TLS options UID, to be used in `ogo_shield_site` resource configuration for which TLS default settings need to be override.
 
 ## Example Usage
 

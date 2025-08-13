@@ -63,7 +63,7 @@ output "default_cluster_uid" {
 #  domain_name          = "min-tf.ogosecurity.com"
 #  cluster_uid          = var.cluster_uid
 #  origin_server        = "192.168.122.13"
-#  tls_options_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+#  tlsoptions_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
 #  pass_tls_client_cert = "none"
 #}
 
@@ -81,7 +81,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   audit_mode              = false
   passthrough_mode        = false
   hsts                    = "hstss"
-  tls_options_uid         = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+  tlsoptions_uid         = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
   pass_tls_client_cert    = "info"
   tags                    = ["test", "dev"]
   blacklisted_countries   = ["IT", "FR"]
@@ -137,7 +137,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   ]
 }
 
-resource "ogo_shield_tls_options" "gys_tf" {
+resource "ogo_shield_tlsoptions" "gys_tf" {
   name            = "gys-tf"
   min_tls_version = "TLS_12"
   client_auth_ca_certs = [

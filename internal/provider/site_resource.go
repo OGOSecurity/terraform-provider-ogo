@@ -45,7 +45,7 @@ type SiteResourceModel struct {
 	PassthroughMode      types.Bool          `tfsdk:"passthrough_mode"`
 	Hsts                 types.String        `tfsdk:"hsts"`
 	PassTlsClientCert    types.String        `tfsdk:"pass_tls_client_cert"`
-	TlsOptionsUid        types.String        `tfsdk:"tls_options_uid"`
+	TlsOptionsUid        types.String        `tfsdk:"tlsoptions_uid"`
 	Tags                 []types.String      `tfsdk:"tags"`
 	BlacklistedCountries []types.String      `tfsdk:"blacklisted_countries"`
 	IpExceptions         []IpExceptionModel  `tfsdk:"ip_exceptions"`
@@ -108,7 +108,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID on which site is deployed (force site recreation if modified)",
+				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `cluster` data source",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -184,9 +184,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Enable log export for this site (Default: **false**)",
 				Default:     booldefault.StaticBool(false),
 			},
-			"tls_options_uid": schema.StringAttribute{
+			"tlsoptions_uid": schema.StringAttribute{
 				Optional:    true,
-				Description: "UID of TLS options to be applied to this site",
+				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `tlsoptions` data source",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
 				Optional:    true,
@@ -393,7 +393,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 		},
 		MarkdownDescription: "Resource *site* can be used to create, update or delete site " +
 			"configuration in Ogo Dashboard.\n\n" +
-			"!> This resource allowed to manage all site settings.\n\n",
+			"This resource allowed to manage all site settings.\n\n" +
+			"`cluster` and `tlsoptions` data source can be used to retrieve UID needed in `site` " +
+			"resource configuration.\n\n",
 	}
 }
 

@@ -19,7 +19,7 @@ resource "ogo_shield_site" "bar_example_com" {
   audit_mode              = false
   passthrough_mode        = false
   hsts                    = "hstss"
-  tls_options_uid         = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
+  tlsoptions_uid         = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
   blacklisted_countries   = ["DE", "EN", "FR", "IT"]

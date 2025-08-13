@@ -46,7 +46,7 @@ type tlsOptionsResource struct {
 
 // Metadata returns the resource type name.
 func (r *tlsOptionsResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_shield_tls_options"
+	resp.TypeName = req.ProviderTypeName + "_shield_tlsoptions"
 }
 
 // Schema defines the schema for the resource.
@@ -95,11 +95,11 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				},
 			},
 		},
-		MarkdownDescription: "This *tls_options* resource manage TLS options at " +
+		MarkdownDescription: "This *ogo_shield_tlsoptions* resource manage TLS options at " +
 			"Organization level by defining specific TLS configuration: minimum " +
 			"and maximum supported TLS version, allowed ciphers, client certificate" +
 			" for mTLS authentication, etc.\n\n" +
-			"TLS options is intended to be used in *site* resource definition to" +
+			"TLS options is intended to be used in `ogo_shield_site` resource definition to" +
 			" override default Ogo shield TLS settings.\n\n",
 	}
 }

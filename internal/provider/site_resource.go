@@ -224,7 +224,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"ip_exceptions": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Passthrough mode for IPs. Requests from those IPs will never be blocked.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"ip": schema.StringAttribute{
@@ -252,7 +252,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"rewrite_rules": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Rewrite a path of your website.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
@@ -297,7 +297,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"rules": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Restrict access to given URLs. The engine stops at the first URL match.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"priority": schema.Int32Attribute{
@@ -322,7 +322,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"cache": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "",
+							Description: "Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**)",
 							Default:     booldefault.StaticBool(false),
 						},
 						"comment": schema.StringAttribute{
@@ -361,7 +361,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"url_exceptions": schema.SetNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "",
+				Description: "Passthrough mode on URL regular expressions. The matching requests will never be blocked.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"path": schema.StringAttribute{

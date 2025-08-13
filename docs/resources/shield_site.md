@@ -122,7 +122,7 @@ resource "ogo_shield_site" "bar_example_com" {
   * **hstss**: Enable HSTS including subdomains
   * **hstsp**: Enable HSTS including subdomains and preloading
   * **none**: Disable HSTS
-- `ip_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--ip_exceptions))
+- `ip_exceptions` (Attributes Set) Passthrough mode for IPs. Requests from those IPs will never be blocked. (see [below for nested schema](#nestedatt--ip_exceptions))
 - `log_export_enabled` (Boolean) Enable log export for this site (Default: **false**)
 - `origin_mtls_enabled` (Boolean) Enable mTLS between Ogo and origin server (Default: **false**)
 - `origin_port` (Number) Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port
@@ -135,11 +135,11 @@ resource "ogo_shield_site" "bar_example_com" {
   * **none***: Nothing send
 - `passthrough_mode` (Boolean) Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**)
 - `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (Default: **false** )
-- `rewrite_rules` (Attributes Set) (see [below for nested schema](#nestedatt--rewrite_rules))
-- `rules` (Attributes Set) (see [below for nested schema](#nestedatt--rules))
+- `rewrite_rules` (Attributes Set) Rewrite a path of your website. (see [below for nested schema](#nestedatt--rewrite_rules))
+- `rules` (Attributes Set) Restrict access to given URLs. The engine stops at the first URL match. (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String) List of tags
 - `tlsoptions_uid` (String) UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source
-- `url_exceptions` (Attributes Set) (see [below for nested schema](#nestedatt--url_exceptions))
+- `url_exceptions` (Attributes Set) Passthrough mode on URL regular expressions. The matching requests will never be blocked. (see [below for nested schema](#nestedatt--url_exceptions))
 
 ### Read-Only
 
@@ -187,7 +187,7 @@ Optional:
   * **brain**: Rule analysed by ogo Shield brain
   * **bypass**: Rule not analysed by Ogo Shield brain
 - `active` (Boolean) Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**)
-- `cache` (Boolean)
+- `cache` (Boolean) Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**)
 - `comment` (String) Description associated to this rule
 
 

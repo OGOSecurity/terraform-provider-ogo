@@ -392,7 +392,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 		},
 		MarkdownDescription: "Resource `ogo_shield_site` can be used to create, " +
-			"update or delete site configuration in Ogo Dashboard.\n\n" +
+			"update or delete sites configuration in Ogo Dashboard.\n\n" +
 			"This resource allowed to manage all site settings.\n\n" +
 			"`ogo_shield_clusters` and `ogo_shield_tlsoptions` data sources can be " +
 			"used to retrieve UID needed in `ogo_shield_site` resource configuration.\n\n",

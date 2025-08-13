@@ -2,14 +2,14 @@
 page_title: "ogo_shield_site Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
-  Resource ogo_shield_site can be used to create, update or delete site configuration in Ogo Dashboard.
+  Resource ogo_shield_site can be used to create, update or delete sites configuration in Ogo Dashboard.
   This resource allowed to manage all site settings.
   ogo_shield_clusters and ogo_shield_tlsoptions data sources can be used to retrieve UID needed in ogo_shield_site resource configuration.
 ---
 
 # ogo_shield_site (Resource)
 
-Resource `ogo_shield_site` can be used to create, update or delete site configuration in Ogo Dashboard.
+Resource `ogo_shield_site` can be used to create, update or delete sites configuration in Ogo Dashboard.
 
 This resource allowed to manage all site settings.
 
@@ -207,10 +207,11 @@ Optional:
 
 Import is supported using the following syntax:
 
-The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
-
 ```shell
 # Import foo.ogosecurity.com existing site from OGO Dashboard to resource foo_ogosecurity_com in terraform state
 terraform import ogo_shield_site.foo_ogosecurity_com foo.ogosecurity.com
 ```
+
+More information of how to use [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import).
+
 

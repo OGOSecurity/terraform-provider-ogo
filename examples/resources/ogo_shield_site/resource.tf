@@ -1,10 +1,11 @@
-# Simple example with only required attributes
+# Define variable with default cluster UID to used
 variable "cluster_uid" {
   type        = string
-    description = "Default Cluster ID where sites will be provisioned"
-    default     = "802448cf-e2f9-40eb-b0d8-2983e018a0f4"
+  description = "Default Cluster ID where sites will be provisioned"
+  default     = "802448cf-e2f9-40eb-b0d8-2983e018a0f4"
 }
 
+# Simple example with only required attributes
 resource "ogo_shield_site" "foo_example_com" {
   domain_name          = "foo.example.com"
   cluster_uid          = var.cluster_uid

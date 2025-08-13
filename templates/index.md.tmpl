@@ -8,7 +8,7 @@ description: |-
 
 ## Description
 
-The "ogo" provider allows to manage Site and TLS options in Ogo Security Dashboard
+The `ogo` provider allows to manage Site and TLS options in Ogo Security Dashboard
 
 ## Example Usage
 

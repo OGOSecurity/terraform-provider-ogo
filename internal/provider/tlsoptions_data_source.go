@@ -80,6 +80,9 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 				},
 			},
 		},
+		MarkdownDescription: "Get list of organization TLS options and associated configuration.\n\n" +
+			"Use this data source to retrieve informations, in particular TLS options UID, to be used " +
+			"in *site* resource configuration for which TLS default settings need to be override.",
 	}
 }
 

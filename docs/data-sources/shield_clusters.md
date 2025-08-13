@@ -2,12 +2,15 @@
 page_title: "ogo_shield_clusters Data Source - terraform-provider-ogo"
 subcategory: ""
 description: |-
-  
+  Get list of cluster and accosiated informations.
+  Use this data source to retrieve list of available cluster and related informations, in particular cluster UID needed to create new site.
 ---
 
 # ogo_shield_clusters (Data Source)
 
+Get list of cluster and accosiated informations.
 
+Use this data source to retrieve list of available cluster and related informations, in particular cluster UID needed to create new site.
 
 ## Example Usage
 

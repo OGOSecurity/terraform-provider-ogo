@@ -14,8 +14,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -106,7 +108,10 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID on which site is deployed",
+				Description: "Cluster UID on which site is deployed (force site recreation if modified)",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"origin_server": schema.StringAttribute{
 				Required:    true,
@@ -386,6 +391,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Last resource update by terraform",
 			},
 		},
+		MarkdownDescription: "Resource *site* can be used to create, update or delete site " +
+			"configuration in Ogo Dashboard.\n\n" +
+			"This resource allowed to managed all site settings.\n\n",
 	}
 }
 

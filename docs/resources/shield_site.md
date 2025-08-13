@@ -2,12 +2,15 @@
 page_title: "ogo_shield_site Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
-  
+  Resource site can be used to create, update or delete site configuration in Ogo Dashboard.
+  This resource allowed to managed all site settings.
 ---
 
 # ogo_shield_site (Resource)
 
+Resource *site* can be used to create, update or delete site configuration in Ogo Dashboard.
 
+This resource allowed to managed all site settings.
 
 ## Example Usage
 
@@ -95,7 +98,7 @@ resource "ogo_shield_site" "bar_example_com" {
 
 ### Required
 
-- `cluster_uid` (String) Cluster UID on which site is deployed
+- `cluster_uid` (String) Cluster UID on which site is deployed (force site recreation if modified)
 - `domain_name` (String) DNS domain name of site
 - `origin_server` (String) Origin server address (IP address or domain name)
 
@@ -188,3 +191,16 @@ Required:
 Optional:
 
 - `comment` (String) Description associated to this URL exception
+
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import foo.ogosecurity.com existing site from OGO Dashboard to resource foo_ogosecurity_com in terraform state
+terraform import ogo_shield_site.foo_ogosecurity_com foo.ogosecurity.com
+```
+

@@ -96,6 +96,9 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				},
 			},
 		},
+		MarkdownDescription: "Get list of cluster and accosiated informations.\n\n" +
+			"Use this data source to retrieve list of available cluster and related informations, " +
+			"in particular cluster UID needed to create new site.",
 	}
 }
 

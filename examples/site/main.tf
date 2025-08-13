@@ -59,17 +59,18 @@ output "default_cluster_uid" {
 
 # Resources
 ## Resources site
-resource "ogo_shield_site" "min_tf_ogosecurity_com" {
-  domain_name          = "min-tf.ogosecurity.com"
-  cluster_uid          = var.cluster_uid
-  origin_server        = "192.168.122.13"
-  tls_options_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
-  pass_tls_client_cert = "none"
-}
+#resource "ogo_shield_site" "min_tf_ogosecurity_com" {
+#  domain_name          = "min-tf.ogosecurity.com"
+#  cluster_uid          = var.cluster_uid
+#  origin_server        = "192.168.122.13"
+#  tls_options_uid      = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+#  pass_tls_client_cert = "none"
+#}
 
 resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   domain_name             = "gys-tf.ogosecurity.com"
-  cluster_uid             = var.cluster_uid
+  #cluster_uid             = var.cluster_uid
+  cluster_uid             = "02f4fc0b-e112-455f-8e09-93820a1196f0"
   origin_server           = "192.168.122.13"
   origin_scheme           = "https"
   origin_skip_cert_verify = true

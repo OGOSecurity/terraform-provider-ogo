@@ -95,6 +95,12 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				},
 			},
 		},
+		MarkdownDescription: "This *tls_options* resource manage TLS options at " +
+			"Organization level by defining specific TLS configuration: minimum " +
+			"and maximum supported TLS version, allowed ciphers, client certificate" +
+			" for mTLS authentication, etc.\n\n" +
+			"TLS options is intended to be used in *site* resource definition to" +
+			" override default Ogo shield TLS settings.\n\n",
 	}
 }
 

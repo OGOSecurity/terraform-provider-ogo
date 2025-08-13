@@ -139,7 +139,7 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 
 	tflog.Debug(ctx, "Creating Ogo client")
 
-	// Create a new HashiCups client using the configuration values
+	// Create a new Ogo Security client using the configuration values
 	client, err := ogosecurity.NewClient(&endpoint, &organization, &apikey)
 	if err != nil {
 		resp.Diagnostics.AddError(

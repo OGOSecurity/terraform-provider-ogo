@@ -13,8 +13,6 @@ description: |-
 ## Example Usage
 
 ```terraform
-# Datasources
-## Datasource clusters
 data "ogo_shield_clusters" "shield" {}
 ```
 

@@ -1,7 +1,7 @@
 # Declare TLS options with minimum supported version of TLS 1.2
 # and list of 2 accepted certificate authority
-resource "ogo_shield_tls_options" "gys_tf" {
-  name            = "gys-tf"
+resource "ogo_shield_tls_options" "mtls_foobar" {
+  name            = "mTLS foo bar"
   min_tls_version = "TLS_12"
   client_auth_ca_certs = [
     <<-EOT

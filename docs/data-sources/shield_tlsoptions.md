@@ -13,8 +13,6 @@ description: |-
 ## Example Usage
 
 ```terraform
-# Datasources
-## Datasource tlsoptions
 data "ogo_shield_tlsoptions" "tlsoptions" {}
 ```
 

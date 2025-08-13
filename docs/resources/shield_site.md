@@ -18,7 +18,7 @@ This resource allowed to manage all site settings.
 ## Example Usage
 
 ```terraform
-# Define variable with default cluster UID to used
+# Define variable with default cluster UID to used in sites definition
 variable "cluster_uid" {
   type        = string
   description = "Default Cluster ID where sites will be provisioned"

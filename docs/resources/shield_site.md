@@ -2,18 +2,18 @@
 page_title: "ogo_shield_site Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
-  Resource site can be used to create, update or delete site configuration in Ogo Dashboard.
+  Resource ogo_shield_site can be used to create, update or delete site configuration in Ogo Dashboard.
   This resource allowed to manage all site settings.
-  cluster and tlsoptions data source can be used to retrieve UID needed in site resource configuration.
+  ogo_shield_clusters and ogo_shield_tlsoptions data source can be used to retrieve UID needed in site resource configuration.
 ---
 
 # ogo_shield_site (Resource)
 
-Resource *site* can be used to create, update or delete site configuration in Ogo Dashboard.
+Resource *ogo_shield_site* can be used to create, update or delete site configuration in Ogo Dashboard.
 
 This resource allowed to manage all site settings.
 
-`cluster` and `tlsoptions` data source can be used to retrieve UID needed in `site` resource configuration.
+`ogo_shield_clusters` and `ogo_shield_tlsoptions` data source can be used to retrieve UID needed in `site` resource configuration.
 
 ## Example Usage
 

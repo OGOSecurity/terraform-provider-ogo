@@ -391,11 +391,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Last resource update by terraform",
 			},
 		},
-		MarkdownDescription: "Resource *site* can be used to create, update or delete site " +
-			"configuration in Ogo Dashboard.\n\n" +
+		MarkdownDescription: "Resource *ogo_shield_site* can be used to create, " +
+			"update or delete site configuration in Ogo Dashboard.\n\n" +
 			"This resource allowed to manage all site settings.\n\n" +
-			"`cluster` and `tlsoptions` data source can be used to retrieve UID needed in `site` " +
-			"resource configuration.\n\n",
+			"`ogo_shield_clusters` and `ogo_shield_tlsoptions` data source can be " +
+			"used to retrieve UID needed in `site` resource configuration.\n\n",
 	}
 }
 

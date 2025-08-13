@@ -108,7 +108,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `cluster` data source",
+				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -186,7 +186,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"tlsoptions_uid": schema.StringAttribute{
 				Optional:    true,
-				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `tlsoptions` data source",
+				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
 				Optional:    true,
@@ -391,11 +391,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "Last resource update by terraform",
 			},
 		},
-		MarkdownDescription: "Resource *ogo_shield_site* can be used to create, " +
+		MarkdownDescription: "Resource `ogo_shield_site` can be used to create, " +
 			"update or delete site configuration in Ogo Dashboard.\n\n" +
 			"This resource allowed to manage all site settings.\n\n" +
-			"`ogo_shield_clusters` and `ogo_shield_tlsoptions` data source can be " +
-			"used to retrieve UID needed in `site` resource configuration.\n\n",
+			"`ogo_shield_clusters` and `ogo_shield_tlsoptions` data sources can be " +
+			"used to retrieve UID needed in `ogo_shield_site` resource configuration.\n\n",
 	}
 }
 

@@ -10,7 +10,7 @@ terraform {
 ## Provider variables
 variable "ogo_endpoint" {
   type        = string
-  default     = "https://api-stg.ogosecurity.com"
+  default     = "https://api.ogosecurity.com"
   description = "Ogo Dashboard API endpoint"
 }
 

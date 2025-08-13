@@ -393,7 +393,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 		},
 		MarkdownDescription: "Resource *site* can be used to create, update or delete site " +
 			"configuration in Ogo Dashboard.\n\n" +
-			"This resource allowed to managed all site settings.\n\n",
+			"!> This resource allowed to manage all site settings.\n\n",
 	}
 }
 

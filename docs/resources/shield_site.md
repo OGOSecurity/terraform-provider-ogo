@@ -3,14 +3,14 @@ page_title: "ogo_shield_site Resource - terraform-provider-ogo"
 subcategory: ""
 description: |-
   Resource site can be used to create, update or delete site configuration in Ogo Dashboard.
-  This resource allowed to managed all site settings.
+  !> This resource allowed to manage all site settings.
 ---
 
 # ogo_shield_site (Resource)
 
 Resource *site* can be used to create, update or delete site configuration in Ogo Dashboard.
 
-This resource allowed to managed all site settings.
+!> This resource allowed to manage all site settings.
 
 ## Example Usage
 

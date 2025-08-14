@@ -1,7 +1,8 @@
 terraform {
   required_providers {
     ogo = {
-      source = "ogosecurity.com/ogosecurity/ogo"
+      source = "ogosecurity/ogo"
+      version = "~> 1.0"
     }
   }
 }

@@ -1,5 +1,3 @@
 Datasource to implement:
-  * cluster (clusterid)
   * organization (orga code)
   * contracts (contract number)
-  * tlsoptions (tls options uid)

@@ -72,7 +72,7 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	req.Header.Set("X-Ogo-Api-Key", c.ApiKey)
 
-	// Lock access to Ogo API to restrict count of concurrent request
+	// Lock access to Ogo API to restrict count of concurrent requests
 	sem <- 1
 	res, err := c.HTTPClient.Do(req)
 	<-sem

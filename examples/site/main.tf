@@ -69,8 +69,7 @@ output "default_cluster_uid" {
 
 resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   domain_name             = "gys-tf.ogosecurity.com"
-  #cluster_uid             = var.cluster_uid
-  cluster_uid             = "02f4fc0b-e112-455f-8e09-93820a1196f0"
+  cluster_uid             = var.cluster_uid
   origin_server           = "192.168.122.13"
   origin_scheme           = "https"
   origin_skip_cert_verify = true

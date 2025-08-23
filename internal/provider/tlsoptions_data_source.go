@@ -28,8 +28,8 @@ type tlsoptionsModel struct {
 	Name              types.String   `tfsdk:"name"`
 	ClientAuthType    types.String   `tfsdk:"client_auth_type"`
 	ClientAuthCaCerts []types.String `tfsdk:"client_auth_ca_certs"`
-	MinTlsVersion     types.String   `tfsdk:"min_tls_version"` //TLS_1.2 => enum
-	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"` //TLS_1.3 => enum
+	MinTlsVersion     types.String   `tfsdk:"min_tls_version"`
+	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"`
 }
 
 func NewTlsOptionsDataSource() datasource.DataSource {
@@ -125,8 +125,8 @@ func (d *tlsoptionsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 			Uid:            types.StringValue(t.Uid),
 			Name:           types.StringValue(t.Name),
 			ClientAuthType: types.StringValue(t.ClientAuthType),
-			MinTlsVersion:  types.StringValue(t.MinTlsVersion),
-			MaxTlsVersion:  types.StringValue(t.MaxTlsVersion),
+			MinTlsVersion:  types.StringPointerValue(t.MinTlsVersion),
+			MaxTlsVersion:  types.StringPointerValue(t.MaxTlsVersion),
 		}
 
 		for _, cert := range t.ClientAuthCaCerts {

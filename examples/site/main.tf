@@ -80,7 +80,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
   audit_mode              = false
   passthrough_mode        = false
   hsts                    = "hstss"
-  tlsoptions_uid         = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
+  tlsoptions_uid          = "ogo00795-f4c2670b-d75b-4cd8-ad11-1edd8409bfc0"
   pass_tls_client_cert    = "info"
   tags                    = ["test", "dev"]
   blacklisted_countries   = ["IT", "FR"]
@@ -109,6 +109,7 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
     },
     {
       priority        = 2
+      action          = "brain"
       comment         = "Admin from office"
       paths           = ["/wp-admin"]
       whitelisted_ips = ["10.10.10.1/32"]
@@ -137,39 +138,10 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
 }
 
 resource "ogo_shield_tlsoptions" "gys_tf" {
-  name            = "gys-tf"
-  min_tls_version = "TLS_12"
+  name             = "gys-tf"
+  min_tls_version  = "TLS_12"
+  client_auth_type = "VerifyClientCertIfGiven"
   client_auth_ca_certs = [
-    <<-EOT
------BEGIN CERTIFICATE-----
-MIIElDCCAvygAwIBAgICAXswDQYJKoZIhvcNAQELBQAwLjEYMBYGA1UECgwPT0dP
-U0VDVVJJVFkuQ09NMRIwEAYDVQQDDAlPR08tQURNSU4wHhcNMjUwNDI3MjIxNzUy
-WhcNMjcwNDI4MjIxNzUyWjAuMRwwGgYDVQQKDBNBRE0uT0dPU0VDVVJJVFkuTEFO
-MQ4wDAYDVQQDDAVzZWdpcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AMLaNpRz6Mln8Ip7rPiwsR1cbztTJ0/8PIA/WlD0UOjBPdLHUG+ZrXvwvvnYuoqX
-S4icuRq80Y0hKlOtUwF1+WeOndvsMaOM9cDtsxE8D8gaajlFy5G/i1GOLN4aPXYm
-hciUe2PQgv2ryjheCS8HykrQuw4StSWdGbUzspXj0ucSHRxijcLXu1nuBuTngLH5
-lKw0SdmgeLD3iZBtCJ+yHO15MnXa9KBSvsOA+hFqoA0l4UuqoJHwotoK9kKpSlCH
-9a/1ggYbjX3pnsiLVaGYVWN/oUi+82m/zuKeGyPo3RdKcgHIT6LjYEFBE/fBZsQD
-nFz0jr0MELqxN0ZExvgEXBUCAwEAAaOCATowggE2MB8GA1UdIwQYMBaAFIbHkmfH
-ub6ZMmZ9UHiOAgQPjdmFMEUGCCsGAQUFBwEBBDkwNzA1BggrBgEFBQcwAYYpaHR0
-cDovL2lwYS1jYS5hZG0ub2dvc2VjdXJpdHkubGFuL2NhL29jc3AwDgYDVR0PAQH/
-BAQDAgTwMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjB+BgNVHR8EdzB1
-MHOgO6A5hjdodHRwOi8vaXBhLWNhLmFkbS5vZ29zZWN1cml0eS5sYW4vaXBhL2Ny
-bC9NYXN0ZXJDUkwuYmluojSkMjAwMQ4wDAYDVQQKDAVpcGFjYTEeMBwGA1UEAwwV
-Q2VydGlmaWNhdGUgQXV0aG9yaXR5MB0GA1UdDgQWBBTAVA36cQC0qwu7vUc1a4J9
-MPKugDANBgkqhkiG9w0BAQsFAAOCAYEAX6Xj6Wo96h3hkEZmTWqerEE/TH16W7Pp
-82daqpgQiWhFTaXiQcVZtBw1/ou6yOGFueLdjTGeC7Lr9XOzG4ZX5A+7bxfw8sLq
-ab8y4xw0+M/n6dS5D/SRx+WuUK/hWciPcAdY1fCoLrfghp9UVtoFJBCTeUr3RnfM
-SDqdfN1V9kIjHf5jfDryyYBcdYtGdjQO2izWbXPcUWDHpiRZ+kaX1X5vyEUZfKSw
-LN2saw6cZohXfNu9bfQykD9Qx/UiN5bEcs7TZzolK+xPSQZUkCNdd1f3IQCTgHQE
-yubOaofMxN8lJE089HbK5zljsJ8fYkbYWGL4juUI0CiCJ4CY94XoJOTMJdfwcdWc
-SFU8utLNQd+QfRcH9/4DPpO1oHvmw3Y3xjl8uzO/z/x5ssNf98C73Mp40phF16/J
-NYx6TMbY7rF14TMTT3FHTTpPKfIKTrcj/xk6dRDJjJTKIGBv23eoqps4bC8eJ/yn
-PAV3CIWULm1Xcp4yhwdyimWWk8nKqDbp
------END CERTIFICATE-----
-EOT
-    ,
     <<-EOT
 -----BEGIN CERTIFICATE-----
 MIIE6jCCAtKgAwIBAgIUalcKYItsBi+0uncayhnAEHKeZiQwDQYJKoZIhvcNAQEL
@@ -201,5 +173,36 @@ WZSsQcTqb56y5FJHFK4tYHoM4m4EzqYlvKjyv+1tsZ6gCH3JcemxW2R6eohD/yba
 zCESYTnxjtaeZU7HMn4=
 -----END CERTIFICATE-----
 EOT
+    ,
+    <<-EOT
+-----BEGIN CERTIFICATE-----
+MIIElDCCAvygAwIBAgICAXswDQYJKoZIhvcNAQELBQAwLjEYMBYGA1UECgwPT0dP
+U0VDVVJJVFkuQ09NMRIwEAYDVQQDDAlPR08tQURNSU4wHhcNMjUwNDI3MjIxNzUy
+WhcNMjcwNDI4MjIxNzUyWjAuMRwwGgYDVQQKDBNBRE0uT0dPU0VDVVJJVFkuTEFO
+MQ4wDAYDVQQDDAVzZWdpcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AMLaNpRz6Mln8Ip7rPiwsR1cbztTJ0/8PIA/WlD0UOjBPdLHUG+ZrXvwvvnYuoqX
+S4icuRq80Y0hKlOtUwF1+WeOndvsMaOM9cDtsxE8D8gaajlFy5G/i1GOLN4aPXYm
+hciUe2PQgv2ryjheCS8HykrQuw4StSWdGbUzspXj0ucSHRxijcLXu1nuBuTngLH5
+lKw0SdmgeLD3iZBtCJ+yHO15MnXa9KBSvsOA+hFqoA0l4UuqoJHwotoK9kKpSlCH
+9a/1ggYbjX3pnsiLVaGYVWN/oUi+82m/zuKeGyPo3RdKcgHIT6LjYEFBE/fBZsQD
+nFz0jr0MELqxN0ZExvgEXBUCAwEAAaOCATowggE2MB8GA1UdIwQYMBaAFIbHkmfH
+ub6ZMmZ9UHiOAgQPjdmFMEUGCCsGAQUFBwEBBDkwNzA1BggrBgEFBQcwAYYpaHR0
+cDovL2lwYS1jYS5hZG0ub2dvc2VjdXJpdHkubGFuL2NhL29jc3AwDgYDVR0PAQH/
+BAQDAgTwMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjB+BgNVHR8EdzB1
+MHOgO6A5hjdodHRwOi8vaXBhLWNhLmFkbS5vZ29zZWN1cml0eS5sYW4vaXBhL2Ny
+bC9NYXN0ZXJDUkwuYmluojSkMjAwMQ4wDAYDVQQKDAVpcGFjYTEeMBwGA1UEAwwV
+Q2VydGlmaWNhdGUgQXV0aG9yaXR5MB0GA1UdDgQWBBTAVA36cQC0qwu7vUc1a4J9
+MPKugDANBgkqhkiG9w0BAQsFAAOCAYEAX6Xj6Wo96h3hkEZmTWqerEE/TH16W7Pp
+82daqpgQiWhFTaXiQcVZtBw1/ou6yOGFueLdjTGeC7Lr9XOzG4ZX5A+7bxfw8sLq
+ab8y4xw0+M/n6dS5D/SRx+WuUK/hWciPcAdY1fCoLrfghp9UVtoFJBCTeUr3RnfM
+SDqdfN1V9kIjHf5jfDryyYBcdYtGdjQO2izWbXPcUWDHpiRZ+kaX1X5vyEUZfKSw
+LN2saw6cZohXfNu9bfQykD9Qx/UiN5bEcs7TZzolK+xPSQZUkCNdd1f3IQCTgHQE
+yubOaofMxN8lJE089HbK5zljsJ8fYkbYWGL4juUI0CiCJ4CY94XoJOTMJdfwcdWc
+SFU8utLNQd+QfRcH9/4DPpO1oHvmw3Y3xjl8uzO/z/x5ssNf98C73Mp40phF16/J
+NYx6TMbY7rF14TMTT3FHTTpPKfIKTrcj/xk6dRDJjJTKIGBv23eoqps4bC8eJ/yn
+PAV3CIWULm1Xcp4yhwdyimWWk8nKqDbp
+-----END CERTIFICATE-----
+EOT
+    ,
   ]
 }

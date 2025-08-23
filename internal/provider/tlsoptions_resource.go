@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"time"
 
 	ogosecurity "terraform-provider-ogo/internal/ogo"
 
@@ -32,6 +33,7 @@ type TlsOptionsResourceModel struct {
 	ClientAuthCaCerts []types.String `tfsdk:"client_auth_ca_certs"`
 	MinTlsVersion     types.String   `tfsdk:"min_tls_version"`
 	MaxTlsVersion     types.String   `tfsdk:"max_tls_version"`
+	LastUpdated       types.String   `tfsdk:"last_updated"`
 }
 
 // NewTlsOptionsResource is a helper function to simplify the provider implementation.
@@ -94,6 +96,10 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
 				},
 			},
+			"last_updated": schema.StringAttribute{
+				Computed:    true,
+				Description: "Last resource update by terraform",
+			},
 		},
 		MarkdownDescription: "This *ogo_shield_tlsoptions* resource manage TLS options at " +
 			"Organization level by defining specific TLS configuration: minimum " +
@@ -140,8 +146,8 @@ func (r *tlsOptionsResource) Create(ctx context.Context, req resource.CreateRequ
 	t := ogosecurity.TlsOptions{
 		Name:           string(plan.Name.ValueString()),
 		ClientAuthType: string(plan.ClientAuthType.ValueString()),
-		MinTlsVersion:  string(plan.MinTlsVersion.ValueString()),
-		MaxTlsVersion:  string(plan.MaxTlsVersion.ValueString()),
+		MinTlsVersion:  plan.MinTlsVersion.ValueStringPointer(),
+		MaxTlsVersion:  plan.MaxTlsVersion.ValueStringPointer(),
 	}
 
 	// CA certificates
@@ -162,6 +168,7 @@ func (r *tlsOptionsResource) Create(ctx context.Context, req resource.CreateRequ
 
 	// Map response body to schema and populate Computed attribute values
 	plan.Uid = types.StringValue(tlsOpt.Uid)
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
 	diags = resp.State.Set(ctx, plan)
@@ -194,8 +201,8 @@ func (r *tlsOptionsResource) Read(ctx context.Context, req resource.ReadRequest,
 	// Overwrite properties with refreshed state
 	state.Name = types.StringValue(tlsOptions.Name)
 	state.ClientAuthType = types.StringValue(tlsOptions.ClientAuthType)
-	state.MinTlsVersion = types.StringValue(tlsOptions.MinTlsVersion)
-	state.MaxTlsVersion = types.StringValue(tlsOptions.MaxTlsVersion)
+	state.MinTlsVersion = types.StringPointerValue(tlsOptions.MinTlsVersion)
+	state.MaxTlsVersion = types.StringPointerValue(tlsOptions.MaxTlsVersion)
 
 	// CA certificates
 	state.ClientAuthCaCerts = []types.String{}
@@ -226,8 +233,8 @@ func (r *tlsOptionsResource) Update(ctx context.Context, req resource.UpdateRequ
 		Name:           string(plan.Name.ValueString()),
 		Uid:            string(plan.Uid.ValueString()),
 		ClientAuthType: string(plan.ClientAuthType.ValueString()),
-		MinTlsVersion:  string(plan.MinTlsVersion.ValueString()),
-		MaxTlsVersion:  string(plan.MaxTlsVersion.ValueString()),
+		MinTlsVersion:  plan.MinTlsVersion.ValueStringPointer(),
+		MaxTlsVersion:  plan.MaxTlsVersion.ValueStringPointer(),
 	}
 
 	// CA certificate
@@ -247,6 +254,7 @@ func (r *tlsOptionsResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 
 	// Map response body to schema and populate Computed attribute values
+	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
 	diags = resp.State.Set(ctx, plan)

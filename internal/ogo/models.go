@@ -68,8 +68,8 @@ type TlsOptions struct {
 	Name              string   `json:"name,omitempty"`
 	ClientAuthType    string   `json:"clientAuthType,omitempty"`
 	ClientAuthCaCerts []string `json:"clientAuthCaCerts,omitempty"`
-	MinTlsVersion     string   `json:"minTlsVersion,omitempty"`
-	MaxTlsVersion     string   `json:"maxTlsVersion,omitempty"`
+	MinTlsVersion     *string  `json:"minTlsVersion,omitempty"`
+	MaxTlsVersion     *string  `json:"maxTlsVersion,omitempty"`
 	Uid               string   `json:"uid,omitempty"`
 }
 

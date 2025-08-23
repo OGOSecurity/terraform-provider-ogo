@@ -1,11 +1,9 @@
 package ogosecurity
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 )
@@ -19,30 +17,23 @@ type Client struct {
 	HTTPClient   *http.Client
 	Organization string
 	ApiKey       string
-	Clusters     map[string]string
-}
-
-func md5sum(text string) string {
-	hash := md5.Sum([]byte(text))
-	return hex.EncodeToString(hash[:])
 }
 
 // NewClient
 func NewClient(host *string, organization *string, apikey *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
-		Clusters:   map[string]string{},
 	}
 
 	// Check if endpoint, organization and password are provided
 	if host == nil {
-		return &c, errors.New("Endpoint must be provided")
+		return &c, errors.New("endpoint must be provided")
 	} else {
 		c.Endpoint = *host
 	}
 
 	if organization == nil {
-		return &c, errors.New("Organization must be provided")
+		return &c, errors.New("organization must be provided")
 	} else {
 		c.Organization = *organization
 	}
@@ -54,15 +45,6 @@ func NewClient(host *string, organization *string, apikey *string) (*Client, err
 	}
 
 	c.HostBaseURL = *host + "/v2/organizations/" + *organization
-	clusters, err := c.GetAllClusters()
-
-	if err != nil {
-		return nil, err
-	}
-
-	for _, cluster := range clusters {
-		c.Clusters[cluster.Name] = cluster.Uid
-	}
 
 	return &c, nil
 }
@@ -82,9 +64,9 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to retrieved body: %s (%+v)", string(err.Error()), res)
+		return nil, fmt.Errorf("failed to retrieved body: %s (%+v)", string(err.Error()), res)
 	}
 
 	if res.StatusCode != http.StatusOK &&

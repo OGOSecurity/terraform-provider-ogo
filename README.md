@@ -1,5 +1,7 @@
 # Terraform Provider Ogo (Terraform Plugin Framework)
 
+// TODO: update it!
+
 _This template repository is built on the [Terraform Plugin Framework](https://github.com/hashicorp/terraform-plugin-framework). The template repository built on the [Terraform Plugin SDK](https://github.com/hashicorp/terraform-plugin-sdk) can be found at [terraform-provider-ogo](https://github.com/hashicorp/terraform-provider-ogo). See [Which SDK Should I Use?](https://developer.hashicorp.com/terraform/plugin/framework-benefits) in the Terraform documentation for additional information._
 
 This repository is a *template* for a [Terraform](https://www.terraform.io) provider. It is intended as a starting point for creating Terraform providers, containing:
@@ -62,7 +64,3 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 ```shell
 make testacc
 ```
-
-
-## TODO
-terraform fmt -recursive examples

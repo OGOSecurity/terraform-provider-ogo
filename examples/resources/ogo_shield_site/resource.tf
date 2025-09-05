@@ -7,9 +7,9 @@ variable "cluster_uid" {
 
 # Simple example with only required attributes
 resource "ogo_shield_site" "foo_example_com" {
-  domain_name          = "foo.example.com"
-  cluster_uid          = var.cluster_uid
-  origin_server        = "172.18.1.10"
+  domain_name   = "foo.example.com"
+  cluster_uid   = var.cluster_uid
+  origin_server = "172.18.1.10"
 }
 
 # Complete example with all attributes
@@ -26,7 +26,7 @@ resource "ogo_shield_site" "bar_example_com" {
   audit_mode              = false
   passthrough_mode        = false
   hsts                    = "hstss"
-  tlsoptions_uid         = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
+  tlsoptions_uid          = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
   blacklisted_countries   = ["DE", "EN", "FR", "IT"]

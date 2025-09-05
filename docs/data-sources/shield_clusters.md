@@ -1,5 +1,5 @@
 ---
-page_title: "ogo_shield_clusters Data Source - terraform-provider-ogo"
+page_title: "ogo_shield_clusters Data Source - ogo"
 subcategory: ""
 description: |-
   Get list of cluster and associated informations.

@@ -16,7 +16,7 @@ The `ogo` provider allows to manage Site and TLS options in Ogo Security Dashboa
 terraform {
   required_providers {
     ogo = {
-      source = "ogosecurity/ogo"
+      source  = "ogosecurity/ogo"
       version = "~> 1.0"
     }
   }

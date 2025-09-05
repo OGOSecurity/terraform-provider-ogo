@@ -1,5 +1,5 @@
 ---
-page_title: "ogo_shield_tlsoptions Data Source - terraform-provider-ogo"
+page_title: "ogo_shield_tlsoptions Data Source - ogo"
 subcategory: ""
 description: |-
   Get list of organization TLS options and associated configuration.

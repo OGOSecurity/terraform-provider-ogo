@@ -1,5 +1,5 @@
 ---
-page_title: "ogo_shield_tlsoptions Resource - terraform-provider-ogo"
+page_title: "ogo_shield_tlsoptions Resource - ogo"
 subcategory: ""
 description: |-
   This ogo_shield_tlsoptions resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
@@ -92,6 +92,7 @@ EOT
 
 ### Read-Only
 
+- `last_updated` (String) Last resource update by terraform
 - `uid` (String) UID used to reference this TLS Options
 
 

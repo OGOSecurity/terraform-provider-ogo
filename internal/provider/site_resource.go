@@ -1,3 +1,6 @@
+// Copyright (c) OgoSecurity, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package provider
 
 import (
@@ -154,8 +157,8 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"force_https": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Redirect HTTP request to HTTPS (Default: **true** )",
-				Default:     booldefault.StaticBool(true),
+				Description: "Redirect HTTP request to HTTPS (Default: **false** )",
+				Default:     booldefault.StaticBool(false),
 			},
 			"audit_mode": schema.BoolAttribute{
 				Optional:    true,

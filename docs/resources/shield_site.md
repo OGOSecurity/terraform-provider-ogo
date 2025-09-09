@@ -135,8 +135,8 @@ resource "ogo_shield_site" "bar_example_com" {
   * **none***: Nothing send
 - `passthrough_mode` (Boolean) Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**)
 - `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (Default: **false** )
-- `rewrite_rules` (Attributes Set) Rewrite a path of your website. (see [below for nested schema](#nestedatt--rewrite_rules))
-- `rules` (Attributes Set) Restrict access to given URLs. The engine stops at the first URL match. (see [below for nested schema](#nestedatt--rules))
+- `rewrite_rules` (Attributes List) Rewrite a path of your website. Rewrite rules are parsed in order of declaration. (see [below for nested schema](#nestedatt--rewrite_rules))
+- `rules` (Attributes List) Restrict access to given URLs. Rules are parsed in order of declaration. The engine stops at the first URL match. (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String) List of tags
 - `tlsoptions_uid` (String) UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source
 - `url_exceptions` (Attributes Set) Passthrough mode on URL regular expressions. The matching requests will never be blocked. (see [below for nested schema](#nestedatt--url_exceptions))
@@ -162,7 +162,6 @@ Optional:
 
 Required:
 
-- `priority` (Number) Rewrite rule priority
 - `rewrite_destination` (String) Rewrited destination path
 - `rewrite_source` (String) Source path to be rewrited
 
@@ -178,7 +177,6 @@ Optional:
 Required:
 
 - `paths` (Set of String) List of URL path for which rule is applied
-- `priority` (Number) Rule priority
 - `whitelisted_ips` (Set of String) Authorized IP addresses list
 
 Optional:

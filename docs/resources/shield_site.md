@@ -54,27 +54,23 @@ resource "ogo_shield_site" "bar_example_com" {
     {
       active              = true
       comment             = "Rewrite old to new"
-      priority            = 1
-      rewrite_destination = "/new"
       rewrite_source      = "^/old"
+      rewrite_destination = "/new"
     },
     {
       active              = true
       comment             = "Rewrite from to"
-      priority            = 2
-      rewrite_destination = "/to"
       rewrite_source      = "^/from"
+      rewrite_destination = "/to"
     }
   ]
   rules = [
     {
-      priority        = 1
       comment         = "Admin from office"
       paths           = ["/admin", "/wp-admin"]
       whitelisted_ips = ["fded:b552:6f7e:fc6f::/64", "10.10.9.0/24"]
     },
     {
-      priority        = 2
       comment         = "Monitoring from office"
       paths           = ["/monitor"]
       whitelisted_ips = ["10.10.10.1/32"]

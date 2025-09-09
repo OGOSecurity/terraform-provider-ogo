@@ -17,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -59,7 +60,6 @@ type SiteResourceModel struct {
 }
 
 type RewriteRuleModel struct {
-	Priority           types.Int32  `tfsdk:"priority"`
 	Active             types.Bool   `tfsdk:"active"`
 	Comment            types.String `tfsdk:"comment"`
 	RewriteSource      types.String `tfsdk:"rewrite_source"`
@@ -67,7 +67,6 @@ type RewriteRuleModel struct {
 }
 
 type RuleModel struct {
-	Priority       types.Int32    `tfsdk:"priority"`
 	Active         types.Bool     `tfsdk:"active"`
 	Action         types.String   `tfsdk:"action"`
 	Cache          types.Bool     `tfsdk:"cache"`
@@ -252,16 +251,12 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					),
 				),
 			},
-			"rewrite_rules": schema.SetNestedAttribute{
+			"rewrite_rules": schema.ListNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Rewrite a path of your website.",
+				Description: "Rewrite a path of your website. Rewrite rules are parsed in order of declaration.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"priority": schema.Int32Attribute{
-							Required:    true,
-							Description: "Rewrite rule priority",
-						},
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
@@ -282,11 +277,10 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						},
 					},
 				},
-				Default: setdefault.StaticValue(
-					types.SetValueMust(
+				Default: listdefault.StaticValue(
+					types.ListValueMust(
 						types.ObjectType{
 							AttrTypes: map[string]attr.Type{
-								"priority":            types.Int32Type,
 								"active":              types.BoolType,
 								"comment":             types.StringType,
 								"rewrite_source":      types.StringType,
@@ -297,16 +291,12 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					),
 				),
 			},
-			"rules": schema.SetNestedAttribute{
+			"rules": schema.ListNestedAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Restrict access to given URLs. The engine stops at the first URL match.",
+				Description: "Restrict access to given URLs. Rules are parsed in order of declaration. The engine stops at the first URL match.",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"priority": schema.Int32Attribute{
-							Required:    true,
-							Description: "Rule priority",
-						},
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
@@ -344,11 +334,10 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						},
 					},
 				},
-				Default: setdefault.StaticValue(
-					types.SetValueMust(
+				Default: listdefault.StaticValue(
+					types.ListValueMust(
 						types.ObjectType{
 							AttrTypes: map[string]attr.Type{
-								"priority":        types.Int32Type,
 								"active":          types.BoolType,
 								"action":          types.StringType,
 								"cache":           types.BoolType,
@@ -482,7 +471,6 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.RewriteRules = []ogosecurity.RewriteRule{}
 	for _, rewrite := range plan.RewriteRules {
 		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
-			Priority:           int(rewrite.Priority.ValueInt32()),
 			Active:             bool(rewrite.Active.ValueBool()),
 			Comment:            string(rewrite.Comment.ValueString()),
 			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
@@ -494,7 +482,6 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.Rules = []ogosecurity.Rule{}
 	for _, rule := range plan.Rules {
 		r := ogosecurity.Rule{
-			Priority:       int(rule.Priority.ValueInt32()),
 			Active:         bool(rule.Active.ValueBool()),
 			Action:         string(rule.Action.ValueString()),
 			Cache:          bool(rule.Cache.ValueBool()),
@@ -608,7 +595,6 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.RewriteRules = []RewriteRuleModel{}
 	for _, rewrite := range site.RewriteRules {
 		state.RewriteRules = append(state.RewriteRules, RewriteRuleModel{
-			Priority:           types.Int32Value(int32(rewrite.Priority)),
 			Active:             types.BoolValue(rewrite.Active),
 			Comment:            types.StringValue(rewrite.Comment),
 			RewriteSource:      types.StringValue(rewrite.RewriteSource),
@@ -620,7 +606,6 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.Rules = []RuleModel{}
 	for _, rule := range site.Rules {
 		r := RuleModel{
-			Priority:       types.Int32Value(int32(rule.Priority)),
 			Active:         types.BoolValue(rule.Active),
 			Action:         types.StringValue(rule.Action),
 			Cache:          types.BoolValue(rule.Cache),
@@ -721,7 +706,6 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.RewriteRules = []ogosecurity.RewriteRule{}
 	for _, rewrite := range plan.RewriteRules {
 		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
-			Priority:           int(rewrite.Priority.ValueInt32()),
 			Active:             bool(rewrite.Active.ValueBool()),
 			Comment:            string(rewrite.Comment.ValueString()),
 			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
@@ -733,7 +717,6 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.Rules = []ogosecurity.Rule{}
 	for _, rule := range plan.Rules {
 		r := ogosecurity.Rule{
-			Priority:       int(rule.Priority.ValueInt32()),
 			Active:         bool(rule.Active.ValueBool()),
 			Action:         string(rule.Action.ValueString()),
 			Cache:          bool(rule.Cache.ValueBool()),

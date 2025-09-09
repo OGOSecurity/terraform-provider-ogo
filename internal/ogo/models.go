@@ -42,7 +42,6 @@ type UrlException struct {
 
 // Rewrite Rules
 type RewriteRule struct {
-	Priority           int    `json:"priority"`
 	Active             bool   `json:"active"`
 	Comment            string `json:"comment"`
 	RewriteSource      string `json:"rewriteSource"`
@@ -51,7 +50,6 @@ type RewriteRule struct {
 
 // Rule
 type Rule struct {
-	Priority       int      `json:"priority"`
 	Active         bool     `json:"active"`
 	Action         string   `json:"action"`
 	Cache          bool     `json:"cache"`

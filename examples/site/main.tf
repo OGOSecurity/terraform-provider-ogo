@@ -88,31 +88,27 @@ resource "ogo_shield_site" "gys_tf_ogosecurity_com" {
     {
       active              = true
       comment             = "Rewrite old to new"
-      priority            = 1
-      rewrite_destination = "/new"
       rewrite_source      = "^/old"
+      rewrite_destination = "/new"
     },
     {
       active              = true
       comment             = "Rewrite from to"
-      priority            = 2
-      rewrite_destination = "/to"
       rewrite_source      = "^/from"
+      rewrite_destination = "/to"
     }
   ]
   rules = [
     {
-      priority        = 1
-      comment         = "Admin from home"
-      paths           = ["/admin", "/backoffice"]
-      whitelisted_ips = ["2a01:e0a:4:4e30:b001:6e70:cf1e:56df/64", "82.65.146.54/32"]
-    },
-    {
-      priority        = 2
       action          = "brain"
       comment         = "Admin from office"
       paths           = ["/wp-admin"]
       whitelisted_ips = ["10.10.10.1/32"]
+    },
+    {
+      comment         = "Admin from home"
+      paths           = ["/admin", "/backoffice"]
+      whitelisted_ips = ["2a01:e0a:4:4e30:b001:6e70:cf1e:56df/64", "82.65.146.54/32"]
     }
   ]
   url_exceptions = [

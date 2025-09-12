@@ -107,6 +107,9 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"domain_name": schema.StringAttribute{
 				Required:    true,
 				Description: "DNS domain name of site",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,

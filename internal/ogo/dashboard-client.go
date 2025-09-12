@@ -25,7 +25,7 @@ type Client struct {
 // NewClient
 func NewClient(host *string, organization *string, apikey *string) (*Client, error) {
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
 	// Check if endpoint, organization and password are provided

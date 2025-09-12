@@ -1,66 +1,68 @@
-# Terraform Provider Ogo (Terraform Plugin Framework)
+# OgoSecurity Terraform Provider
 
-// TODO: update it!
-
-_This template repository is built on the [Terraform Plugin Framework](https://github.com/hashicorp/terraform-plugin-framework). The template repository built on the [Terraform Plugin SDK](https://github.com/hashicorp/terraform-plugin-sdk) can be found at [terraform-provider-ogo](https://github.com/hashicorp/terraform-provider-ogo). See [Which SDK Should I Use?](https://developer.hashicorp.com/terraform/plugin/framework-benefits) in the Terraform documentation for additional information._
-
-This repository is a *template* for a [Terraform](https://www.terraform.io) provider. It is intended as a starting point for creating Terraform providers, containing:
-
-- A resource and a data source (`internal/provider/`),
-- Examples (`examples/`) and generated documentation (`docs/`),
-- Miscellaneous meta files.
-
-These files contain boilerplate code that you will need to edit to create your own Terraform provider. Tutorials for creating Terraform providers can be found on the [HashiCorp Developer](https://developer.hashicorp.com/terraform/tutorials/providers-plugin-framework) platform. _Terraform Plugin Framework specific guides are titled accordingly._
-
-Please see the [GitHub template repository documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for how to create a new repository from this template on GitHub.
-
-Once you've written your provider, you'll want to [publish it on the Terraform Registry](https://developer.hashicorp.com/terraform/registry/providers/publishing) so that others can use it.
+The OgoSecurity provider allows Terraform to manage your Site resources configuration through Ogo Dashboard API.
 
 ## Requirements
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
-- [Go](https://golang.org/doc/install) >= 1.23
 
-## Building The Provider
+## Usage
 
-1. Clone the repository
-1. Enter the repository directory
-1. Build the provider using the Go `install` command:
+Create `main.tf` terraform configuration file with the following content:
 
-```shell
-go install
+```hcl
+terraform {
+  required_providers {
+    ogo = {
+      source = "ogosecurity/ogo"
+
+    }
+  }
+}
+
+# Provider configuration
+provider "ogo" {
+  # Ogo Dashboard API endpoint (or use env variable: OGO_ENDPOINT)
+  endpoint     = "https://api.ogosecurity.com"
+  # Organization to access Ogo Dashboard API (or use env variable: OGO_ORGANIZATION)
+  organization = "orga04242"
+  # Organization to access Ogo Dashboard API (or use env variable: OGO_APIKEY)
+  apikey       = "cd583abf-a02f-49e7-949e-424bf42419ea"
+}
+
+# Datasources
+## Clusters datasource
+data "ogo_shield_clusters" "shield" {}
+
+## TLS options datasource
+data "ogo_shield_tlsoptions" "tlsoptions" {}
+
+# Resources
+## Define variable with default cluster UID to used in site resources definition
+variable "cluster_uid" {
+  type        = string
+  description = "Default Cluster ID where sites will be provisioned"
+  default     = "802448cf-e2f9-40eb-b0d8-2983e018a0f4"
+}
+
+## Simple example with only required attributes
+resource "ogo_shield_site" "foo_example_com" {
+  domain_name   = "foo.example.com"
+  cluster_uid   = var.cluster_uid
+  origin_server = "172.18.1.10"
+}
 ```
 
-## Adding Dependencies
+Use `terraform init` command to initialize your project.
 
-This provider uses [Go modules](https://github.com/golang/go/wiki/Modules).
-Please see the Go documentation for the most up to date information about using Go modules.
 
-To add a new dependency `github.com/author/dependency` to your Terraform provider:
+## Documentation
 
-```shell
-go get github.com/author/dependency
-go mod tidy
-```
+Full OgoSecurity provider documentation is available on the official Hashicorp Terraform provider registry [the Terraform Registry](https://registry.terraform.io/providers/ogosecurity/ogo/latest/docs).
 
-Then commit the changes to `go.mod` and `go.sum`.
+Some examples can also be found in this [./examples](./examples) project directory.
 
-## Using the provider
 
-Fill this in for each provider
+## Contacts
 
-## Developing the Provider
-
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (see [Requirements](#requirements) above).
-
-To compile the provider, run `go install`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
-
-To generate or update documentation, run `make generate`.
-
-In order to run the full suite of Acceptance tests, run `make testacc`.
-
-*Note:* Acceptance tests create real resources, and often cost money to run.
-
-```shell
-make testacc
-```
+If you believe you have found a security issue in the Terraform OgoSecurity Provider, please responsibly disclose it by contacting us at security@ogosecurity.com.

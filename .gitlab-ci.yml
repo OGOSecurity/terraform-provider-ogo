@@ -3,7 +3,8 @@ stages:
   - test
 
 test:
-  tags: docker
+  tags:
+    - docker
   image: golang:1.24
   stage: test
   script:

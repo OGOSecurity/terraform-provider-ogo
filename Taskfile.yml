@@ -1,0 +1,13 @@
+version: '3'
+
+vars:
+
+tasks:
+  test:
+    desc: Run provider Unit Tests
+    cmds:
+      - cd internal/provider && TF_ACC=1 go test -count=1 -v
+  clean:
+    desc: Clean test environment
+    cmds:
+      - rm -r .task/checksum || ()

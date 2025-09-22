@@ -132,7 +132,7 @@ func (d *clustersDataSource) Read(ctx context.Context, req datasource.ReadReques
 	clusters, err := d.client.GetAllClusters()
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to Read Ogo Clusters",
+			"Unable to read Ogo Clusters",
 			err.Error(),
 		)
 		return

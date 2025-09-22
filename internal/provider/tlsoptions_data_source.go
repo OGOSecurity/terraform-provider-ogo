@@ -116,7 +116,7 @@ func (d *tlsoptionsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 	tlsoptions, err := d.client.GetAllTlsOptions()
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to Read Ogo TLS Options",
+			"Unable to read Ogo TLS Options",
 			err.Error(),
 		)
 		return

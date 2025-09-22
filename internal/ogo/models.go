@@ -99,3 +99,49 @@ type ClustersResponse struct {
 	Role         string   `json:"role"`
 	AccessRights []string `json:"accessRights"`
 }
+
+// Organization
+type Organization struct {
+	Code         string `json:"code"`
+	CompagnyName string `json:"companyName"`
+}
+
+type OrganizationDetails struct {
+	Organization Organization `json:"organization"`
+	Role         string       `json:"role"`
+	Privileges   []string     `json:"privileges"`
+}
+
+type OrganizationsResponse struct {
+	OrganizationDetails []OrganizationDetails `json:"content"`
+	Count               int                   `json:"totalElements"`
+}
+
+// Contract
+type Contract struct {
+	CreatedAt               string         `json:"createdAt"`
+	Number                  string         `json:"number"`
+	Name                    string         `json:"name"`
+	Type                    string         `json:"type"`
+	StartDate               string         `json:"startDate"`
+	EndDate                 string         `json:"endDate"`
+	RenewalDate             string         `json:"renewalDate"`
+	Holder                  ContractHolder `json:"holder"`
+	MillionRequestsPerMonth int32          `json:"millionRequestsPerMonth"`
+	AdditionalBandwidth     int32          `json:"additionalBandwidth"`
+	NbSites                 int32          `json:"nbSites"`
+	CdnEnabled              bool           `json:"cdnEnabled"`
+	InvoicingTimeZone       string         `json:"invoicingTimeZone"`
+	MonthsaryDay            int32          `json:"monthsaryDay"`
+	BandwidthPerMonth       int32          `json:"bandwidthPerMonth"`
+}
+
+type ContractHolder struct {
+	Code        string `json:"code"`
+	CompanyName string `json:"companyName"`
+}
+
+type ContractsResponse struct {
+	Contracts []Contract `json:"content"`
+	Count     int        `json:"totalElements"`
+}

@@ -27,17 +27,8 @@ type contractsDataSourceModel struct {
 
 // contractModel maps contract schema data
 type contractsModel struct {
-	Number                  types.String `tfsdk:"number"`
-	Name                    types.String `tfsdk:"name"`
-	Type                    types.String `tfsdk:"type"`
-	BandwidthPerMonth       types.Int32  `tfsdk:"bandwidth_per_month"`
-	MillionRequestsPerMonth types.Int32  `tfsdk:"million_requests_per_month"`
-	NbSitesAdvanced         types.Int32  `tfsdk:"nb_sites_advanced"`
-	NbSitesExpert           types.Int32  `tfsdk:"nb_sites_expert"`
-	CdnEnabled              types.Bool   `tfsdk:"cdn_enabled"`
-	StartDate               types.String `tfsdk:"start_date"`
-	EndDate                 types.String `tfsdk:"end_date"`
-	RenewalDate             types.String `tfsdk:"renewal_date"`
+	Number types.String `tfsdk:"number"`
+	Name   types.String `tfsdk:"name"`
 }
 
 func NewContractsDataSource() datasource.DataSource {
@@ -66,42 +57,6 @@ func (d *contractsDataSource) Schema(_ context.Context, _ datasource.SchemaReque
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: "Name of the contract",
-						},
-						"type": schema.StringAttribute{
-							Computed:    true,
-							Description: "Type of contract",
-						},
-						"bandwidth_per_month": schema.Int32Attribute{
-							Computed:    true,
-							Description: "Bandwidth per month included in contract",
-						},
-						"million_requests_per_month": schema.Int32Attribute{
-							Computed:    true,
-							Description: "Number of requests in millions per month included in contract",
-						},
-						"nb_sites_advanced": schema.Int32Attribute{
-							Computed:    true,
-							Description: "Number of sites in advanced mode included in contract",
-						},
-						"nb_sites_expert": schema.Int32Attribute{
-							Computed:    true,
-							Description: "Number of sites in expert mode included in contract",
-						},
-						"cdn_enabled": schema.BoolAttribute{
-							Computed:    true,
-							Description: "Is CDN option enabled for this contract",
-						},
-						"start_date": schema.StringAttribute{
-							Computed:    true,
-							Description: "Start date of contract",
-						},
-						"end_date": schema.StringAttribute{
-							Computed:    true,
-							Description: "End date of contract",
-						},
-						"renewal_date": schema.StringAttribute{
-							Computed:    true,
-							Description: "Renewal date of contract",
 						},
 					},
 				},
@@ -149,17 +104,8 @@ func (d *contractsDataSource) Read(ctx context.Context, req datasource.ReadReque
 	// Map response body to model
 	for _, c := range contracts {
 		contractState := contractsModel{
-			Number:                  types.StringValue(c.Number),
-			Name:                    types.StringValue(c.Name),
-			Type:                    types.StringValue(c.Type),
-			BandwidthPerMonth:       types.Int32Value(c.BandwidthPerMonth),
-			MillionRequestsPerMonth: types.Int32Value(c.MillionRequestsPerMonth),
-			NbSitesAdvanced:         types.Int32Value(c.NbSitesAdvanced),
-			NbSitesExpert:           types.Int32Value(c.NbSitesExpert),
-			CdnEnabled:              types.BoolValue(c.CdnEnabled),
-			StartDate:               types.StringValue(c.StartDate),
-			EndDate:                 types.StringValue(c.EndDate),
-			RenewalDate:             types.StringValue(c.RenewalDate),
+			Number: types.StringValue(c.Number),
+			Name:   types.StringValue(c.Name),
 		}
 
 		state.Contracts = append(state.Contracts, contractState)

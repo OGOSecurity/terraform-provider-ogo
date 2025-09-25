@@ -119,22 +119,8 @@ type OrganizationsResponse struct {
 
 // Contract
 type Contract struct {
-	CreatedAt               string         `json:"createdAt"`
-	Number                  string         `json:"number"`
-	Name                    string         `json:"name"`
-	Type                    string         `json:"type"`
-	StartDate               string         `json:"startDate"`
-	EndDate                 string         `json:"endDate"`
-	RenewalDate             string         `json:"renewalDate"`
-	Holder                  ContractHolder `json:"holder"`
-	MillionRequestsPerMonth int32          `json:"millionRequestsPerMonth"`
-	AdditionalBandwidth     int32          `json:"additionalBandwidth"`
-	NbSitesAdvanced         int32          `json:"nbSitesAdvanced"`
-	NbSitesExpert           int32          `json:"nbSitesExpert"`
-	CdnEnabled              bool           `json:"cdnEnabled"`
-	InvoicingTimeZone       string         `json:"invoicingTimeZone"`
-	MonthsaryDay            int32          `json:"monthsaryDay"`
-	BandwidthPerMonth       int32          `json:"bandwidthPerMonth"`
+	Number string `json:"number"`
+	Name   string `json:"name"`
 }
 
 type ContractHolder struct {

@@ -19,7 +19,7 @@ TLS options is intended to be used in `ogo_shield_site` resource definition to o
 # and list of 2 accepted certificate authority
 resource "ogo_shield_tlsoptions" "mtls_foobar" {
   name            = "mTLS foo bar"
-  min_tls_version = "TLS_12"
+  min_tls_version = "TLS_1.2"
   client_auth_ca_certs = [
     <<-EOT
 -----BEGIN CERTIFICATE-----
@@ -87,8 +87,8 @@ EOT
 - `client_auth_type` (String) Authentication type needed to authenticate client. Supported values:
   * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.
   * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
-- `max_tls_version` (String) Maximum TLS version accepted. Supported values: **TLS_10**, **TLS_11**, **TLS_12**, **TLS_13**
-- `min_tls_version` (String) Minimum TLS version accepted. Supported values: **TLS_10**, **TLS_11**, **TLS_12**, **TLS_13**
+- `max_tls_version` (String) Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**
+- `min_tls_version` (String) Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**
 
 ### Read-Only
 

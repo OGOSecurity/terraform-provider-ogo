@@ -1,3 +1,6 @@
+// Copyright (c) OgoSecurity, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package provider
 
 import (
@@ -43,7 +46,7 @@ func TestAccTlsOptionsResource(t *testing.T) {
 				Config: providerConfig + `
 resource "ogo_shield_tlsoptions" "test" {
   name            = "mTLS foo bar"
-  min_tls_version = "TLS_12"
+  min_tls_version = "TLS_1.2"
   client_auth_ca_certs = [
     <<-EOT
 -----BEGIN CERTIFICATE-----
@@ -100,7 +103,7 @@ EOT
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify first tlsoptions
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "name", "mTLS foo bar"),
-					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "min_tls_version", "TLS_12"),
+					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "min_tls_version", "TLS_1.2"),
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "client_auth_ca_certs.#", "2"),
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "client_auth_ca_certs.0", "-----BEGIN CERTIFICATE-----\nMIIDnTCCAoWgAwIBAgIUHvOpeMH+4Lk1ewQZKMwOygGBQe0wDQYJKoZIhvcNAQEL\nBQAwXjELMAkGA1UEBhMCRlIxDzANBgNVBAgMBkZyYW5jZTEOMAwGA1UEBwwFUGFy\naXMxFDASBgNVBAoMC09nb1NlY3VyaXR5MRgwFgYDVQQDDA9iYXIuZXhhbXBsZS5j\nb20wHhcNMjUwODEzMDYyODU1WhcNMzUwODExMDYyODU1WjBeMQswCQYDVQQGEwJG\nUjEPMA0GA1UECAwGRnJhbmNlMQ4wDAYDVQQHDAVQYXJpczEUMBIGA1UECgwLT2dv\nU2VjdXJpdHkxGDAWBgNVBAMMD2Jhci5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcN\nAQEBBQADggEPADCCAQoCggEBAO4dBU9DGbgBzjIYy/Qls0IglivSHyughVRa4nfZ\nb2b3iGP1rEa+xNlnmOlgxp8ihjxF4yBz/DMGVDEDnErwITUOxEG4fJ5gdX7a5Iyd\nOgYYyoh1RJKRkyWSGQoU4RmbVidTCyxq15j+yRBJDt3fll+Y9rlL+Ejl9QJCe+Zt\nkSab7pBn9SmUzX8IeHyX1IpEMA4nNtFI8ysNSZNxPJa1hB3tXtVGZrkhpecCZvx4\nIBpuRrjBSY3MaRE5YW51l7nC7jExC+IeNGe3mfKYUu0Re7fkK7n1auGmAJhTlzIR\n4126rTJDbZlKyDFSfoaDFsyYeNe2t2W6KlhG4d0dSiFwIucCAwEAAaNTMFEwHQYD\nVR0OBBYEFKBppFca57l7wutRyaIRZ3fwzZP7MB8GA1UdIwQYMBaAFKBppFca57l7\nwutRyaIRZ3fwzZP7MA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB\nAGwIPOoZqd/3Uu3W2dUcd8HWw/VmjokjKrC811KUfhiijpFpQjGMcGQrjti3rIkk\n5ZQyItkw91/IaUPOnyO8H5O/I/4RmTPaqbhmZ2gn8Ekw3/TO79tBB3bQWcfaSkK9\nb+4+ryk2fCe3Um6Q/NCeSRwYe3Z8Xe5ByqJfjGmrXLyU//folGAtnx4uaAeJ98ze\njUXT17x8AbdEt2JIpYoJI7xFC8mOr0s3LvA/gFmpNkuRNbCNQF2v5Qt9L2AYT0Fv\nB5uT42VuHQvRRNReAxa5oNGp/zcCjspaouPia03Tf5ZNZEd5LUFANLHPtsJg4jBB\nkjHKjCnt0/9fttE1u/gMW7k=\n-----END CERTIFICATE-----\n"),
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "client_auth_ca_certs.1", "-----BEGIN CERTIFICATE-----\nMIIDnTCCAoWgAwIBAgIUU5bIl5SJavP6YWPL/RUPLCbGu9owDQYJKoZIhvcNAQEL\nBQAwXjELMAkGA1UEBhMCRlIxDzANBgNVBAgMBkZyYW5jZTEOMAwGA1UEBwwFUGFy\naXMxFDASBgNVBAoMC09nb1NlY3VyaXR5MRgwFgYDVQQDDA9mb28uZXhhbXBsZS5j\nb20wHhcNMjUwODEzMDYyODM5WhcNMzUwODExMDYyODM5WjBeMQswCQYDVQQGEwJG\nUjEPMA0GA1UECAwGRnJhbmNlMQ4wDAYDVQQHDAVQYXJpczEUMBIGA1UECgwLT2dv\nU2VjdXJpdHkxGDAWBgNVBAMMD2Zvby5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcN\nAQEBBQADggEPADCCAQoCggEBANZ0zrEH22IMXp8tQ5PbwLFHmCQRc1/T1ge5z7ho\np6zdyFn5GEFrMv1ZOywPBPlCz+Lb/5sWWj9qhcMw6JkPogKKVx9PQZDwfpc9ov+M\nmujh/SM1Ms07AFt286h9e0yZzQfP9t6B9+Dns4Lgn6/+Ua8g7VW+Hrq3V9Ait0bx\nkDOZUj0djOp9H3tShtgl8p9Z+dcqYIAPtkjSTt/U7jUDtR9PH6qz4/gXE/mCKq4e\nLf+63nLqGfZ3S1mIwjysRhPsJwy4g9v+E6fHO4Emfk4KF6EvFj3GVXyckxLbxKNa\n1yYRUhSLZvNCNyDVvySVUta7yOhdzyC53YvS/Emtrh/7I6kCAwEAAaNTMFEwHQYD\nVR0OBBYEFF3MC9L6J3lESlcdryXXFzC1uJGvMB8GA1UdIwQYMBaAFF3MC9L6J3lE\nSlcdryXXFzC1uJGvMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB\nABUa9KqjfCB5lf9G7rpVTqhrg5LIKzuYzH4c7MZ76R4GZyH475yV5jQYCj2Qr3Pq\n2m50UpEzVKICjfBSCbJulv5ZofSn8DWTpEBoLZA2pVM9yutI3wOQW350HX01nY82\n9j9im1yMVtdf1uAPd1O3pm+RUcSICI5YBFQ1/LAAEoSqrmSoVUPwH6pt9Gr+4E/w\nPpUcdAju8piy48Nx9ZD9vwCVjD67oRNnF00wEDJgrl8RpI9i0zOzflBxXyllGD8L\nXT6wvPmUpso+jn04qnizfMWaYy9P2ip8RgOslrH6WIe6GyXSy6VjAu9JSuVE5OYX\nXpYou5FLSGMhNaPTuaukAgY=\n-----END CERTIFICATE-----\n"),
@@ -123,8 +126,8 @@ EOT
 				Config: providerConfig + `
 resource "ogo_shield_tlsoptions" "test" {
   name            = "mTLS foo bar"
-  min_tls_version = "TLS_11"
-  max_tls_version = "TLS_13"
+  min_tls_version = "TLS_1.1"
+  max_tls_version = "TLS_1.3"
   client_auth_ca_certs = [
     <<-EOT
 -----BEGIN CERTIFICATE-----
@@ -156,8 +159,8 @@ EOT
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// Verify first tlsoptions
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "name", "mTLS foo bar"),
-					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "min_tls_version", "TLS_11"),
-					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "max_tls_version", "TLS_13"),
+					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "min_tls_version", "TLS_1.1"),
+					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "max_tls_version", "TLS_1.3"),
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "client_auth_ca_certs.#", "1"),
 					resource.TestCheckResourceAttr("ogo_shield_tlsoptions.test", "client_auth_ca_certs.0", "-----BEGIN CERTIFICATE-----\nMIIDnTCCAoWgAwIBAgIUHvOpeMH+4Lk1ewQZKMwOygGBQe0wDQYJKoZIhvcNAQEL\nBQAwXjELMAkGA1UEBhMCRlIxDzANBgNVBAgMBkZyYW5jZTEOMAwGA1UEBwwFUGFy\naXMxFDASBgNVBAoMC09nb1NlY3VyaXR5MRgwFgYDVQQDDA9iYXIuZXhhbXBsZS5j\nb20wHhcNMjUwODEzMDYyODU1WhcNMzUwODExMDYyODU1WjBeMQswCQYDVQQGEwJG\nUjEPMA0GA1UECAwGRnJhbmNlMQ4wDAYDVQQHDAVQYXJpczEUMBIGA1UECgwLT2dv\nU2VjdXJpdHkxGDAWBgNVBAMMD2Jhci5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcN\nAQEBBQADggEPADCCAQoCggEBAO4dBU9DGbgBzjIYy/Qls0IglivSHyughVRa4nfZ\nb2b3iGP1rEa+xNlnmOlgxp8ihjxF4yBz/DMGVDEDnErwITUOxEG4fJ5gdX7a5Iyd\nOgYYyoh1RJKRkyWSGQoU4RmbVidTCyxq15j+yRBJDt3fll+Y9rlL+Ejl9QJCe+Zt\nkSab7pBn9SmUzX8IeHyX1IpEMA4nNtFI8ysNSZNxPJa1hB3tXtVGZrkhpecCZvx4\nIBpuRrjBSY3MaRE5YW51l7nC7jExC+IeNGe3mfKYUu0Re7fkK7n1auGmAJhTlzIR\n4126rTJDbZlKyDFSfoaDFsyYeNe2t2W6KlhG4d0dSiFwIucCAwEAAaNTMFEwHQYD\nVR0OBBYEFKBppFca57l7wutRyaIRZ3fwzZP7MB8GA1UdIwQYMBaAFKBppFca57l7\nwutRyaIRZ3fwzZP7MA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEB\nAGwIPOoZqd/3Uu3W2dUcd8HWw/VmjokjKrC811KUfhiijpFpQjGMcGQrjti3rIkk\n5ZQyItkw91/IaUPOnyO8H5O/I/4RmTPaqbhmZ2gn8Ekw3/TO79tBB3bQWcfaSkK9\nb+4+ryk2fCe3Um6Q/NCeSRwYe3Z8Xe5ByqJfjGmrXLyU//folGAtnx4uaAeJ98ze\njUXT17x8AbdEt2JIpYoJI7xFC8mOr0s3LvA/gFmpNkuRNbCNQF2v5Qt9L2AYT0Fv\nB5uT42VuHQvRRNReAxa5oNGp/zcCjspaouPia03Tf5ZNZEd5LUFANLHPtsJg4jBB\nkjHKjCnt0/9fttE1u/gMW7k=\n-----END CERTIFICATE-----\n"),
 				),

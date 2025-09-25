@@ -32,7 +32,8 @@ type contractsModel struct {
 	Type                    types.String `tfsdk:"type"`
 	BandwidthPerMonth       types.Int32  `tfsdk:"bandwidth_per_month"`
 	MillionRequestsPerMonth types.Int32  `tfsdk:"million_requests_per_month"`
-	NbSites                 types.Int32  `tfsdk:"nb_sites"`
+	NbSitesAdvanced         types.Int32  `tfsdk:"nb_sites_advanced"`
+	NbSitesExpert           types.Int32  `tfsdk:"nb_sites_expert"`
 	CdnEnabled              types.Bool   `tfsdk:"cdn_enabled"`
 	StartDate               types.String `tfsdk:"start_date"`
 	EndDate                 types.String `tfsdk:"end_date"`
@@ -78,9 +79,13 @@ func (d *contractsDataSource) Schema(_ context.Context, _ datasource.SchemaReque
 							Computed:    true,
 							Description: "Number of requests in millions per month included in contract",
 						},
-						"nb_sites": schema.Int32Attribute{
+						"nb_sites_advanced": schema.Int32Attribute{
 							Computed:    true,
-							Description: "Number of sites included in contract",
+							Description: "Number of sites in advanced mode included in contract",
+						},
+						"nb_sites_expert": schema.Int32Attribute{
+							Computed:    true,
+							Description: "Number of sites in expert mode included in contract",
 						},
 						"cdn_enabled": schema.BoolAttribute{
 							Computed:    true,
@@ -149,7 +154,8 @@ func (d *contractsDataSource) Read(ctx context.Context, req datasource.ReadReque
 			Type:                    types.StringValue(c.Type),
 			BandwidthPerMonth:       types.Int32Value(c.BandwidthPerMonth),
 			MillionRequestsPerMonth: types.Int32Value(c.MillionRequestsPerMonth),
-			NbSites:                 types.Int32Value(c.NbSites),
+			NbSitesAdvanced:         types.Int32Value(c.NbSitesAdvanced),
+			NbSitesExpert:           types.Int32Value(c.NbSitesExpert),
 			CdnEnabled:              types.BoolValue(c.CdnEnabled),
 			StartDate:               types.StringValue(c.StartDate),
 			EndDate:                 types.StringValue(c.EndDate),

@@ -2,7 +2,7 @@
 # and list of 2 accepted certificate authority
 resource "ogo_shield_tlsoptions" "mtls_foobar" {
   name            = "mTLS foo bar"
-  min_tls_version = "TLS_12"
+  min_tls_version = "TLS_1.2"
   client_auth_ca_certs = [
     <<-EOT
 -----BEGIN CERTIFICATE-----

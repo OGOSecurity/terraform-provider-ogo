@@ -86,17 +86,17 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			"min_tls_version": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Minimum TLS version accepted. Supported values: **TLS_10**, **TLS_11**, **TLS_12**, **TLS_13**",
-				Default:     stringdefault.StaticString("TLS_12"),
+				Description: "Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**",
+				Default:     stringdefault.StaticString("TLS_1.2"),
 				Validators: []validator.String{
-					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
+					stringvalidator.OneOf("TLS_1.0", "TLS_1.1", "TLS_1.2", "TLS_1.3"),
 				},
 			},
 			"max_tls_version": schema.StringAttribute{
 				Optional:    true,
-				Description: "Maximum TLS version accepted. Supported values: **TLS_10**, **TLS_11**, **TLS_12**, **TLS_13**",
+				Description: "Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**",
 				Validators: []validator.String{
-					stringvalidator.OneOf("TLS_10", "TLS_11", "TLS_12", "TLS_13"),
+					stringvalidator.OneOf("TLS_1.0", "TLS_1.1", "TLS_1.2", "TLS_1.3"),
 				},
 			},
 			"last_updated": schema.StringAttribute{

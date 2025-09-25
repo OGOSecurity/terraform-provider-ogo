@@ -129,7 +129,8 @@ type Contract struct {
 	Holder                  ContractHolder `json:"holder"`
 	MillionRequestsPerMonth int32          `json:"millionRequestsPerMonth"`
 	AdditionalBandwidth     int32          `json:"additionalBandwidth"`
-	NbSites                 int32          `json:"nbSites"`
+	NbSitesAdvanced         int32          `json:"nbSitesAdvanced"`
+	NbSitesExpert           int32          `json:"nbSitesExpert"`
 	CdnEnabled              bool           `json:"cdnEnabled"`
 	InvoicingTimeZone       string         `json:"invoicingTimeZone"`
 	MonthsaryDay            int32          `json:"monthsaryDay"`

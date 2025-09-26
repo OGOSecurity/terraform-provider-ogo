@@ -112,6 +112,7 @@ resource "ogo_shield_site" "bar_example_com" {
 
 - `audit_mode` (Boolean) Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**)
 - `blacklisted_countries` (Set of String) List of countries to blacklist
+- `contract_number` (String) Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source
 - `force_https` (Boolean) Redirect HTTP request to HTTPS (Default: **false** )
 - `hsts` (String) Enable HSTS (Default: **hsts**). Supported values:
   * **hsts**: Enable HSTS

@@ -30,14 +30,5 @@ data "ogo_shield_contracts" "contracts" {}
 
 Read-Only:
 
-- `bandwidth_per_month` (Number) Bandwidth per month included in contract
-- `cdn_enabled` (Boolean) Is CDN option enabled for this contract
-- `end_date` (String) End date of contract
-- `million_requests_per_month` (Number) Number of requests in millions per month included in contract
 - `name` (String) Name of the contract
-- `nb_sites_advanced` (Number) Number of sites in advanced mode included in contract
-- `nb_sites_expert` (Number) Number of sites in expert mode included in contract
 - `number` (String) Number used to reference this contract
-- `renewal_date` (String) Renewal date of contract
-- `start_date` (String) Start date of contract
-- `type` (String) Type of contract

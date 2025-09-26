@@ -7,6 +7,7 @@ package ogosecurity
 type Site struct {
 	DomainName           string         `json:"domainName"`
 	Cluster              Cluster        `json:"cluster,omitempty"`
+	Contract             *Contract      `json:"contract"`
 	OriginServer         string         `json:"originServer"`
 	OriginScheme         string         `json:"originScheme"`
 	OriginPort           *int32         `json:"originPort"`

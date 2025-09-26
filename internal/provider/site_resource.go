@@ -37,6 +37,7 @@ var (
 type SiteResourceModel struct {
 	DomainName           types.String        `tfsdk:"domain_name"`
 	ClusterUid           types.String        `tfsdk:"cluster_uid"`
+	ContractNumber       types.String        `tfsdk:"contract_number"`
 	OriginServer         types.String        `tfsdk:"origin_server"`
 	OriginScheme         types.String        `tfsdk:"origin_scheme"`
 	OriginPort           types.Int32         `tfsdk:"origin_port"`
@@ -57,6 +58,11 @@ type SiteResourceModel struct {
 	RewriteRules         []RewriteRuleModel  `tfsdk:"rewrite_rules"`
 	Rules                []RuleModel         `tfsdk:"rules"`
 	LastUpdated          types.String        `tfsdk:"last_updated"`
+}
+
+type Contract struct {
+	Number types.String `tfsdk:"number"`
+	Name   types.String `tfsdk:"name"`
 }
 
 type RewriteRuleModel struct {
@@ -114,6 +120,13 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
 				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source",
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"contract_number": schema.StringAttribute{
+				Optional:    true,
+				Description: "Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -448,6 +461,13 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 		TlsOptions:           tlsOpt,
 	}
 
+	// Contract
+	if plan.ContractNumber.ValueString() != "" {
+		s.Contract = &ogosecurity.Contract{
+			Number: string(plan.ContractNumber.ValueString()),
+		}
+	}
+
 	// TLS Options
 	if plan.TlsOptionsUid.ValueString() != "" {
 		s.TlsOptions = &ogosecurity.TlsOptions{
@@ -682,6 +702,13 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
 		TlsOptions:           tlsOpt,
 	}
+
+	// Contracts
+	// if plan.TlsOptionsUid.ValueString() != "" {
+	// 	s.Contract = &ogosecurity.Contract{
+	// 		Number: string(plan.ContractNumber.ValueString()),
+	// 	}
+	// }
 
 	// TLS Options
 	if plan.TlsOptionsUid.ValueString() != "" {

@@ -56,11 +56,11 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 					Attributes: map[string]schema.Attribute{
 						"uid": schema.StringAttribute{
 							Computed:    true,
-							Description: "UID used to reference this TLS Options",
+							Description: "UID used to reference this TLS Options.",
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
-							Description: "Name of the TLS Options",
+							Description: "Name of the TLS Options.",
 						},
 						"client_auth_type": schema.StringAttribute{
 							Computed:    true,
@@ -68,16 +68,16 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 						},
 						"client_auth_ca_certs": schema.ListAttribute{
 							Computed:    true,
-							Description: "List of certificate authority used to verify client certificate",
+							Description: "List of certificate authority used to verify client certificate.",
 							ElementType: types.StringType,
 						},
 						"min_tls_version": schema.StringAttribute{
 							Computed:    true,
-							Description: "Minimum TLS version accepted",
+							Description: "Minimum TLS version accepted.",
 						},
 						"max_tls_version": schema.StringAttribute{
 							Computed:    true,
-							Description: "Maximum TLS version accepted",
+							Description: "Maximum TLS version accepted.",
 						},
 					},
 				},
@@ -100,7 +100,7 @@ func (d *tlsoptionsDataSource) Configure(_ context.Context, req datasource.Confi
 	client, ok := req.ProviderData.(*ogosecurity.Client)
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected data source configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 

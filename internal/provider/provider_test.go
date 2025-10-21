@@ -15,6 +15,7 @@ const (
 	providerConfig = `
 provider "ogo" {
   endpoint     = "%s"
+  email        = "%s"
   organization = "%s"
   apikey       = "%s"
 }
@@ -27,8 +28,9 @@ var testAccProtoV6ProviderFactories = map[string]func() (tfprotov6.ProviderServe
 
 func testAccProviderConfig() string {
 	endpoint := os.Getenv("OGO_ENDPOINT")
+	email := os.Getenv("OGO_EMAIL")
 	organization := os.Getenv("OGO_ORGANIZATION")
 	apikey := os.Getenv("OGO_APIKEY")
 
-	return fmt.Sprintf(providerConfig, endpoint, organization, apikey)
+	return fmt.Sprintf(providerConfig, endpoint, email, organization, apikey)
 }

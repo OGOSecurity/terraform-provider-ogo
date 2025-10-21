@@ -30,5 +30,5 @@ data "ogo_shield_organizations" "organizations" {}
 
 Read-Only:
 
-- `code` (String) Code identifier used to reference this organization
-- `company_name` (String) Company name of this organization
+- `code` (String) Code identifier used to reference this organization.
+- `company_name` (String) Company name of this organization.

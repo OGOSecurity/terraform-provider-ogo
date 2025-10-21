@@ -30,6 +30,11 @@ resource "ogo_shield_site" "bar_example_com" {
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
   blacklisted_countries   = ["DE", "EN", "FR", "IT"]
+  brain_overrides = {
+    "/BRAIN/DRIVE_43E5A99D_5A09_47FC_A9D9_C4FF0248B6C1_Priority"                   = 0.88
+    "/ACTOR/DRIVE_493EE2EC_4776_4A98_8D56_75C2DDD28215_BELIEF"                     = 0.66
+    "/ACTOR/DRIVE_E550246A_FA9A_4EB9_AFA5_C4C3D7C3FBA8_MAX_CONSUMED_RESPONSE_TIME" = 0.55
+  }
   rewrite_rules = [
     {
       active              = true

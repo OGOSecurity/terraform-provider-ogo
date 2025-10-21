@@ -30,5 +30,5 @@ data "ogo_shield_contracts" "contracts" {}
 
 Read-Only:
 
-- `name` (String) Name of the contract
-- `number` (String) Number used to reference this contract
+- `name` (String) Name of the contract.
+- `number` (String) Number used to reference this contract.

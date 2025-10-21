@@ -79,21 +79,21 @@ EOT
 
 ### Required
 
-- `client_auth_ca_certs` (Set of String) List of certificate authority used to verify client certificate
-- `name` (String) Name of the TLS Options
+- `client_auth_ca_certs` (Set of String) List of certificate authority used to verify client certificate.
+- `name` (String) Name of the TLS Options.
 
 ### Optional
 
 - `client_auth_type` (String) Authentication type needed to authenticate client. Supported values:
   * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.
   * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
-- `max_tls_version` (String) Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**
-- `min_tls_version` (String) Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**
+- `max_tls_version` (String) Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.
+- `min_tls_version` (String) Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.
 
 ### Read-Only
 
-- `last_updated` (String) Last resource update by terraform
-- `uid` (String) UID used to reference this TLS Options
+- `last_updated` (String) Last resource update by terraform.
+- `uid` (String) UID used to reference this TLS Options.
 
 
 ## Import

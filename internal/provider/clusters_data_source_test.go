@@ -23,9 +23,14 @@ func TestAccClustersDataSource(t *testing.T) {
 		t.Errorf("OGO_CLUSTER_NAME must be set")
 	}
 
-	clusterHost4 := os.Getenv("OGO_CLUSTER_HOST4")
-	if clusterHost4 == "" {
+	clusterEntrypoint4 := os.Getenv("OGO_CLUSTER_HOST4")
+	if clusterEntrypoint4 == "" {
 		t.Errorf("OGO_CLUSTER_HOST4 must be set")
+	}
+
+	clusterEntrypoint6 := os.Getenv("OGO_CLUSTER_HOST6")
+	if clusterEntrypoint6 == "" {
+		t.Errorf("OGO_CLUSTER_HOST6 must be set")
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -34,8 +39,8 @@ func TestAccClustersDataSource(t *testing.T) {
 			{
 				Config: providerConfig + `data "ogo_shield_clusters" "test" {}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.host4", clusterHost4),
-					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.host6", ""),
+					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.entrypoint4", clusterEntrypoint4),
+					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.entrypoint6", clusterEntrypoint6),
 					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.ips_to_whitelist.#", "2"),
 					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.name", clusterName),
 					resource.TestCheckResourceAttr("data.ogo_shield_clusters.test", "clusters.0.supported_cdns.#", "1"),

@@ -15,6 +15,7 @@
 .terraform/
 .idea
 .vagrant/
+.vscode/
 example.tf
 terraform.tfplan
 terraform.tfstate
@@ -30,7 +31,6 @@ website/.vagrant
 website/.bundle
 website/build
 website/node_modules
-
 website/vendor
 
 # Test exclusions

@@ -52,11 +52,11 @@ func (d *contractsDataSource) Schema(_ context.Context, _ datasource.SchemaReque
 					Attributes: map[string]schema.Attribute{
 						"number": schema.StringAttribute{
 							Computed:    true,
-							Description: "Number used to reference this contract",
+							Description: "Number used to reference this contract.",
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
-							Description: "Name of the contract",
+							Description: "Name of the contract.",
 						},
 					},
 				},
@@ -79,7 +79,7 @@ func (d *contractsDataSource) Configure(_ context.Context, req datasource.Config
 	client, ok := req.ProviderData.(*ogosecurity.Client)
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected data source configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 

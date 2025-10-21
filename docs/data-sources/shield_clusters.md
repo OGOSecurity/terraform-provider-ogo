@@ -30,12 +30,13 @@ data "ogo_shield_clusters" "shield" {}
 
 Read-Only:
 
-- `host4` (String) Ogo Shield public IPv4 address
-- `host6` (String) Ogo Shield public IPv6 address
-- `ips_to_whitelist` (Set of String) Outgoing Ogo Shield IP addresses
-- `name` (String) Name of the cluster
-- `supported_cdns` (Set of String) List of supported CDN
-- `supports_cache` (Boolean) Cache support features
-- `supports_ipv6_origins` (Boolean) Support of IPv6 origins
-- `supports_mtls` (Boolean) mTLS support features
-- `uid` (String) UID used to reference this cluster
+- `entrypoint4` (String) Ogo Shield public IPv4 DNS entrypoint host address.
+- `entrypoint6` (String) Ogo Shield public IPv6 DNS entrypoint host address.
+- `entrypointcdn` (String) CDN public DNS entrypoint host address.
+- `ips_to_whitelist` (Set of String) Outgoing Ogo Shield IP addresses.
+- `name` (String) Name of the cluster.
+- `supported_cdns` (Set of String) List of supported CDN.
+- `supports_cache` (Boolean) Cache support features.
+- `supports_ipv6_origins` (Boolean) Support of IPv6 origins.
+- `supports_mtls` (Boolean) mTLS support features.
+- `uid` (String) UID used to reference this cluster.

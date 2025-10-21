@@ -29,8 +29,9 @@ type clustersDataSourceModel struct {
 type clustersModel struct {
 	Uid                 types.String   `tfsdk:"uid"`
 	Name                types.String   `tfsdk:"name"`
-	Host4               types.String   `tfsdk:"host4"`
-	Host6               types.String   `tfsdk:"host6"`
+	Entrypoint4         types.String   `tfsdk:"entrypoint4"`
+	Entrypoint6         types.String   `tfsdk:"entrypoint6"`
+	EntrypointCdn       types.String   `tfsdk:"entrypointcdn"`
 	IpsToWhitelist      []types.String `tfsdk:"ips_to_whitelist"`
 	SupportsCache       types.Bool     `tfsdk:"supports_cache"`
 	SupportsIpv6Origins types.Bool     `tfsdk:"supports_ipv6_origins"`
@@ -59,41 +60,45 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 					Attributes: map[string]schema.Attribute{
 						"uid": schema.StringAttribute{
 							Computed:    true,
-							Description: "UID used to reference this cluster",
+							Description: "UID used to reference this cluster.",
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
-							Description: "Name of the cluster",
+							Description: "Name of the cluster.",
 						},
-						"host4": schema.StringAttribute{
+						"entrypoint4": schema.StringAttribute{
 							Computed:    true,
-							Description: "Ogo Shield public IPv4 address",
+							Description: "Ogo Shield public IPv4 DNS entrypoint host address.",
 						},
-						"host6": schema.StringAttribute{
+						"entrypoint6": schema.StringAttribute{
 							Computed:    true,
-							Description: "Ogo Shield public IPv6 address",
+							Description: "Ogo Shield public IPv6 DNS entrypoint host address.",
+						},
+						"entrypointcdn": schema.StringAttribute{
+							Computed:    true,
+							Description: "CDN public DNS entrypoint host address.",
 						},
 						"ips_to_whitelist": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
-							Description: "Outgoing Ogo Shield IP addresses",
+							Description: "Outgoing Ogo Shield IP addresses.",
 						},
 						"supports_cache": schema.BoolAttribute{
 							Computed:    true,
-							Description: "Cache support features",
+							Description: "Cache support features.",
 						},
 						"supports_ipv6_origins": schema.BoolAttribute{
 							Computed:    true,
-							Description: "Support of IPv6 origins",
+							Description: "Support of IPv6 origins.",
 						},
 						"supports_mtls": schema.BoolAttribute{
 							Computed:    true,
-							Description: "mTLS support features",
+							Description: "mTLS support features.",
 						},
 						"supported_cdns": schema.SetAttribute{
 							ElementType: types.StringType,
 							Computed:    true,
-							Description: "List of supported CDN",
+							Description: "List of supported CDN.",
 						},
 					},
 				},
@@ -116,7 +121,7 @@ func (d *clustersDataSource) Configure(_ context.Context, req datasource.Configu
 	client, ok := req.ProviderData.(*ogosecurity.Client)
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected data source configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
@@ -143,8 +148,9 @@ func (d *clustersDataSource) Read(ctx context.Context, req datasource.ReadReques
 		clusterState := clustersModel{
 			Uid:                 types.StringValue(c.Uid),
 			Name:                types.StringValue(c.Name),
-			Host4:               types.StringValue(c.Host4),
-			Host6:               types.StringValue(c.Host6),
+			Entrypoint4:         types.StringValue(c.Entrypoint4),
+			Entrypoint6:         types.StringValue(c.Entrypoint6),
+			EntrypointCdn:       types.StringValue(c.EntrypointCdn),
 			SupportsCache:       types.BoolValue(c.SupportsCache),
 			SupportsIpv6Origins: types.BoolValue(c.SupportsIpv6Origins),
 			SupportsMtls:        types.BoolValue(c.SupportsMtls),

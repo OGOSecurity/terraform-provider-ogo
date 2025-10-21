@@ -30,8 +30,8 @@ var (
 
 // TlsOptionsResourceModel maps the resource schema data.
 type TlsOptionsResourceModel struct {
-	Name              types.String   `tfsdk:"name"`
 	Uid               types.String   `tfsdk:"uid"`
+	Name              types.String   `tfsdk:"name"`
 	ClientAuthType    types.String   `tfsdk:"client_auth_type"`
 	ClientAuthCaCerts []types.String `tfsdk:"client_auth_ca_certs"`
 	MinTlsVersion     types.String   `tfsdk:"min_tls_version"`
@@ -60,11 +60,11 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 		Attributes: map[string]schema.Attribute{
 			"name": schema.StringAttribute{
 				Required:    true,
-				Description: "Name of the TLS Options",
+				Description: "Name of the TLS Options.",
 			},
 			"uid": schema.StringAttribute{
 				Computed:    true,
-				Description: "UID used to reference this TLS Options",
+				Description: "UID used to reference this TLS Options.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
@@ -80,13 +80,13 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			},
 			"client_auth_ca_certs": schema.SetAttribute{
 				Required:    true,
-				Description: "List of certificate authority used to verify client certificate",
+				Description: "List of certificate authority used to verify client certificate.",
 				ElementType: types.StringType,
 			},
 			"min_tls_version": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**",
+				Description: "Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.",
 				Default:     stringdefault.StaticString("TLS_1.2"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("TLS_1.0", "TLS_1.1", "TLS_1.2", "TLS_1.3"),
@@ -94,14 +94,14 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			},
 			"max_tls_version": schema.StringAttribute{
 				Optional:    true,
-				Description: "Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**",
+				Description: "Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("TLS_1.0", "TLS_1.1", "TLS_1.2", "TLS_1.3"),
 				},
 			},
 			"last_updated": schema.StringAttribute{
 				Computed:    true,
-				Description: "Last resource update by terraform",
+				Description: "Last resource update by terraform.",
 			},
 		},
 		MarkdownDescription: "This *ogo_shield_tlsoptions* resource manage TLS options at " +
@@ -125,7 +125,7 @@ func (r *tlsOptionsResource) Configure(_ context.Context, req resource.Configure
 
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected resource configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 

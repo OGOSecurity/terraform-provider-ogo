@@ -42,8 +42,9 @@ type ogoProvider struct {
 // ogoProviderModel describes the provider data model.
 type ogoProviderModel struct {
 	Endpoint     types.String `tfsdk:"endpoint"`
-	Organization types.String `tfsdk:"organization"`
+	Email        types.String `tfsdk:"email"`
 	ApiKey       types.String `tfsdk:"apikey"`
+	Organization types.String `tfsdk:"organization"`
 }
 
 func (p *ogoProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -58,14 +59,18 @@ func (p *ogoProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *
 				MarkdownDescription: "Ogo API endpoint",
 				Required:            true,
 			},
-			"organization": schema.StringAttribute{
-				MarkdownDescription: "Organization code used to authenticate to Ogo Dashboard",
+			"email": schema.StringAttribute{
+				MarkdownDescription: "User Email Address",
 				Required:            true,
 			},
 			"apikey": schema.StringAttribute{
 				MarkdownDescription: "API Key",
 				Required:            true,
 				Sensitive:           true,
+			},
+			"organization": schema.StringAttribute{
+				MarkdownDescription: "Organization code used to authenticate to Ogo Dashboard",
+				Required:            true,
 			},
 		},
 	}
@@ -84,20 +89,27 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	// Default values to environment variables, but override
 	// with Terraform configuration value if set.
 	endpoint := os.Getenv("OGO_ENDPOINT")
-	organization := os.Getenv("OGO_ORGANIZATION")
+	email := os.Getenv("OGO_EMAIL")
 	apikey := os.Getenv("OGO_APIKEY")
+	organization := os.Getenv("OGO_ORGANIZATION")
 
 	// Configuration values are now available.
 	if !config.Endpoint.IsNull() {
 		endpoint = config.Endpoint.ValueString()
+	} else {
+		endpoint = "https://api.ogosecurity.com"
 	}
 
-	if !config.Organization.IsNull() {
-		organization = config.Organization.ValueString()
+	if !config.Email.IsNull() {
+		email = config.Email.ValueString()
 	}
 
 	if !config.ApiKey.IsNull() {
 		apikey = config.ApiKey.ValueString()
+	}
+
+	if !config.Organization.IsNull() {
+		organization = config.Organization.ValueString()
 	}
 
 	// If any of the expected configurations are missing, return error
@@ -111,12 +123,12 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		)
 	}
 
-	if organization == "" {
+	if email == "" {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("organization"),
-			"Missing Ogo API organization",
-			"The provider cannot create the Ogo API client as there is a missing or empty value for the Ogo API organization. "+
-				"Set the organization value in the configuration or use the OGO_ORGANIZATION environment variable. "+
+			path.Root("email"),
+			"Missing User email address",
+			"The provider cannot create the User email address as there is a missing or empty value. "+
+				"Set the user email address value in the configuration or use the OGO_EMAIL environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -131,19 +143,30 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		)
 	}
 
+	if organization == "" {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("organization"),
+			"Missing Ogo API organization",
+			"The provider cannot create the Ogo API client as there is a missing or empty value for the Ogo API organization. "+
+				"Set the organization value in the configuration or use the OGO_ORGANIZATION environment variable. "+
+				"If either is already set, ensure the value is not empty.",
+		)
+	}
+
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	ctx = tflog.SetField(ctx, "ogo_endpoint", endpoint)
-	ctx = tflog.SetField(ctx, "ogo_organization", organization)
+	ctx = tflog.SetField(ctx, "ogo_email", email)
 	ctx = tflog.SetField(ctx, "ogo_apikey", apikey)
+	ctx = tflog.SetField(ctx, "ogo_organization", organization)
 	ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "ogo_apikey")
 
 	tflog.Debug(ctx, "Creating Ogo client")
 
 	// Create a new Ogo Security client using the configuration values
-	client, err := ogosecurity.NewClient(&endpoint, &organization, &apikey)
+	client, err := ogosecurity.NewClient(&endpoint, &email, &apikey, &organization)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to Create OgoSecurity Dashboard API Client",

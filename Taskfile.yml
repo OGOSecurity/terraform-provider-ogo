@@ -6,11 +6,15 @@ version: '3'
 vars:
 
 tasks:
-  test:
-    desc: Run provider Unit Tests
-    cmds:
-      - make testacc
   clean:
     desc: Clean test environment
     cmds:
       - rm -r .task/checksum || ()
+  doc:
+    desc: Generate documentation
+    cmds:
+      - make generate
+  test:
+    desc: Run provider Unit Tests
+    cmds:
+      - make testacc

@@ -5,7 +5,10 @@ package provider
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"os"
+	"strconv"
 	"time"
 
 	ogosecurity "terraform-provider-ogo/internal/ogo"
@@ -35,34 +38,47 @@ var (
 
 // SiteResourceModel maps the resource schema data.
 type SiteResourceModel struct {
-	DomainName           types.String        `tfsdk:"domain_name"`
-	ClusterUid           types.String        `tfsdk:"cluster_uid"`
-	ContractNumber       types.String        `tfsdk:"contract_number"`
-	OriginServer         types.String        `tfsdk:"origin_server"`
-	OriginScheme         types.String        `tfsdk:"origin_scheme"`
-	OriginPort           types.Int32         `tfsdk:"origin_port"`
-	OriginSkipCertVerify types.Bool          `tfsdk:"origin_skip_cert_verify"`
-	OriginMtlsEnabled    types.Bool          `tfsdk:"origin_mtls_enabled"`
-	RemoveXForwarded     types.Bool          `tfsdk:"remove_xforwarded"`
-	LogExportEnabled     types.Bool          `tfsdk:"log_export_enabled"`
-	ForceHttps           types.Bool          `tfsdk:"force_https"`
-	AuditMode            types.Bool          `tfsdk:"audit_mode"`
-	PassthroughMode      types.Bool          `tfsdk:"passthrough_mode"`
-	Hsts                 types.String        `tfsdk:"hsts"`
-	PassTlsClientCert    types.String        `tfsdk:"pass_tls_client_cert"`
-	TlsOptionsUid        types.String        `tfsdk:"tlsoptions_uid"`
-	Tags                 []types.String      `tfsdk:"tags"`
-	BlacklistedCountries []types.String      `tfsdk:"blacklisted_countries"`
-	IpExceptions         []IpExceptionModel  `tfsdk:"ip_exceptions"`
-	UrlExceptions        []UrlExceptionModel `tfsdk:"url_exceptions"`
-	RewriteRules         []RewriteRuleModel  `tfsdk:"rewrite_rules"`
-	Rules                []RuleModel         `tfsdk:"rules"`
-	LastUpdated          types.String        `tfsdk:"last_updated"`
+	DomainName                types.String                    `tfsdk:"domain_name"`
+	ClusterUid                types.String                    `tfsdk:"cluster_uid"`
+	ClusterEntrypoint4        types.String                    `tfsdk:"cluster_entrypoint_4"`
+	ClusterEntrypoint6        types.String                    `tfsdk:"cluster_entrypoint_6"`
+	ClusterEntrypointCdn      types.String                    `tfsdk:"cluster_entrypoint_cdn"`
+	ContractNumber            types.String                    `tfsdk:"contract_number"`
+	OriginServer              types.String                    `tfsdk:"origin_server"`
+	OriginScheme              types.String                    `tfsdk:"origin_scheme"`
+	OriginPort                types.Int32                     `tfsdk:"origin_port"`
+	OriginSkipCertVerify      types.Bool                      `tfsdk:"origin_skip_cert_verify"`
+	OriginMtlsEnabled         types.Bool                      `tfsdk:"origin_mtls_enabled"`
+	RemoveXForwarded          types.Bool                      `tfsdk:"remove_xforwarded"`
+	LogExportEnabled          types.Bool                      `tfsdk:"log_export_enabled"`
+	CacheEnabled              types.Bool                      `tfsdk:"cache_enabled"`
+	Status                    types.String                    `tfsdk:"status"`
+	Cdn                       types.String                    `tfsdk:"cdn"`
+	CdnStatus                 types.String                    `tfsdk:"cdn_status"`
+	ForceHttps                types.Bool                      `tfsdk:"force_https"`
+	AuditMode                 types.Bool                      `tfsdk:"audit_mode"`
+	PassthroughMode           types.Bool                      `tfsdk:"passthrough_mode"`
+	Hsts                      types.String                    `tfsdk:"hsts"`
+	PassTlsClientCert         types.String                    `tfsdk:"pass_tls_client_cert"`
+	TlsOptionsUid             types.String                    `tfsdk:"tlsoptions_uid"`
+	BrainOverrides            types.Map                       `tfsdk:"brain_overrides"`
+	ActiveCustomerCertificate *ActiveCustomerCertificateModel `tfsdk:"active_customer_certificate"`
+	BlacklistedCountries      []types.String                  `tfsdk:"blacklisted_countries"`
+	IpExceptions              []IpExceptionModel              `tfsdk:"ip_exceptions"`
+	UrlExceptions             []UrlExceptionModel             `tfsdk:"url_exceptions"`
+	RewriteRules              []RewriteRuleModel              `tfsdk:"rewrite_rules"`
+	Rules                     []RuleModel                     `tfsdk:"rules"`
+	Tags                      []types.String                  `tfsdk:"tags"`
+	LastUpdated               types.String                    `tfsdk:"last_updated"`
 }
 
-type Contract struct {
-	Number types.String `tfsdk:"number"`
-	Name   types.String `tfsdk:"name"`
+type ActiveCustomerCertificateModel struct {
+	Cn           types.String `tfsdk:"cn"`
+	ExpiredAt    types.String `tfsdk:"expired_at"`
+	Hash         types.String `tfsdk:"hash"`
+	P12File      types.String `tfsdk:"p12_file"`
+	P12Content64 types.String `tfsdk:"p12_content64"`
+	P12Password  types.String `tfsdk:"p12_password"`
 }
 
 type RewriteRuleModel struct {
@@ -112,33 +128,45 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 		Attributes: map[string]schema.Attribute{
 			"domain_name": schema.StringAttribute{
 				Required:    true,
-				Description: "DNS domain name of site",
+				Description: "DNS domain name of site.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source",
+				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			"cluster_entrypoint_4": schema.StringAttribute{
+				Computed:    true,
+				Description: "IPv4 cluster entrypoint to which site DNS record can be configured.",
+			},
+			"cluster_entrypoint_6": schema.StringAttribute{
+				Computed:    true,
+				Description: "IPv6 cluster entrypoint to which site DNS record can be configured.",
+			},
+			"cluster_entrypoint_cdn": schema.StringAttribute{
+				Computed:    true,
+				Description: "CDN entrypoint to which site DNS record can be configured.",
+			},
 			"contract_number": schema.StringAttribute{
 				Optional:    true,
-				Description: "Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source",
+				Description: "Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"origin_server": schema.StringAttribute{
 				Required:    true,
-				Description: "Origin server address (IP address or domain name)",
+				Description: "Origin server address (IP address or domain name).",
 			},
 			"origin_scheme": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**)",
+				Description: "Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**).",
 				Default:     stringdefault.StaticString("https"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("http", "https"),
@@ -146,7 +174,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"origin_port": schema.Int32Attribute{
 				Optional:    true,
-				Description: "Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port",
+				Description: "Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port.",
 				Validators: []validator.Int32{
 					int32validator.Between(1, 65535),
 				},
@@ -154,43 +182,43 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"origin_mtls_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable mTLS between Ogo and origin server (Default: **false**)",
+				Description: "Enable mTLS between Ogo and origin server (Default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"origin_skip_cert_verify": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**)",
+				Description: "Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"remove_xforwarded": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Remove X-Forwarded-* headers. (Default: **false** )",
+				Description: "Remove X-Forwarded-* headers. (Default: **false** ).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"force_https": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Redirect HTTP request to HTTPS (Default: **false** )",
+				Description: "Redirect HTTP request to HTTPS (Default: **false** ).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"audit_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**)",
+				Description: "Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"passthrough_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**)",
+				Description: "Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"hsts": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable HSTS (Default: **hsts**). Supported values:\n  * **hsts**: Enable HSTS\n  * **hstss**: Enable HSTS including subdomains\n  * **hstsp**: Enable HSTS including subdomains and preloading\n  * **none**: Disable HSTS",
+				Description: "Enable HSTS (Default: **hsts**). Supported values:\n  * **hsts**: Enable HSTS\n  * **hstss**: Enable HSTS including subdomains\n  * **hstsp**: Enable HSTS including subdomains and preloading\n  * **none**: Disable HSTS.",
 				Default:     stringdefault.StaticString("hsts"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
@@ -199,26 +227,85 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"log_export_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable log export for this site (Default: **false**)",
+				Description: "Enable log export for this site (Default: **false**).",
 				Default:     booldefault.StaticBool(false),
+			},
+			"cache_enabled": schema.BoolAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "Enable cache for this site if supported by cluster (Default: **false**).",
+				Default:     booldefault.StaticBool(false),
+			},
+			"status": schema.StringAttribute{
+				Computed:    true,
+				Description: "Get site status. Available state:\n  * **CREATED**: Site just created, waiting for DNS to be configured for site domain name to redirect to Ogo Shield cluster.\n  * **DNS_ERROR**: Partial DNS configuration.\n  * **ONLINE**: Site is properly provisioned, but no active TLS certificate is present (ephemeral state).\n  * **LE_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a Let's Encrypt certificate.\n  * **CUST_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a customer certificate.\n  * **LE_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired Let's Encrypt certificate.\n  * **CUST_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired customer certificate.\n  * **OFFLIINE**: Site has been properly provisioned and configured on Ogo Shield cluster, but DNS no longer redirect on Ogo Shield cluster.",
+				Validators: []validator.String{
+					stringvalidator.OneOf("CREATED", "DNS_ERROR", "ONLINE", "LE_CERT", "CUST_CERT", "LE_EXP", "CUST_EXP", "OFFLINE"),
+				},
+			},
+			"cdn": schema.StringAttribute{
+				Optional:    true,
+				Description: "Select CDN to be used for this site if supported by cluster.",
+				Validators: []validator.String{
+					stringvalidator.OneOf("ORANGE"),
+				},
+			},
+			"cdn_status": schema.StringAttribute{
+				Computed:    true,
+				Description: "Retrieve CDN status if CDN is enabled.\n Available state:\n  * **ACTIVE**: CDN is enabled and ready to be used.\n  * **ACTIVATION_IN_PROGRESS**: CDN is enabled and first activation is in progress.\n  * **SYNC_IN_PROGRESS**: New configuration is waiting to be applied on CDN.",
+				Validators: []validator.String{
+					stringvalidator.OneOf("ACTIVE", "ACTIVATION_IN_PROGRESS", "SYNC_IN_PROGRESS"),
+				},
 			},
 			"tlsoptions_uid": schema.StringAttribute{
 				Optional:    true,
-				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source",
+				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source.",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Client certificate information to pass to origin server (Default: **info**). Supported values:\n  * **all**: Send certificate and certificate information\n  * **cert**: Send only certificate\n  * **info**: Send only certificate information\n  * **none***: Nothing send",
+				Description: "Client certificate information to pass to origin server (Default: **info**). Supported values:\n  * **all**: Send certificate and certificate information\n  * **cert**: Send only certificate\n  * **info**: Send only certificate information\n  * **none***: Nothing send.",
 				Default:     stringdefault.StaticString("info"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("all", "cert", "info", "none"),
 				},
 			},
-			"tags": schema.SetAttribute{
+			"active_customer_certificate": schema.SingleNestedAttribute{
+				Optional:    true,
+				Description: "P12/PFX certificate to be used for this site.",
+				Attributes: map[string]schema.Attribute{
+					"cn": schema.StringAttribute{
+						Computed:    true,
+						Description: "Common name of this certificate.",
+					},
+					"expired_at": schema.StringAttribute{
+						Computed:    true,
+						Description: "Expiration date of this certificate.",
+					},
+					"hash": schema.StringAttribute{
+						Optional:    true,
+						Computed:    true,
+						Description: "Hash of the certificate generated from P12 content.",
+					},
+					"p12_file": schema.StringAttribute{
+						Optional:    true,
+						Description: "P12/PFX file path containing certificate and key (conflicts with `p12_content64`).",
+					},
+					"p12_content64": schema.StringAttribute{
+						Optional:    true,
+						Description: "P12/PFX content encoded in base64 (conflicts with `p12_file`).",
+					},
+					"p12_password": schema.StringAttribute{
+						Required:    true,
+						Sensitive:   true,
+						Description: "Password used to decrypt P12 file.",
+					},
+				},
+			},
+			"blacklisted_countries": schema.SetAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "List of tags",
+				Description: "List of countries to blacklist.",
 				ElementType: types.StringType,
 				Default: setdefault.StaticValue(
 					types.SetValueMust(
@@ -227,17 +314,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					),
 				),
 			},
-			"blacklisted_countries": schema.SetAttribute{
+			"brain_overrides": schema.MapAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "List of countries to blacklist",
-				ElementType: types.StringType,
-				Default: setdefault.StaticValue(
-					types.SetValueMust(
-						types.StringType,
-						[]attr.Value{},
-					),
-				),
+				Description: "List of brain parameters to override",
+				ElementType: types.Float64Type,
 			},
 			"ip_exceptions": schema.SetNestedAttribute{
 				Optional:    true,
@@ -247,11 +328,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"ip": schema.StringAttribute{
 							Required:    true,
-							Description: "IP address list never blocked by Ogo Shield",
+							Description: "IP address list never blocked by Ogo Shield.",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this IP list",
+							Description: "Description associated to this IP list.",
 						},
 					},
 				},
@@ -276,20 +357,20 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**)",
+							Description: "Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**).",
 							Default:     booldefault.StaticBool(true),
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this rewrite rule",
+							Description: "Description associated to this rewrite rule.",
 						},
 						"rewrite_source": schema.StringAttribute{
 							Required:    true,
-							Description: "Source path to be rewrited",
+							Description: "Source path to be rewrited.",
 						},
 						"rewrite_destination": schema.StringAttribute{
 							Required:    true,
-							Description: "Rewrited destination path",
+							Description: "Rewrited destination path.",
 						},
 					},
 				},
@@ -316,13 +397,13 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**)",
+							Description: "Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**).",
 							Default:     booldefault.StaticBool(true),
 						},
 						"action": schema.StringAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Action to applied when rule match (Default: **brain**). Supported values:\n  * **brain**: Rule analysed by ogo Shield brain\n  * **bypass**: Rule not analysed by Ogo Shield brain",
+							Description: "Action to applied when rule match (Default: **brain**). Supported values:\n  * **brain**: Rule analysed by ogo Shield brain\n  * **bypass**: Rule not analysed by Ogo Shield brain.",
 							Default:     stringdefault.StaticString("brain"),
 							Validators: []validator.String{
 								stringvalidator.OneOf("brain", "bypass"),
@@ -331,21 +412,21 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"cache": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**)",
+							Description: "Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**).",
 							Default:     booldefault.StaticBool(false),
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this rule",
+							Description: "Description associated to this rule.",
 						},
 						"paths": schema.SetAttribute{
 							Required:    true,
-							Description: "List of URL path for which rule is applied",
+							Description: "List of URL path for which rule is applied.",
 							ElementType: types.StringType,
 						},
 						"whitelisted_ips": schema.SetAttribute{
 							Required:    true,
-							Description: "Authorized IP addresses list",
+							Description: "Authorized IP addresses list.",
 							ElementType: types.StringType,
 						},
 					},
@@ -374,11 +455,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"path": schema.StringAttribute{
 							Required:    true,
-							Description: "Path of URL never blocked by Ogo Shield",
+							Description: "Path of URL never blocked by Ogo Shield.",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this URL exception",
+							Description: "Description associated to this URL exception.",
 						},
 					},
 				},
@@ -394,9 +475,21 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					),
 				),
 			},
+			"tags": schema.SetAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "List of tags.",
+				ElementType: types.StringType,
+				Default: setdefault.StaticValue(
+					types.SetValueMust(
+						types.StringType,
+						[]attr.Value{},
+					),
+				),
+			},
 			"last_updated": schema.StringAttribute{
 				Computed:    true,
-				Description: "Last resource update by terraform",
+				Description: "Last resource update by terraform.",
 			},
 		},
 		MarkdownDescription: "Resource `ogo_shield_site` can be used to create, " +
@@ -419,7 +512,7 @@ func (r *siteResource) Configure(_ context.Context, req resource.ConfigureReques
 
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected resource configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
@@ -456,9 +549,46 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
 		Hsts:                 string(plan.Hsts.ValueString()),
 		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
+		CacheEnabled:         bool(plan.CacheEnabled.ValueBool()),
+		Status:               plan.Status.ValueString(),
+		Cdn:                  plan.Cdn.ValueStringPointer(),
 		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
 		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
 		TlsOptions:           tlsOpt,
+	}
+
+	// Certificate
+	if plan.ActiveCustomerCertificate != nil {
+		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" &&
+			plan.ActiveCustomerCertificate.P12Content64.ValueString() != "" {
+			resp.Diagnostics.AddError(
+				"attribute conflicts in active_customer_certificate",
+				"p12_file and p12_content64 attribute can't be used at same time",
+			)
+			return
+		}
+
+		p12_content64 := ""
+		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" {
+			p12Data, err := os.ReadFile(string(plan.ActiveCustomerCertificate.P12File.ValueString()))
+			if err != nil {
+				resp.Diagnostics.AddError(
+					"failed to read P12/PFX file",
+					"Could not read P12/PFX file, unexpected error: "+string(err.Error()),
+				)
+				return
+			}
+			p12_content64 = base64.StdEncoding.EncodeToString(p12Data)
+		} else if plan.ActiveCustomerCertificate.P12Content64.ValueString() != "" {
+			p12_content64 = plan.ActiveCustomerCertificate.P12Content64.ValueString()
+		}
+
+		s.ActiveCustomerCertificate = &ogosecurity.ActiveCustomerCertificate{
+			P12: ogosecurity.CertificateP12{
+				Data:     p12_content64,
+				Password: plan.ActiveCustomerCertificate.P12Password.ValueString(),
+			},
+		}
 	}
 
 	// Contract
@@ -479,6 +609,20 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.BlacklistedCountries = []string{}
 	for _, country := range plan.BlacklistedCountries {
 		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+	}
+
+	// Brain parameters overrides
+	s.BrainOverrides = make(map[string]float64)
+	for brainParam, brainVal := range plan.BrainOverrides.Elements() {
+		val, err := strconv.ParseFloat(brainVal.String(), 64)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error updating site",
+				"Invalid brain parameter float value, "+brainVal.String()+" unexpected error: "+err.Error(),
+			)
+			return
+		}
+		s.BrainOverrides[brainParam] = val
 	}
 
 	// IP Exceptions
@@ -539,7 +683,7 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 		s.Tags = append(s.Tags, string(tag.ValueString()))
 	}
 
-	_, err := r.client.CreateSite(s)
+	site, err := r.client.CreateSite(s)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating site",
@@ -549,6 +693,18 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 
 	// Map response body to schema and populate Computed attribute values
+	plan.ClusterEntrypoint4 = types.StringValue(site.Cluster.Entrypoint4)
+	plan.ClusterEntrypoint6 = types.StringValue(site.Cluster.Entrypoint6)
+	if plan.ActiveCustomerCertificate != nil {
+		plan.ActiveCustomerCertificate.Cn = types.StringValue(site.ActiveCustomerCertificate.Cn)
+		plan.ActiveCustomerCertificate.ExpiredAt = types.StringValue(site.ActiveCustomerCertificate.ExpiredAt)
+		plan.ActiveCustomerCertificate.Hash = types.StringValue(site.ActiveCustomerCertificate.Hash)
+	}
+	if plan.Cdn.String() != "" {
+		plan.ClusterEntrypointCdn = types.StringValue(site.Cluster.EntrypointCdn)
+		plan.CdnStatus = types.StringPointerValue(site.CdnStatus)
+	}
+	plan.Status = types.StringValue(site.Status)
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data
@@ -581,6 +737,9 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	// Overwrite properties with refreshed state
 	state.ClusterUid = types.StringValue(site.Cluster.Uid)
+	state.ClusterEntrypoint4 = types.StringValue(site.Cluster.Entrypoint4)
+	state.ClusterEntrypoint6 = types.StringValue(site.Cluster.Entrypoint6)
+	state.ClusterEntrypointCdn = types.StringValue(site.Cluster.EntrypointCdn)
 	state.OriginServer = types.StringValue(site.OriginServer)
 	state.OriginScheme = types.StringValue(site.OriginScheme)
 	state.OriginMtlsEnabled = types.BoolValue(site.OriginMtlsEnabled)
@@ -592,7 +751,42 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.PassthroughMode = types.BoolValue(site.PassthroughMode)
 	state.Hsts = types.StringValue(site.Hsts)
 	state.LogExportEnabled = types.BoolValue(site.LogExportEnabled)
+	state.CacheEnabled = types.BoolValue(site.CacheEnabled)
+	state.Status = types.StringValue(site.Status)
+	state.LogExportEnabled = types.BoolValue(site.LogExportEnabled)
 	state.PassTlsClientCert = types.StringValue(site.PassTlsClientCert)
+
+	// Activate certificate
+	if state.ActiveCustomerCertificate != nil {
+		if state.ActiveCustomerCertificate.Hash != types.StringValue(site.ActiveCustomerCertificate.Hash) {
+			if state.ActiveCustomerCertificate.P12File.ValueString() != "" {
+				state.ActiveCustomerCertificate.P12File = types.StringValue("")
+			} else if state.ActiveCustomerCertificate.P12Content64.ValueString() != "" {
+				state.ActiveCustomerCertificate.P12Content64 = types.StringValue("")
+			}
+		}
+	}
+
+	// Brain parameters overrides
+	state.BrainOverrides, diags = types.MapValueFrom(ctx, types.Float64Type, site.BrainOverrides)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// CDN
+	if site.Cdn != nil {
+		state.Cdn = types.StringPointerValue(site.Cdn)
+		state.CdnStatus = types.StringPointerValue(site.CdnStatus)
+		state.ClusterEntrypointCdn = types.StringValue(site.Cluster.EntrypointCdn)
+	}
+
+	// Contract
+	if site.Contract != nil {
+		if site.Contract.Number != "" {
+			state.ContractNumber = types.StringValue(site.Contract.Number)
+		}
+	}
 
 	// TLS Options
 	if site.TlsOptions != nil {
@@ -698,17 +892,53 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
 		Hsts:                 string(plan.Hsts.ValueString()),
 		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
+		CacheEnabled:         bool(plan.CacheEnabled.ValueBool()),
+		Status:               plan.Status.ValueString(),
+		Cdn:                  plan.Cdn.ValueStringPointer(),
 		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
 		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
 		TlsOptions:           tlsOpt,
 	}
 
-	// Contracts
-	// if plan.TlsOptionsUid.ValueString() != "" {
-	// 	s.Contract = &ogosecurity.Contract{
-	// 		Number: string(plan.ContractNumber.ValueString()),
-	// 	}
-	// }
+	// Certificate
+	if plan.ActiveCustomerCertificate != nil {
+		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" &&
+			plan.ActiveCustomerCertificate.P12Content64.ValueString() != "" {
+			resp.Diagnostics.AddError(
+				"attribute conflicts in active_customer_certificate",
+				"p12_file and p12_content64 attribute can't be used at same time",
+			)
+			return
+		}
+
+		p12_content64 := ""
+		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" {
+			p12Data, err := os.ReadFile(string(plan.ActiveCustomerCertificate.P12File.ValueString()))
+			if err != nil {
+				resp.Diagnostics.AddError(
+					"failed to read certificate",
+					"Could not read certificate file, unexpected error: "+string(err.Error()),
+				)
+				return
+			}
+			p12_content64 = base64.StdEncoding.EncodeToString(p12Data)
+		} else if plan.ActiveCustomerCertificate.P12Content64.ValueString() != "" {
+			p12_content64 = plan.ActiveCustomerCertificate.P12Content64.ValueString()
+		}
+		s.ActiveCustomerCertificate = &ogosecurity.ActiveCustomerCertificate{
+			P12: ogosecurity.CertificateP12{
+				Data:     p12_content64,
+				Password: plan.ActiveCustomerCertificate.P12Password.ValueString(),
+			},
+		}
+	}
+
+	// Contract
+	if plan.ContractNumber.ValueString() != "" {
+		s.Contract = &ogosecurity.Contract{
+			Number: string(plan.ContractNumber.ValueString()),
+		}
+	}
 
 	// TLS Options
 	if plan.TlsOptionsUid.ValueString() != "" {
@@ -721,6 +951,20 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.BlacklistedCountries = []string{}
 	for _, country := range plan.BlacklistedCountries {
 		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+	}
+
+	// Brain parameters overrides
+	s.BrainOverrides = make(map[string]float64)
+	for brainParam, brainVal := range plan.BrainOverrides.Elements() {
+		val, err := strconv.ParseFloat(brainVal.String(), 64)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error updating site",
+				"Invalid brain parameter float value, "+brainVal.String()+" unexpected error: "+err.Error(),
+			)
+			return
+		}
+		s.BrainOverrides[brainParam] = val
 	}
 
 	// IP Exceptions
@@ -781,7 +1025,7 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		s.Tags = append(s.Tags, string(tag.ValueString()))
 	}
 
-	_, err := r.client.UpdateSite(s)
+	site, err := r.client.UpdateSite(s)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error updating site",
@@ -791,6 +1035,18 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	// Map response body to schema and populate Computed attribute values
+	plan.ClusterEntrypoint4 = types.StringValue(site.Cluster.Entrypoint4)
+	plan.ClusterEntrypoint6 = types.StringValue(site.Cluster.Entrypoint6)
+	if plan.ActiveCustomerCertificate != nil {
+		plan.ActiveCustomerCertificate.Cn = types.StringValue(site.ActiveCustomerCertificate.Cn)
+		plan.ActiveCustomerCertificate.ExpiredAt = types.StringValue(site.ActiveCustomerCertificate.ExpiredAt)
+		plan.ActiveCustomerCertificate.Hash = types.StringValue(site.ActiveCustomerCertificate.Hash)
+	}
+	if plan.Cdn.String() != "" {
+		plan.ClusterEntrypointCdn = types.StringValue(site.Cluster.EntrypointCdn)
+		plan.CdnStatus = types.StringPointerValue(site.CdnStatus)
+	}
+	plan.Status = types.StringValue(site.Status)
 	plan.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 
 	// Set state to fully populated data

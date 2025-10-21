@@ -4,6 +4,8 @@
 package ogosecurity
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -18,21 +20,39 @@ type Client struct {
 	Endpoint     string
 	HostBaseURL  string
 	HTTPClient   *http.Client
-	Organization string
+	Email        string
 	ApiKey       string
+	Organization string
+}
+
+func md5sum(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
 }
 
 // NewClient
-func NewClient(host *string, organization *string, apikey *string) (*Client, error) {
+func NewClient(host *string, email *string, apikey *string, organization *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
-	// Check if endpoint, organization and password are provided
+	// Check if endpoint, email, apikey and organization are provided
 	if host == nil {
 		return &c, errors.New("endpoint must be provided")
 	} else {
 		c.Endpoint = *host
+	}
+
+	if email == nil {
+		return &c, errors.New("user email address must be provided")
+	} else {
+		c.Email = *email
+	}
+
+	if apikey == nil {
+		return &c, errors.New("API key must be provided")
+	} else {
+		c.ApiKey = *apikey
 	}
 
 	if organization == nil {
@@ -41,23 +61,22 @@ func NewClient(host *string, organization *string, apikey *string) (*Client, err
 		c.Organization = *organization
 	}
 
-	if apikey == nil {
-		return &c, errors.New("API Key must be provided")
-	} else {
-		c.ApiKey = *apikey
-	}
-
 	c.HostBaseURL = *host + "/v2/organizations/" + *organization
 
 	return &c, nil
 }
 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
-	// Set headers
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	req.Header.Set("X-Ogo-Api-Key", c.ApiKey)
+	// Generate token based on URL Path
+	token := md5sum(req.URL.Path + "-" + c.ApiKey)
 
-	// Lock access to Ogo API to restrict count of concurrent requests
+	// Set headers
+	if req.Header.Get("Content-Type") == "" {
+		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	}
+	req.Header.Set("X-Ogo-Auth", c.Email+";"+token)
+
+	// Lock access to Ogo API to restrict concurrent requests
 	sem <- 1
 	res, err := c.HTTPClient.Do(req)
 	<-sem

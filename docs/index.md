@@ -54,5 +54,6 @@ provider "ogo" {
 ### Required
 
 - `apikey` (String, Sensitive) API Key
+- `email` (String) User Email Address
 - `endpoint` (String) Ogo API endpoint
 - `organization` (String) Organization code used to authenticate to Ogo Dashboard

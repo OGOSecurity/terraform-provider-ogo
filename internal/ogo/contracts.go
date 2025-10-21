@@ -11,7 +11,7 @@ import (
 
 // GetAllContracts - Returns all user's contract
 func (c *Client) GetAllContracts() ([]Contract, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/contracts", c.HostBaseURL), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/contracts/available", c.HostBaseURL), nil)
 	if err != nil {
 		return nil, err
 	}

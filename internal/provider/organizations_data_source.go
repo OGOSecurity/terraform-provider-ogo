@@ -52,11 +52,11 @@ func (d *organizationsDataSource) Schema(_ context.Context, _ datasource.SchemaR
 					Attributes: map[string]schema.Attribute{
 						"code": schema.StringAttribute{
 							Computed:    true,
-							Description: "Code identifier used to reference this organization",
+							Description: "Code identifier used to reference this organization.",
 						},
 						"company_name": schema.StringAttribute{
 							Computed:    true,
-							Description: "Company name of this organization",
+							Description: "Company name of this organization.",
 						},
 					},
 				},
@@ -79,7 +79,7 @@ func (d *organizationsDataSource) Configure(_ context.Context, req datasource.Co
 	client, ok := req.ProviderData.(*ogosecurity.Client)
 	if !ok {
 		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
+			"unexpected data source configure type",
 			fmt.Sprintf("Expected *ogosecurity.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 

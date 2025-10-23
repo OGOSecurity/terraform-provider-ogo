@@ -2,15 +2,15 @@
 page_title: "ogo_shield_contracts Data Source - ogo"
 subcategory: ""
 description: |-
-  Get list of contract and associated informations.
-  Use this data source to retrieve list of available contract and related informations, in particular contract Number needed to create new site.
+  Get a list of contracts and the associated information.
+  Use this data source to retrieve the list of available contracts and related information, in particular the contract number needed to create a new site.
 ---
 
 # ogo_shield_contracts (Data Source)
 
-Get list of contract and associated informations.
+Get a list of contracts and the associated information.
 
-Use this data source to retrieve list of available contract and related informations, in particular contract Number needed to create new site.
+Use this data source to retrieve the list of available contracts and related information, in particular the contract number needed to create a new site.
 
 ## Example Usage
 

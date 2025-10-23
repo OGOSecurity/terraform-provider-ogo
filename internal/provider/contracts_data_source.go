@@ -62,9 +62,9 @@ func (d *contractsDataSource) Schema(_ context.Context, _ datasource.SchemaReque
 				},
 			},
 		},
-		MarkdownDescription: "Get list of contract and associated informations.\n\n" +
-			"Use this data source to retrieve list of available contract and related informations, " +
-			"in particular contract Number needed to create new site.",
+		MarkdownDescription: "Get a list of contracts and the associated information.\n\n" +
+			"Use this data source to retrieve the list of available contracts and related information, " +
+			"in particular the contract number needed to create a new site.",
 	}
 }
 

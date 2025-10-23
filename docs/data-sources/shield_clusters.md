@@ -2,15 +2,15 @@
 page_title: "ogo_shield_clusters Data Source - ogo"
 subcategory: ""
 description: |-
-  Get list of cluster and associated informations.
-  Use this data source to retrieve list of available cluster and related informations, in particular cluster UID needed to create new site.
+  Get a list of clusters and the associated information.
+  Use this data source to retrieve the list of available clusters and related information, in particular the cluster UID needed to create a new site.
 ---
 
 # ogo_shield_clusters (Data Source)
 
-Get list of cluster and associated informations.
+Get a list of clusters and the associated information.
 
-Use this data source to retrieve list of available cluster and related informations, in particular cluster UID needed to create new site.
+Use this data source to retrieve the list of available clusters and related information, in particular the cluster UID needed to create a new site.
 
 ## Example Usage
 
@@ -37,6 +37,6 @@ Read-Only:
 - `name` (String) Name of the cluster.
 - `supported_cdns` (Set of String) List of supported CDN.
 - `supports_cache` (Boolean) Cache support features.
-- `supports_ipv6_origins` (Boolean) Support of IPv6 origins.
+- `supports_ipv6_origins` (Boolean) Support of IPv6 on the origin server.
 - `supports_mtls` (Boolean) mTLS support features.
 - `uid` (String) UID used to reference this cluster.

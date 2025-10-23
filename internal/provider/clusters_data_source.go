@@ -89,7 +89,7 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 						},
 						"supports_ipv6_origins": schema.BoolAttribute{
 							Computed:    true,
-							Description: "Support of IPv6 origins.",
+							Description: "Support of IPv6 on the origin server.",
 						},
 						"supports_mtls": schema.BoolAttribute{
 							Computed:    true,
@@ -104,9 +104,9 @@ func (d *clustersDataSource) Schema(_ context.Context, _ datasource.SchemaReques
 				},
 			},
 		},
-		MarkdownDescription: "Get list of cluster and associated informations.\n\n" +
-			"Use this data source to retrieve list of available cluster and related informations, " +
-			"in particular cluster UID needed to create new site.",
+		MarkdownDescription: "Get a list of clusters and the associated information.\n\n" +
+			"Use this data source to retrieve the list of available clusters and related information, " +
+			"in particular the cluster UID needed to create a new site.",
 	}
 }
 

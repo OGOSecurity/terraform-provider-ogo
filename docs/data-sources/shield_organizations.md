@@ -2,15 +2,15 @@
 page_title: "ogo_shield_organizations Data Source - ogo"
 subcategory: ""
 description: |-
-  Get list of organization.
-  Use this data source to retrieve list of available organization, in particular organization code needed to create new site.
+  Get a list of organizations.
+  Use this data source to retrieve the list of available organizations, in particular the organization code needed to create a new site.
 ---
 
 # ogo_shield_organizations (Data Source)
 
-Get list of organization.
+Get a list of organizations.
 
-Use this data source to retrieve list of available organization, in particular organization code needed to create new site.
+Use this data source to retrieve the list of available organizations, in particular the organization code needed to create a new site.
 
 ## Example Usage
 

@@ -63,12 +63,14 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 							Description: "Name of the TLS Options.",
 						},
 						"client_auth_type": schema.StringAttribute{
-							Computed:    true,
-							Description: "Authentication type needed to authenticate client.\n  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.\n  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
+							Computed: true,
+							Description: "Authentication type needed to authenticate clients.\n" +
+								"  * **VerifyClientCertIfGiven**: If a certificate is provided, verify if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise, proceed without any certificate.\n" +
+								"  * **RequireAndVerifyClientCert**: Require a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
 						},
 						"client_auth_ca_certs": schema.ListAttribute{
 							Computed:    true,
-							Description: "List of certificate authority used to verify client certificate.",
+							Description: "List of certificate authorities used to verify client certificates.",
 							ElementType: types.StringType,
 						},
 						"min_tls_version": schema.StringAttribute{
@@ -83,9 +85,9 @@ func (d *tlsoptionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 				},
 			},
 		},
-		MarkdownDescription: "Get list of organization TLS options and associated configuration.\n\n" +
-			"Use this data source to retrieve informations, in particular TLS options UID, to be used " +
-			"in `ogo_shield_site` resource configuration for which TLS default settings need to be override.",
+		MarkdownDescription: "Get a list of organization TLS options and associated configurations.\n\n" +
+			"Use this data source to retrieve information, in particular TLS options UID, to be used " +
+			"in `ogo_shield_site` resource configuration for which TLS default settings need to be overridden.",
 	}
 }
 

@@ -62,9 +62,9 @@ func (d *organizationsDataSource) Schema(_ context.Context, _ datasource.SchemaR
 				},
 			},
 		},
-		MarkdownDescription: "Get list of organization.\n\n" +
-			"Use this data source to retrieve list of available organization, " +
-			"in particular organization code needed to create new site.",
+		MarkdownDescription: "Get a list of organizations.\n\n" +
+			"Use this data source to retrieve the list of available organizations, " +
+			"in particular the organization code needed to create a new site.",
 	}
 }
 

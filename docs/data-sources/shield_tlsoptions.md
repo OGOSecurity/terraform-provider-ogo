@@ -2,15 +2,15 @@
 page_title: "ogo_shield_tlsoptions Data Source - ogo"
 subcategory: ""
 description: |-
-  Get list of organization TLS options and associated configuration.
-  Use this data source to retrieve informations, in particular TLS options UID, to be used in ogo_shield_site resource configuration for which TLS default settings need to be override.
+  Get a list of organization TLS options and associated configurations.
+  Use this data source to retrieve information, in particular TLS options UID, to be used in ogo_shield_site resource configuration for which TLS default settings need to be overridden.
 ---
 
 # ogo_shield_tlsoptions (Data Source)
 
-Get list of organization TLS options and associated configuration.
+Get a list of organization TLS options and associated configurations.
 
-Use this data source to retrieve informations, in particular TLS options UID, to be used in `ogo_shield_site` resource configuration for which TLS default settings need to be override.
+Use this data source to retrieve information, in particular TLS options UID, to be used in `ogo_shield_site` resource configuration for which TLS default settings need to be overridden.
 
 ## Example Usage
 
@@ -30,10 +30,10 @@ data "ogo_shield_tlsoptions" "tlsoptions" {}
 
 Read-Only:
 
-- `client_auth_ca_certs` (List of String) List of certificate authority used to verify client certificate.
-- `client_auth_type` (String) Authentication type needed to authenticate client.
-  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.
-  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
+- `client_auth_ca_certs` (List of String) List of certificate authorities used to verify client certificates.
+- `client_auth_type` (String) Authentication type needed to authenticate clients.
+  * **VerifyClientCertIfGiven**: If a certificate is provided, verify if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise, proceed without any certificate.
+  * **RequireAndVerifyClientCert**: Require a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
 - `max_tls_version` (String) Maximum TLS version accepted.
 - `min_tls_version` (String) Minimum TLS version accepted.
 - `name` (String) Name of the TLS Options.

@@ -128,7 +128,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 		Attributes: map[string]schema.Attribute{
 			"domain_name": schema.StringAttribute{
 				Required:    true,
-				Description: "DNS domain name of site.",
+				Description: "DNS domain name of the site.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -142,19 +142,19 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_entrypoint_4": schema.StringAttribute{
 				Computed:    true,
-				Description: "IPv4 cluster entrypoint to which site DNS record can be configured.",
+				Description: "IPv4 cluster entrypoint to which the site DNS record can be configured.",
 			},
 			"cluster_entrypoint_6": schema.StringAttribute{
 				Computed:    true,
-				Description: "IPv6 cluster entrypoint to which site DNS record can be configured.",
+				Description: "IPv6 cluster entrypoint to which site the DNS record can be configured.",
 			},
 			"cluster_entrypoint_cdn": schema.StringAttribute{
 				Computed:    true,
-				Description: "CDN entrypoint to which site DNS record can be configured.",
+				Description: "CDN entrypoint to which the site DNS record can be configured.",
 			},
 			"contract_number": schema.StringAttribute{
 				Optional:    true,
-				Description: "Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source.",
+				Description: "Contract number to which the site is attached, only required if multiple contracts exist for this organization. List of available contracts can be retrieved from `ogo_shield_contrats` data source.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -166,7 +166,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"origin_scheme": schema.StringAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**).",
+				Description: "Scheme used to access the origin server. Supported values: **https** or **http** (default: **https**).",
 				Default:     stringdefault.StaticString("https"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("http", "https"),
@@ -174,7 +174,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"origin_port": schema.Int32Attribute{
 				Optional:    true,
-				Description: "Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port.",
+				Description: "Port to be used to access the origin server. Must be defined only if different from standard HTTP port 443 or 80, otherwise let Ogo choose the correct port.",
 				Validators: []validator.Int32{
 					int32validator.Between(1, 65535),
 				},
@@ -182,44 +182,51 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"origin_mtls_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable mTLS between Ogo and origin server (Default: **false**).",
+				Description: "Enable mTLS between Ogo and the origin server (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"origin_skip_cert_verify": schema.BoolAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**).",
-				Default:     booldefault.StaticBool(false),
+				Optional: true,
+				Computed: true,
+				Description: "Skip origin server certificate verification if TLS is used. " +
+					"If set to **true** Ogo accepts connection to the origin server even if the " +
+					"certificate doesn't match site domain name, or the certificate is expired, " +
+					"or the certificate is self signed (default: **false**).",
+				Default: booldefault.StaticBool(false),
 			},
 			"remove_xforwarded": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Remove X-Forwarded-* headers. (Default: **false** ).",
+				Description: "Remove X-Forwarded-* headers. (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"force_https": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Redirect HTTP request to HTTPS (Default: **false** ).",
+				Description: "Redirect HTTP request to HTTPS (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"audit_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**).",
+				Description: "Enable audit mode. Requests are analyzed by Ogo Shield but never blocked (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"passthrough_mode": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**).",
+				Description: "Enable passthrough mode. Requests are not analyzed by Ogo Shield and never blocked (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"hsts": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Enable HSTS (Default: **hsts**). Supported values:\n  * **hsts**: Enable HSTS\n  * **hstss**: Enable HSTS including subdomains\n  * **hstsp**: Enable HSTS including subdomains and preloading\n  * **none**: Disable HSTS.",
-				Default:     stringdefault.StaticString("hsts"),
+				Optional: true,
+				Computed: true,
+				Description: "Enable HSTS (default: **hsts**). Supported values:\n" +
+					" * **hsts**: Enable HSTS\n" +
+					"  * **hstss**: Enable HSTS including subdomains\n" +
+					"  * **hstsp**: Enable HSTS including subdomains and preloading\n" +
+					"  * **none**: Disable HSTS.",
+				Default: stringdefault.StaticString("hsts"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("hsts", "hstss", "hstssp", "none"),
 				},
@@ -227,18 +234,26 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			"log_export_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable log export for this site (Default: **false**).",
+				Description: "Enable log export for this site (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"cache_enabled": schema.BoolAttribute{
 				Optional:    true,
 				Computed:    true,
-				Description: "Enable cache for this site if supported by cluster (Default: **false**).",
+				Description: "Enable cache for this site if supported by cluster (default: **false**).",
 				Default:     booldefault.StaticBool(false),
 			},
 			"status": schema.StringAttribute{
-				Computed:    true,
-				Description: "Get site status. Available state:\n  * **CREATED**: Site just created, waiting for DNS to be configured for site domain name to redirect to Ogo Shield cluster.\n  * **DNS_ERROR**: Partial DNS configuration.\n  * **ONLINE**: Site is properly provisioned, but no active TLS certificate is present (ephemeral state).\n  * **LE_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a Let's Encrypt certificate.\n  * **CUST_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a customer certificate.\n  * **LE_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired Let's Encrypt certificate.\n  * **CUST_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired customer certificate.\n  * **OFFLIINE**: Site has been properly provisioned and configured on Ogo Shield cluster, but DNS no longer redirect on Ogo Shield cluster.",
+				Computed: true,
+				Description: "Get site status. Available state:\n" +
+					"  * **CREATED**: site just created, waiting for DNS to be configured for site domain name to redirect to Ogo Shield cluster.\n" +
+					"  * **DNS_ERROR**: Partial DNS configuration.\n" +
+					"  * **ONLINE**: Site is properly provisioned, but no active TLS certificate is present (ephemeral state).\n" +
+					"  * **LE_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a Let's Encrypt certificate.\n" +
+					"  * **CUST_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a customer certificate.\n" +
+					"  * **LE_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired Let's Encrypt certificate.\n" +
+					"  * **CUST_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired customer certificate.\n" +
+					"  * **OFFLINE**: Site has been properly provisioned and configured on Ogo Shield cluster, but DNS no longer redirects on Ogo Shield cluster.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("CREATED", "DNS_ERROR", "ONLINE", "LE_CERT", "CUST_CERT", "LE_EXP", "CUST_EXP", "OFFLINE"),
 				},
@@ -251,8 +266,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				},
 			},
 			"cdn_status": schema.StringAttribute{
-				Computed:    true,
-				Description: "Retrieve CDN status if CDN is enabled.\n Available state:\n  * **ACTIVE**: CDN is enabled and ready to be used.\n  * **ACTIVATION_IN_PROGRESS**: CDN is enabled and first activation is in progress.\n  * **SYNC_IN_PROGRESS**: New configuration is waiting to be applied on CDN.",
+				Computed: true,
+				Description: "Retrieve CDN status if CDN is enabled.\n Available state:\n" +
+					"  * **ACTIVE**: CDN is enabled and ready to be used.\n" +
+					"  * **ACTIVATION_IN_PROGRESS**: CDN is enabled and first activation is in progress.\n" +
+					"  * **SYNC_IN_PROGRESS**: New configuration is waiting to be applied on CDN.",
 				Validators: []validator.String{
 					stringvalidator.OneOf("ACTIVE", "ACTIVATION_IN_PROGRESS", "SYNC_IN_PROGRESS"),
 				},
@@ -262,10 +280,14 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Description: "UID of TLS options to be applied to this site. List of available TLS options and associated UID can be retrieved from `ogo_shield_tlsoptions` data source.",
 			},
 			"pass_tls_client_cert": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Client certificate information to pass to origin server (Default: **info**). Supported values:\n  * **all**: Send certificate and certificate information\n  * **cert**: Send only certificate\n  * **info**: Send only certificate information\n  * **none***: Nothing send.",
-				Default:     stringdefault.StaticString("info"),
+				Optional: true,
+				Computed: true,
+				Description: "Client certificate informations to pass to the origin server (default: **info**). Supported values:\n" +
+					"  * **all**: Send the certificate and certificate informations\n" +
+					"  * **cert**: Send only the certificate\n" +
+					"  * **info**: Send only the certificate information\n" +
+					"  * **none***: Nothing sent.",
+				Default: stringdefault.StaticString("info"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("all", "cert", "info", "none"),
 				},
@@ -332,7 +354,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this IP list.",
+							Description: "Description associated with this IP list.",
 						},
 					},
 				},
@@ -357,20 +379,20 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**).",
+							Description: "Flag to enable (**true**) or disable (**false**) rewrite rule. (default: **true**).",
 							Default:     booldefault.StaticBool(true),
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this rewrite rule.",
+							Description: "Description associated with this rewrite rule.",
 						},
 						"rewrite_source": schema.StringAttribute{
 							Required:    true,
-							Description: "Source path to be rewrited.",
+							Description: "Source path to be rewritten.",
 						},
 						"rewrite_destination": schema.StringAttribute{
 							Required:    true,
-							Description: "Rewrited destination path.",
+							Description: "Rewritten destination path.",
 						},
 					},
 				},
@@ -397,14 +419,16 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"active": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**).",
+							Description: "Flag to enable (**true**) or disable (**false**) rule. (default: **true**).",
 							Default:     booldefault.StaticBool(true),
 						},
 						"action": schema.StringAttribute{
-							Optional:    true,
-							Computed:    true,
-							Description: "Action to applied when rule match (Default: **brain**). Supported values:\n  * **brain**: Rule analysed by ogo Shield brain\n  * **bypass**: Rule not analysed by Ogo Shield brain.",
-							Default:     stringdefault.StaticString("brain"),
+							Optional: true,
+							Computed: true,
+							Description: "Action to be applied when the rule matches (default: **brain**). Supported values:\n" +
+								"  * **brain**: Rule analyzed by Ogo Shield brain\n" +
+								"  * **bypass**: Rule not analyzed by Ogo Shield brain.",
+							Default: stringdefault.StaticString("brain"),
 							Validators: []validator.String{
 								stringvalidator.OneOf("brain", "bypass"),
 							},
@@ -412,16 +436,16 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						"cache": schema.BoolAttribute{
 							Optional:    true,
 							Computed:    true,
-							Description: "Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**).",
+							Description: "Enable or disable caching on this rule. Option can be used only if site caching is enabled. (default: **false**).",
 							Default:     booldefault.StaticBool(false),
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this rule.",
+							Description: "Description associated with this rule.",
 						},
 						"paths": schema.SetAttribute{
 							Required:    true,
-							Description: "List of URL path for which rule is applied.",
+							Description: "List of URL paths for which the rule is applied.",
 							ElementType: types.StringType,
 						},
 						"whitelisted_ips": schema.SetAttribute{
@@ -455,11 +479,11 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 					Attributes: map[string]schema.Attribute{
 						"path": schema.StringAttribute{
 							Required:    true,
-							Description: "Path of URL never blocked by Ogo Shield.",
+							Description: "Path of the URL never blocked by Ogo Shield.",
 						},
 						"comment": schema.StringAttribute{
 							Optional:    true,
-							Description: "Description associated to this URL exception.",
+							Description: "Description associated with this URL exception.",
 						},
 					},
 				},
@@ -489,12 +513,12 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"last_updated": schema.StringAttribute{
 				Computed:    true,
-				Description: "Last resource update by terraform.",
+				Description: "Last resource updated by Terraform.",
 			},
 		},
 		MarkdownDescription: "Resource `ogo_shield_site` can be used to create, " +
 			"update or delete sites configuration in Ogo Dashboard.\n\n" +
-			"This resource allowed to manage all site settings.\n\n" +
+			"This resource allow to manage all site settings.\n\n" +
 			"`ogo_shield_clusters` and `ogo_shield_tlsoptions` data sources can be " +
 			"used to retrieve UID needed in `ogo_shield_site` resource configuration.\n\n",
 	}

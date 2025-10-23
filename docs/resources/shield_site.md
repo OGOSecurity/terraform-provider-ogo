@@ -3,7 +3,7 @@ page_title: "ogo_shield_site Resource - ogo"
 subcategory: ""
 description: |-
   Resource ogo_shield_site can be used to create, update or delete sites configuration in Ogo Dashboard.
-  This resource allowed to manage all site settings.
+  This resource allow to manage all site settings.
   ogo_shield_clusters and ogo_shield_tlsoptions data sources can be used to retrieve UID needed in ogo_shield_site resource configuration.
 ---
 
@@ -11,7 +11,7 @@ description: |-
 
 Resource `ogo_shield_site` can be used to create, update or delete sites configuration in Ogo Dashboard.
 
-This resource allowed to manage all site settings.
+This resource allow to manage all site settings.
 
 `ogo_shield_clusters` and `ogo_shield_tlsoptions` data sources can be used to retrieve UID needed in `ogo_shield_site` resource configuration.
 
@@ -110,37 +110,37 @@ resource "ogo_shield_site" "bar_example_com" {
 ### Required
 
 - `cluster_uid` (String) Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.
-- `domain_name` (String) DNS domain name of site.
+- `domain_name` (String) DNS domain name of the site.
 - `origin_server` (String) Origin server address (IP address or domain name).
 
 ### Optional
 
 - `active_customer_certificate` (Attributes) P12/PFX certificate to be used for this site. (see [below for nested schema](#nestedatt--active_customer_certificate))
-- `audit_mode` (Boolean) Enable audit mode. Requests are analysed by Ogo Shield but never blocked (Default: **false**).
+- `audit_mode` (Boolean) Enable audit mode. Requests are analyzed by Ogo Shield but never blocked (default: **false**).
 - `blacklisted_countries` (Set of String) List of countries to blacklist.
 - `brain_overrides` (Map of Number) List of brain parameters to override
-- `cache_enabled` (Boolean) Enable cache for this site if supported by cluster (Default: **false**).
+- `cache_enabled` (Boolean) Enable cache for this site if supported by cluster (default: **false**).
 - `cdn` (String) Select CDN to be used for this site if supported by cluster.
-- `contract_number` (String) Contract number to which the site is attached, only required if multiple contract exist for this organization. List of available contract can be retrieved from `ogo_shield_contrats` data source.
-- `force_https` (Boolean) Redirect HTTP request to HTTPS (Default: **false** ).
-- `hsts` (String) Enable HSTS (Default: **hsts**). Supported values:
-  * **hsts**: Enable HSTS
+- `contract_number` (String) Contract number to which the site is attached, only required if multiple contracts exist for this organization. List of available contracts can be retrieved from `ogo_shield_contrats` data source.
+- `force_https` (Boolean) Redirect HTTP request to HTTPS (default: **false**).
+- `hsts` (String) Enable HSTS (default: **hsts**). Supported values:
+ * **hsts**: Enable HSTS
   * **hstss**: Enable HSTS including subdomains
   * **hstsp**: Enable HSTS including subdomains and preloading
   * **none**: Disable HSTS.
 - `ip_exceptions` (Attributes Set) Passthrough mode for IPs. Requests from those IPs will never be blocked. (see [below for nested schema](#nestedatt--ip_exceptions))
-- `log_export_enabled` (Boolean) Enable log export for this site (Default: **false**).
-- `origin_mtls_enabled` (Boolean) Enable mTLS between Ogo and origin server (Default: **false**).
-- `origin_port` (Number) Port to be used to access origin server. Must be defined only if different to standard HTTP port 443 or 80, otherwise let Ogo choose the correct port.
-- `origin_scheme` (String) Scheme to used to access origin server. Supported values: **https** or **http** (Default: **https**).
-- `origin_skip_cert_verify` (Boolean) Skip origin server certificate verification if TLS is used. If set to **true** Ogo accept connection to origin server even if certificate doesn't match site domain name, or certificate is expired, or certificate is self signed (Default: **false**).
-- `pass_tls_client_cert` (String) Client certificate information to pass to origin server (Default: **info**). Supported values:
-  * **all**: Send certificate and certificate information
-  * **cert**: Send only certificate
-  * **info**: Send only certificate information
-  * **none***: Nothing send.
-- `passthrough_mode` (Boolean) Enable passthrough mode. Requests are not analysed by Ogo Shield and never blocked (Default: **false**).
-- `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (Default: **false** ).
+- `log_export_enabled` (Boolean) Enable log export for this site (default: **false**).
+- `origin_mtls_enabled` (Boolean) Enable mTLS between Ogo and the origin server (default: **false**).
+- `origin_port` (Number) Port to be used to access the origin server. Must be defined only if different from standard HTTP port 443 or 80, otherwise let Ogo choose the correct port.
+- `origin_scheme` (String) Scheme used to access the origin server. Supported values: **https** or **http** (default: **https**).
+- `origin_skip_cert_verify` (Boolean) Skip origin server certificate verification if TLS is used. If set to **true** Ogo accepts connection to the origin server even if the certificate doesn't match site domain name, or the certificate is expired, or the certificate is self signed (default: **false**).
+- `pass_tls_client_cert` (String) Client certificate informations to pass to the origin server (default: **info**). Supported values:
+  * **all**: Send the certificate and certificate informations
+  * **cert**: Send only the certificate
+  * **info**: Send only the certificate information
+  * **none***: Nothing sent.
+- `passthrough_mode` (Boolean) Enable passthrough mode. Requests are not analyzed by Ogo Shield and never blocked (default: **false**).
+- `remove_xforwarded` (Boolean) Remove X-Forwarded-* headers. (default: **false**).
 - `rewrite_rules` (Attributes List) Rewrite a path of your website. Rewrite rules are parsed in order of declaration. (see [below for nested schema](#nestedatt--rewrite_rules))
 - `rules` (Attributes List) Restrict access to given URLs. Rules are parsed in order of declaration. The engine stops at the first URL match. (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String) List of tags.
@@ -154,19 +154,19 @@ resource "ogo_shield_site" "bar_example_com" {
   * **ACTIVE**: CDN is enabled and ready to be used.
   * **ACTIVATION_IN_PROGRESS**: CDN is enabled and first activation is in progress.
   * **SYNC_IN_PROGRESS**: New configuration is waiting to be applied on CDN.
-- `cluster_entrypoint_4` (String) IPv4 cluster entrypoint to which site DNS record can be configured.
-- `cluster_entrypoint_6` (String) IPv6 cluster entrypoint to which site DNS record can be configured.
-- `cluster_entrypoint_cdn` (String) CDN entrypoint to which site DNS record can be configured.
-- `last_updated` (String) Last resource update by terraform.
+- `cluster_entrypoint_4` (String) IPv4 cluster entrypoint to which the site DNS record can be configured.
+- `cluster_entrypoint_6` (String) IPv6 cluster entrypoint to which site the DNS record can be configured.
+- `cluster_entrypoint_cdn` (String) CDN entrypoint to which the site DNS record can be configured.
+- `last_updated` (String) Last resource updated by Terraform.
 - `status` (String) Get site status. Available state:
-  * **CREATED**: Site just created, waiting for DNS to be configured for site domain name to redirect to Ogo Shield cluster.
+  * **CREATED**: site just created, waiting for DNS to be configured for site domain name to redirect to Ogo Shield cluster.
   * **DNS_ERROR**: Partial DNS configuration.
   * **ONLINE**: Site is properly provisioned, but no active TLS certificate is present (ephemeral state).
   * **LE_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a Let's Encrypt certificate.
   * **CUST_CERT**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with a customer certificate.
   * **LE_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired Let's Encrypt certificate.
   * **CUST_EXP**: Site is properly provisioned, DNS is configured on Ogo Shield cluster and site is protected with an expired customer certificate.
-  * **OFFLIINE**: Site has been properly provisioned and configured on Ogo Shield cluster, but DNS no longer redirect on Ogo Shield cluster.
+  * **OFFLINE**: Site has been properly provisioned and configured on Ogo Shield cluster, but DNS no longer redirects on Ogo Shield cluster.
 
 <a id="nestedatt--active_customer_certificate"></a>
 ### Nested Schema for `active_customer_certificate`
@@ -196,7 +196,7 @@ Required:
 
 Optional:
 
-- `comment` (String) Description associated to this IP list.
+- `comment` (String) Description associated with this IP list.
 
 
 <a id="nestedatt--rewrite_rules"></a>
@@ -204,13 +204,13 @@ Optional:
 
 Required:
 
-- `rewrite_destination` (String) Rewrited destination path.
-- `rewrite_source` (String) Source path to be rewrited.
+- `rewrite_destination` (String) Rewritten destination path.
+- `rewrite_source` (String) Source path to be rewritten.
 
 Optional:
 
-- `active` (Boolean) Flag to enabled (**true**) or disabled (**false**) rewrite rule. (Default: **true**).
-- `comment` (String) Description associated to this rewrite rule.
+- `active` (Boolean) Flag to enable (**true**) or disable (**false**) rewrite rule. (default: **true**).
+- `comment` (String) Description associated with this rewrite rule.
 
 
 <a id="nestedatt--rules"></a>
@@ -218,17 +218,17 @@ Optional:
 
 Required:
 
-- `paths` (Set of String) List of URL path for which rule is applied.
+- `paths` (Set of String) List of URL paths for which the rule is applied.
 - `whitelisted_ips` (Set of String) Authorized IP addresses list.
 
 Optional:
 
-- `action` (String) Action to applied when rule match (Default: **brain**). Supported values:
-  * **brain**: Rule analysed by ogo Shield brain
-  * **bypass**: Rule not analysed by Ogo Shield brain.
-- `active` (Boolean) Flag to enabled (**true**) or disabled (**false**) rule. (Default: **true**).
-- `cache` (Boolean) Enable or disable caching on this rule. Option can be used only if site caching is enabled. (Default: **false**).
-- `comment` (String) Description associated to this rule.
+- `action` (String) Action to be applied when the rule matches (default: **brain**). Supported values:
+  * **brain**: Rule analyzed by Ogo Shield brain
+  * **bypass**: Rule not analyzed by Ogo Shield brain.
+- `active` (Boolean) Flag to enable (**true**) or disable (**false**) rule. (default: **true**).
+- `cache` (Boolean) Enable or disable caching on this rule. Option can be used only if site caching is enabled. (default: **false**).
+- `comment` (String) Description associated with this rule.
 
 
 <a id="nestedatt--url_exceptions"></a>
@@ -236,11 +236,11 @@ Optional:
 
 Required:
 
-- `path` (String) Path of URL never blocked by Ogo Shield.
+- `path` (String) Path of the URL never blocked by Ogo Shield.
 
 Optional:
 
-- `comment` (String) Description associated to this URL exception.
+- `comment` (String) Description associated with this URL exception.
 
 
 ## Import

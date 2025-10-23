@@ -2,15 +2,15 @@
 page_title: "ogo_shield_tlsoptions Resource - ogo"
 subcategory: ""
 description: |-
-  This ogo_shield_tlsoptions resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
-  TLS options is intended to be used in ogo_shield_site resource definition to override default Ogo shield TLS settings.
+  This ogo_shield_tlsoptions resource manages TLS options at Organization level by defining specific TLS configurations: minimum and maximum supported TLS versions, allowed ciphers, client certificates for mTLS authentication, etc.
+  TLS options are intended to be used in ogo_shield_site resource definition to override default Ogo shield TLS settings.
 ---
 
 # ogo_shield_tlsoptions (Resource)
 
-This *ogo_shield_tlsoptions* resource manage TLS options at Organization level by defining specific TLS configuration: minimum and maximum supported TLS version, allowed ciphers, client certificate for mTLS authentication, etc.
+This *ogo_shield_tlsoptions* resource manages TLS options at Organization level by defining specific TLS configurations: minimum and maximum supported TLS versions, allowed ciphers, client certificates for mTLS authentication, etc.
 
-TLS options is intended to be used in `ogo_shield_site` resource definition to override default Ogo shield TLS settings.
+TLS options are intended to be used in `ogo_shield_site` resource definition to override default Ogo shield TLS settings.
 
 ## Example Usage
 
@@ -79,20 +79,20 @@ EOT
 
 ### Required
 
-- `client_auth_ca_certs` (Set of String) List of certificate authority used to verify client certificate.
+- `client_auth_ca_certs` (Set of String) List of certificate authorities used to verify client certificates.
 - `name` (String) Name of the TLS Options.
 
 ### Optional
 
-- `client_auth_type` (String) Authentication type needed to authenticate client. Supported values:
-  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.
-  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
+- `client_auth_type` (String) Authentication type needed to authenticate clients. Supported values:
+  * **VerifyClientCertIfGiven**: If a certificate is provided, verify if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise, proceed without any certificate.
+  * **RequireAndVerifyClientCert**: Require a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.
 - `max_tls_version` (String) Maximum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.
 - `min_tls_version` (String) Minimum TLS version accepted. Supported values: **TLS_1.0**, **TLS_1.1**, **TLS_1.2**, **TLS_1.3**.
 
 ### Read-Only
 
-- `last_updated` (String) Last resource update by terraform.
+- `last_updated` (String) Last resource updated by Terraform.
 - `uid` (String) UID used to reference this TLS Options.
 
 

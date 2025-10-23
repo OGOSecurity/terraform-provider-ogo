@@ -70,17 +70,19 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				},
 			},
 			"client_auth_type": schema.StringAttribute{
-				Optional:    true,
-				Computed:    true,
-				Description: "Authentication type needed to authenticate client. Supported values:\n  * **VerifyClientCertIfGiven**: if a certificate is provided, verifies if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise proceeds without any certificate.\n  * **RequireAndVerifyClientCert**: requires a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
-				Default:     stringdefault.StaticString("VerifyClientCertIfGiven"),
+				Optional: true,
+				Computed: true,
+				Description: "Authentication type needed to authenticate clients. Supported values:\n" +
+					"  * **VerifyClientCertIfGiven**: If a certificate is provided, verify if it is signed by a CA listed in `client_auth_ca_certs`. Otherwise, proceed without any certificate.\n" +
+					"  * **RequireAndVerifyClientCert**: Require a certificate, which must be signed by a CA listed in `client_auth_ca_certs`.",
+				Default: stringdefault.StaticString("VerifyClientCertIfGiven"),
 				Validators: []validator.String{
 					stringvalidator.OneOf("VerifyClientCertIfGiven", "RequireAndVerifyClientCert"),
 				},
 			},
 			"client_auth_ca_certs": schema.SetAttribute{
 				Required:    true,
-				Description: "List of certificate authority used to verify client certificate.",
+				Description: "List of certificate authorities used to verify client certificates.",
 				ElementType: types.StringType,
 			},
 			"min_tls_version": schema.StringAttribute{
@@ -101,14 +103,14 @@ func (r *tlsOptionsResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			},
 			"last_updated": schema.StringAttribute{
 				Computed:    true,
-				Description: "Last resource update by terraform.",
+				Description: "Last resource updated by Terraform.",
 			},
 		},
-		MarkdownDescription: "This *ogo_shield_tlsoptions* resource manage TLS options at " +
-			"Organization level by defining specific TLS configuration: minimum " +
-			"and maximum supported TLS version, allowed ciphers, client certificate" +
+		MarkdownDescription: "This *ogo_shield_tlsoptions* resource manages TLS options at " +
+			"Organization level by defining specific TLS configurations: minimum " +
+			"and maximum supported TLS versions, allowed ciphers, client certificates" +
 			" for mTLS authentication, etc.\n\n" +
-			"TLS options is intended to be used in `ogo_shield_site` resource definition to" +
+			"TLS options are intended to be used in `ogo_shield_site` resource definition to" +
 			" override default Ogo shield TLS settings.\n\n",
 	}
 }

@@ -2,6 +2,8 @@
 
 The OgoSecurity provider allows Terraform to manage your Site resources configuration through Ogo Dashboard API.
 
+⚠️  Provider is under development and may lead to changes, please feel free to give us feedback! ⚠️ 
+
 ## Requirements
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0

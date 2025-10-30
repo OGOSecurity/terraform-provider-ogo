@@ -27,7 +27,7 @@ provider "ogo" {
   # Ogo Dashboard API endpoint (or use env variable OGO_ENDPOINT)
   endpoint     = "https://api.ogosecurity.com"
   # Email address used to authenticate to Ogo Dashboard API (or use env variable OGO_EMAIL)
-  email = "user@example.com"
+  email        = "user@example.com"
   # Organization to access Ogo Dashboard API (or use env variable OGO_ORGANIZATION)
   organization = "orga04242"
   # API Key used to authenticate to Ogo Dashboard API (or use env variable OGO_APIKEY)

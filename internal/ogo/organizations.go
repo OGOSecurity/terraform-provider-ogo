@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// GetAllOrganizations - Returns all user's organization
+// GetAllOrganizations - Returns all user's organization.
 func (c *Client) GetAllOrganizations() ([]Organization, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/v2/organizations", c.Endpoint), nil)
 	if err != nil {

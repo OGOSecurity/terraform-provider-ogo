@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// GetAllClusters - Returns all user's cluster
+// GetAllClusters - Returns all user's cluster.
 func (c *Client) GetAllClusters() ([]Cluster, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/clusters", c.HostBaseURL), nil)
 	if err != nil {

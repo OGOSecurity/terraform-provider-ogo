@@ -20,12 +20,12 @@ var (
 	_ datasource.DataSourceWithConfigure = &tlsoptionsDataSource{}
 )
 
-// tlsoptionsDataSourceModel maps the data source schema data
+// tlsoptionsDataSourceModel maps the data source schema data.
 type tlsoptionsDataSourceModel struct {
 	TlsOptions []tlsoptionsModel `tfsdk:"tlsoptions"`
 }
 
-// tlsoptionsModel maps TLS Options schema data
+// tlsoptionsModel maps TLS Options schema data.
 type tlsoptionsModel struct {
 	Uid               types.String   `tfsdk:"uid"`
 	Name              types.String   `tfsdk:"name"`

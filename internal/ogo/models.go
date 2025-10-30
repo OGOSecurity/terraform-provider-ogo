@@ -3,7 +3,7 @@
 
 package ogosecurity
 
-// Site
+// Site objects.
 type Site struct {
 	DomainName                string                     `json:"domainName"`
 	Cluster                   Cluster                    `json:"cluster,omitempty"`
@@ -35,19 +35,16 @@ type Site struct {
 	Tags                      []string                   `json:"tags"`
 }
 
-// Blacklist Countries
 type BlacklistedCountry struct {
 	CountryCode string `json:"countryCode"`
 	CountryName string `json:"countryNameEn"`
 }
 
-// Url Exceptions
 type UrlException struct {
 	Path    string `json:"path"`
 	Comment string `json:"comment"`
 }
 
-// Rewrite Rules
 type RewriteRule struct {
 	Active             bool   `json:"active"`
 	Comment            string `json:"comment"`
@@ -55,7 +52,6 @@ type RewriteRule struct {
 	RewriteDestination string `json:"rewriteDestination"`
 }
 
-// Rule
 type Rule struct {
 	Active         bool     `json:"active"`
 	Action         string   `json:"action"`
@@ -65,13 +61,12 @@ type Rule struct {
 	WhitelistedIps []string `json:"whitelistedIps"`
 }
 
-// IP Exception
 type IpException struct {
 	Ip      string `json:"ip"`
 	Comment string `json:"comment"`
 }
 
-// TLS Options
+// TLS options objects.
 type TlsOptions struct {
 	Name              string   `json:"name,omitempty"`
 	ClientAuthType    string   `json:"clientAuthType,omitempty"`
@@ -81,13 +76,12 @@ type TlsOptions struct {
 	Uid               string   `json:"uid,omitempty"`
 }
 
-// All TLS Options Response
 type TlsOptionsResponse struct {
 	TlsOptions []TlsOptions `json:"content"`
 	Count      int          `json:"totalElements"`
 }
 
-// Cluster
+// Cluster objects.
 type Cluster struct {
 	Uid                 string   `json:"clusterId"`
 	Name                string   `json:"name"`
@@ -101,14 +95,13 @@ type Cluster struct {
 	SupportedCdns       []string `json:"supportedCdns"`
 }
 
-// All Clusters Response
 type ClustersResponse struct {
 	Cluster      Cluster  `json:"cluster"`
 	Role         string   `json:"role"`
 	AccessRights []string `json:"accessRights"`
 }
 
-// Organization
+// Organization objects.
 type Organization struct {
 	Code string `json:"code"`
 	Name string `json:"name"`
@@ -125,7 +118,7 @@ type OrganizationsResponse struct {
 	Count               int                   `json:"totalElements"`
 }
 
-// Contract
+// Contract objects.
 type Contract struct {
 	Number string `json:"number"`
 	Name   string `json:"name"`
@@ -141,7 +134,7 @@ type ContractsResponse struct {
 	Count     int        `json:"totalElements"`
 }
 
-// Certificate
+// Certificate objects.
 type CertificateP12 struct {
 	Data     string `json:"data"`
 	Password string `json:"password"`

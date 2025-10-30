@@ -20,12 +20,12 @@ var (
 	_ datasource.DataSourceWithConfigure = &contractsDataSource{}
 )
 
-// contractsDataSourceModel maps the data source schema data
+// contractsDataSourceModel maps the data source schema data.
 type contractsDataSourceModel struct {
 	Contracts []contractsModel `tfsdk:"contracts"`
 }
 
-// contractModel maps contract schema data
+// contractModel maps contract schema data.
 type contractsModel struct {
 	Number types.String `tfsdk:"number"`
 	Name   types.String `tfsdk:"name"`

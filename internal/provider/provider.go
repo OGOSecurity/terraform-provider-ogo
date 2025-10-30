@@ -96,7 +96,7 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	// Configuration values are now available.
 	if !config.Endpoint.IsNull() {
 		endpoint = config.Endpoint.ValueString()
-	} else {
+	} else if endpoint == "" {
 		endpoint = "https://api.ogosecurity.com"
 	}
 

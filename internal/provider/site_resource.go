@@ -559,25 +559,25 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	// Create new site
 	var tlsOpt *ogosecurity.TlsOptions
 	s := ogosecurity.Site{
-		DomainName: string(plan.DomainName.ValueString()),
+		DomainName: plan.DomainName.ValueString(),
 		Cluster: ogosecurity.Cluster{
-			Uid: string(plan.ClusterUid.ValueString()),
+			Uid: plan.ClusterUid.ValueString(),
 		},
-		OriginServer:         string(plan.OriginServer.ValueString()),
-		OriginScheme:         string(plan.OriginScheme.ValueString()),
-		OriginMtlsEnabled:    bool(plan.OriginMtlsEnabled.ValueBool()),
-		OriginSkipCertVerify: bool(plan.OriginSkipCertVerify.ValueBool()),
-		RemoveXForwarded:     bool(plan.RemoveXForwarded.ValueBool()),
-		ForceHttps:           bool(plan.ForceHttps.ValueBool()),
-		AuditMode:            bool(plan.AuditMode.ValueBool()),
-		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
-		Hsts:                 string(plan.Hsts.ValueString()),
-		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
-		CacheEnabled:         bool(plan.CacheEnabled.ValueBool()),
+		OriginServer:         plan.OriginServer.ValueString(),
+		OriginScheme:         plan.OriginScheme.ValueString(),
+		OriginMtlsEnabled:    plan.OriginMtlsEnabled.ValueBool(),
+		OriginSkipCertVerify: plan.OriginSkipCertVerify.ValueBool(),
+		RemoveXForwarded:     plan.RemoveXForwarded.ValueBool(),
+		ForceHttps:           plan.ForceHttps.ValueBool(),
+		AuditMode:            plan.AuditMode.ValueBool(),
+		PassthroughMode:      plan.PassthroughMode.ValueBool(),
+		Hsts:                 plan.Hsts.ValueString(),
+		LogExportEnabled:     plan.LogExportEnabled.ValueBool(),
+		CacheEnabled:         plan.CacheEnabled.ValueBool(),
 		Status:               plan.Status.ValueString(),
 		Cdn:                  plan.Cdn.ValueStringPointer(),
 		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
-		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
+		PassTlsClientCert:    plan.PassTlsClientCert.ValueString(),
 		TlsOptions:           tlsOpt,
 	}
 
@@ -594,11 +594,11 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 		p12_content64 := ""
 		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" {
-			p12Data, err := os.ReadFile(string(plan.ActiveCustomerCertificate.P12File.ValueString()))
+			p12Data, err := os.ReadFile(plan.ActiveCustomerCertificate.P12File.ValueString())
 			if err != nil {
 				resp.Diagnostics.AddError(
 					"failed to read P12/PFX file",
-					"Could not read P12/PFX file, unexpected error: "+string(err.Error()),
+					"Could not read P12/PFX file, unexpected error: "+err.Error(),
 				)
 				return
 			}
@@ -618,21 +618,21 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	// Contract
 	if plan.ContractNumber.ValueString() != "" {
 		s.Contract = &ogosecurity.Contract{
-			Number: string(plan.ContractNumber.ValueString()),
+			Number: plan.ContractNumber.ValueString(),
 		}
 	}
 
 	// TLS Options
 	if plan.TlsOptionsUid.ValueString() != "" {
 		s.TlsOptions = &ogosecurity.TlsOptions{
-			Uid: string(plan.TlsOptionsUid.ValueString()),
+			Uid: plan.TlsOptionsUid.ValueString(),
 		}
 	}
 
 	// Blacklist Countries
 	s.BlacklistedCountries = []string{}
 	for _, country := range plan.BlacklistedCountries {
-		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+		s.BlacklistedCountries = append(s.BlacklistedCountries, country.ValueString())
 	}
 
 	// Brain parameters overrides
@@ -653,8 +653,8 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.IpExceptions = []ogosecurity.IpException{}
 	for _, wlip := range plan.IpExceptions {
 		s.IpExceptions = append(s.IpExceptions, ogosecurity.IpException{
-			Ip:      string(wlip.Ip.ValueString()),
-			Comment: string(wlip.Comment.ValueString()),
+			Ip:      wlip.Ip.ValueString(),
+			Comment: wlip.Comment.ValueString(),
 		})
 	}
 
@@ -662,10 +662,10 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.RewriteRules = []ogosecurity.RewriteRule{}
 	for _, rewrite := range plan.RewriteRules {
 		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
-			Active:             bool(rewrite.Active.ValueBool()),
-			Comment:            string(rewrite.Comment.ValueString()),
-			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
-			RewriteDestination: string(rewrite.RewriteDestination.ValueString()),
+			Active:             rewrite.Active.ValueBool(),
+			Comment:            rewrite.Comment.ValueString(),
+			RewriteSource:      rewrite.RewriteSource.ValueString(),
+			RewriteDestination: rewrite.RewriteDestination.ValueString(),
 		})
 	}
 
@@ -673,20 +673,20 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.Rules = []ogosecurity.Rule{}
 	for _, rule := range plan.Rules {
 		r := ogosecurity.Rule{
-			Active:         bool(rule.Active.ValueBool()),
-			Action:         string(rule.Action.ValueString()),
-			Cache:          bool(rule.Cache.ValueBool()),
-			Comment:        string(rule.Comment.ValueString()),
+			Active:         rule.Active.ValueBool(),
+			Action:         rule.Action.ValueString(),
+			Cache:          rule.Cache.ValueBool(),
+			Comment:        rule.Comment.ValueString(),
 			Paths:          []string{},
 			WhitelistedIps: []string{},
 		}
 
 		for _, path := range rule.Paths {
-			r.Paths = append(r.Paths, string(path.ValueString()))
+			r.Paths = append(r.Paths, path.ValueString())
 		}
 
 		for _, ip := range rule.WhitelistedIps {
-			r.WhitelistedIps = append(r.WhitelistedIps, string(ip.ValueString()))
+			r.WhitelistedIps = append(r.WhitelistedIps, ip.ValueString())
 		}
 
 		s.Rules = append(s.Rules, r)
@@ -696,15 +696,15 @@ func (r *siteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	s.UrlExceptions = []ogosecurity.UrlException{}
 	for _, url := range plan.UrlExceptions {
 		s.UrlExceptions = append(s.UrlExceptions, ogosecurity.UrlException{
-			Path:    string(url.Path.ValueString()),
-			Comment: string(url.Comment.ValueString()),
+			Path:    url.Path.ValueString(),
+			Comment: url.Comment.ValueString(),
 		})
 	}
 
 	// Tags
 	s.Tags = []string{}
 	for _, tag := range plan.Tags {
-		s.Tags = append(s.Tags, string(tag.ValueString()))
+		s.Tags = append(s.Tags, tag.ValueString())
 	}
 
 	site, err := r.client.CreateSite(s)
@@ -902,25 +902,25 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	// Create new site
 	var tlsOpt *ogosecurity.TlsOptions
 	s := ogosecurity.Site{
-		DomainName: string(plan.DomainName.ValueString()),
+		DomainName: plan.DomainName.ValueString(),
 		Cluster: ogosecurity.Cluster{
-			Uid: string(plan.ClusterUid.ValueString()),
+			Uid: plan.ClusterUid.ValueString(),
 		},
-		OriginServer:         string(plan.OriginServer.ValueString()),
-		OriginScheme:         string(plan.OriginScheme.ValueString()),
-		OriginMtlsEnabled:    bool(plan.OriginMtlsEnabled.ValueBool()),
-		OriginSkipCertVerify: bool(plan.OriginSkipCertVerify.ValueBool()),
-		RemoveXForwarded:     bool(plan.RemoveXForwarded.ValueBool()),
-		ForceHttps:           bool(plan.ForceHttps.ValueBool()),
-		AuditMode:            bool(plan.AuditMode.ValueBool()),
-		PassthroughMode:      bool(plan.PassthroughMode.ValueBool()),
-		Hsts:                 string(plan.Hsts.ValueString()),
-		LogExportEnabled:     bool(plan.LogExportEnabled.ValueBool()),
-		CacheEnabled:         bool(plan.CacheEnabled.ValueBool()),
+		OriginServer:         plan.OriginServer.ValueString(),
+		OriginScheme:         plan.OriginScheme.ValueString(),
+		OriginMtlsEnabled:    plan.OriginMtlsEnabled.ValueBool(),
+		OriginSkipCertVerify: plan.OriginSkipCertVerify.ValueBool(),
+		RemoveXForwarded:     plan.RemoveXForwarded.ValueBool(),
+		ForceHttps:           plan.ForceHttps.ValueBool(),
+		AuditMode:            plan.AuditMode.ValueBool(),
+		PassthroughMode:      plan.PassthroughMode.ValueBool(),
+		Hsts:                 plan.Hsts.ValueString(),
+		LogExportEnabled:     plan.LogExportEnabled.ValueBool(),
+		CacheEnabled:         plan.CacheEnabled.ValueBool(),
 		Status:               plan.Status.ValueString(),
 		Cdn:                  plan.Cdn.ValueStringPointer(),
 		OriginPort:           plan.OriginPort.ValueInt32Pointer(),
-		PassTlsClientCert:    string(plan.PassTlsClientCert.ValueString()),
+		PassTlsClientCert:    plan.PassTlsClientCert.ValueString(),
 		TlsOptions:           tlsOpt,
 	}
 
@@ -937,11 +937,11 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 		p12_content64 := ""
 		if plan.ActiveCustomerCertificate.P12File.ValueString() != "" {
-			p12Data, err := os.ReadFile(string(plan.ActiveCustomerCertificate.P12File.ValueString()))
+			p12Data, err := os.ReadFile(plan.ActiveCustomerCertificate.P12File.ValueString())
 			if err != nil {
 				resp.Diagnostics.AddError(
 					"failed to read certificate",
-					"Could not read certificate file, unexpected error: "+string(err.Error()),
+					"Could not read certificate file, unexpected error: "+err.Error(),
 				)
 				return
 			}
@@ -960,21 +960,21 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	// Contract
 	if plan.ContractNumber.ValueString() != "" {
 		s.Contract = &ogosecurity.Contract{
-			Number: string(plan.ContractNumber.ValueString()),
+			Number: plan.ContractNumber.ValueString(),
 		}
 	}
 
 	// TLS Options
 	if plan.TlsOptionsUid.ValueString() != "" {
 		s.TlsOptions = &ogosecurity.TlsOptions{
-			Uid: string(plan.TlsOptionsUid.ValueString()),
+			Uid: plan.TlsOptionsUid.ValueString(),
 		}
 	}
 
 	// Blacklist Countries
 	s.BlacklistedCountries = []string{}
 	for _, country := range plan.BlacklistedCountries {
-		s.BlacklistedCountries = append(s.BlacklistedCountries, string(country.ValueString()))
+		s.BlacklistedCountries = append(s.BlacklistedCountries, country.ValueString())
 	}
 
 	// Brain parameters overrides
@@ -995,8 +995,8 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.IpExceptions = []ogosecurity.IpException{}
 	for _, wlip := range plan.IpExceptions {
 		s.IpExceptions = append(s.IpExceptions, ogosecurity.IpException{
-			Ip:      string(wlip.Ip.ValueString()),
-			Comment: string(wlip.Comment.ValueString()),
+			Ip:      wlip.Ip.ValueString(),
+			Comment: wlip.Comment.ValueString(),
 		})
 	}
 
@@ -1004,10 +1004,10 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.RewriteRules = []ogosecurity.RewriteRule{}
 	for _, rewrite := range plan.RewriteRules {
 		s.RewriteRules = append(s.RewriteRules, ogosecurity.RewriteRule{
-			Active:             bool(rewrite.Active.ValueBool()),
-			Comment:            string(rewrite.Comment.ValueString()),
-			RewriteSource:      string(rewrite.RewriteSource.ValueString()),
-			RewriteDestination: string(rewrite.RewriteDestination.ValueString()),
+			Active:             rewrite.Active.ValueBool(),
+			Comment:            rewrite.Comment.ValueString(),
+			RewriteSource:      rewrite.RewriteSource.ValueString(),
+			RewriteDestination: rewrite.RewriteDestination.ValueString(),
 		})
 	}
 
@@ -1015,20 +1015,20 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.Rules = []ogosecurity.Rule{}
 	for _, rule := range plan.Rules {
 		r := ogosecurity.Rule{
-			Active:         bool(rule.Active.ValueBool()),
-			Action:         string(rule.Action.ValueString()),
-			Cache:          bool(rule.Cache.ValueBool()),
-			Comment:        string(rule.Comment.ValueString()),
+			Active:         rule.Active.ValueBool(),
+			Action:         rule.Action.ValueString(),
+			Cache:          rule.Cache.ValueBool(),
+			Comment:        rule.Comment.ValueString(),
 			Paths:          []string{},
 			WhitelistedIps: []string{},
 		}
 
 		for _, path := range rule.Paths {
-			r.Paths = append(r.Paths, string(path.ValueString()))
+			r.Paths = append(r.Paths, path.ValueString())
 		}
 
 		for _, ip := range rule.WhitelistedIps {
-			r.WhitelistedIps = append(r.WhitelistedIps, string(ip.ValueString()))
+			r.WhitelistedIps = append(r.WhitelistedIps, ip.ValueString())
 		}
 
 		s.Rules = append(s.Rules, r)
@@ -1038,15 +1038,15 @@ func (r *siteResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	s.UrlExceptions = []ogosecurity.UrlException{}
 	for _, url := range plan.UrlExceptions {
 		s.UrlExceptions = append(s.UrlExceptions, ogosecurity.UrlException{
-			Path:    string(url.Path.ValueString()),
-			Comment: string(url.Comment.ValueString()),
+			Path:    url.Path.ValueString(),
+			Comment: url.Comment.ValueString(),
 		})
 	}
 
 	// Tags
 	s.Tags = []string{}
 	for _, tag := range plan.Tags {
-		s.Tags = append(s.Tags, string(tag.ValueString()))
+		s.Tags = append(s.Tags, tag.ValueString())
 	}
 
 	site, err := r.client.UpdateSite(s)

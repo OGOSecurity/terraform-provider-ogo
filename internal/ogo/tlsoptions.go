@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// GetAllTlsOptions - Returns all user's TLS Options
+// Returns all user's TLS Options.
 func (c *Client) GetAllTlsOptions() ([]TlsOptions, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/tls-options", c.HostBaseURL), nil)
 	if err != nil {
@@ -31,7 +31,7 @@ func (c *Client) GetAllTlsOptions() ([]TlsOptions, error) {
 	return resp.TlsOptions, nil
 }
 
-// GetTlsOptions - Returns a specifc TLS Options
+// Returns a specifc TLS Options.
 func (c *Client) GetTlsOptions(tlsOptionsUid string) (*TlsOptions, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/tls-options/%s", c.HostBaseURL, tlsOptionsUid), nil)
 	if err != nil {
@@ -52,7 +52,7 @@ func (c *Client) GetTlsOptions(tlsOptionsUid string) (*TlsOptions, error) {
 	return &resp, nil
 }
 
-// CreateTlsOptions - Create new TLS Options
+// Create new TLS Options.
 func (c *Client) CreateTlsOptions(tlsOptions TlsOptions) (*TlsOptions, error) {
 	rb, err := json.Marshal(tlsOptions)
 	if err != nil {
@@ -78,7 +78,7 @@ func (c *Client) CreateTlsOptions(tlsOptions TlsOptions) (*TlsOptions, error) {
 	return &resp, nil
 }
 
-// UpdateTlsOptions - Update existing TLS Options
+// Update existing TLS Options.
 func (c *Client) UpdateTlsOptions(tlsOptions TlsOptions) (*TlsOptions, error) {
 	uid := tlsOptions.Uid
 	tlsOptions.Uid = ""
@@ -110,7 +110,7 @@ func (c *Client) UpdateTlsOptions(tlsOptions TlsOptions) (*TlsOptions, error) {
 	return &resp, nil
 }
 
-// DeleteTlsOptions - Delete an existing TLS Options
+// Delete an existing TLS Options.
 func (c *Client) DeleteTlsOptions(tlsOptionsUid string) error {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/tls-options/%s", c.HostBaseURL, tlsOptionsUid), nil)
 	if err != nil {

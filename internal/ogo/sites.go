@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// GetSite - Returns a specifc site
+// Returns a specifc site.
 func (c *Client) GetSite(siteDomainName string) (*Site, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {
@@ -31,7 +31,7 @@ func (c *Client) GetSite(siteDomainName string) (*Site, error) {
 	return &resp, nil
 }
 
-// CreateSite - Create new site
+// Create new site.
 func (c *Client) CreateSite(site Site) (*Site, error) {
 	rb, err := json.Marshal(site)
 	if err != nil {
@@ -57,7 +57,7 @@ func (c *Client) CreateSite(site Site) (*Site, error) {
 	return &resp, nil
 }
 
-// UpdateSite - Update existing site
+// Update existing site.
 func (c *Client) UpdateSite(site Site) (*Site, error) {
 	rb, err := json.Marshal(site)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c *Client) UpdateSite(site Site) (*Site, error) {
 	return &resp, nil
 }
 
-// DeleteSite - Delete existing site
+// Delete existing site.
 func (c *Client) DeleteSite(siteDomainName string) error {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/sites/%s", c.HostBaseURL, siteDomainName), nil)
 	if err != nil {

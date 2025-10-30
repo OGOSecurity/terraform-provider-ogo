@@ -20,12 +20,12 @@ var (
 	_ datasource.DataSourceWithConfigure = &organizationsDataSource{}
 )
 
-// organizationsDataSourceModel maps the data source schema data
+// organizationsDataSourceModel maps the data source schema data.
 type organizationsDataSourceModel struct {
 	Organizations []organizationsModel `tfsdk:"organizations"`
 }
 
-// organizationModel maps organization schema data
+// organizationModel maps organization schema data.
 type organizationsModel struct {
 	Code types.String `tfsdk:"code"`
 	Name types.String `tfsdk:"name"`

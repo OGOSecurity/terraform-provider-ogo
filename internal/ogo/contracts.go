@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// GetAllContracts - Returns all user's contract
+// GetAllContracts - Returns all user's contract.
 func (c *Client) GetAllContracts() ([]Contract, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/contracts/available", c.HostBaseURL), nil)
 	if err != nil {

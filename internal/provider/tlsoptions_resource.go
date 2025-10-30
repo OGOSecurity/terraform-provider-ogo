@@ -149,8 +149,8 @@ func (r *tlsOptionsResource) Create(ctx context.Context, req resource.CreateRequ
 
 	// Create new TLS options
 	t := ogosecurity.TlsOptions{
-		Name:           string(plan.Name.ValueString()),
-		ClientAuthType: string(plan.ClientAuthType.ValueString()),
+		Name:           plan.Name.ValueString(),
+		ClientAuthType: plan.ClientAuthType.ValueString(),
 		MinTlsVersion:  plan.MinTlsVersion.ValueStringPointer(),
 		MaxTlsVersion:  plan.MaxTlsVersion.ValueStringPointer(),
 	}
@@ -158,7 +158,7 @@ func (r *tlsOptionsResource) Create(ctx context.Context, req resource.CreateRequ
 	// CA certificates
 	t.ClientAuthCaCerts = []string{}
 	for _, cert := range plan.ClientAuthCaCerts {
-		t.ClientAuthCaCerts = append(t.ClientAuthCaCerts, string(cert.ValueString()))
+		t.ClientAuthCaCerts = append(t.ClientAuthCaCerts, cert.ValueString())
 	}
 
 	// Create TLS options
@@ -235,9 +235,9 @@ func (r *tlsOptionsResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	// Set TLS options
 	t := ogosecurity.TlsOptions{
-		Name:           string(plan.Name.ValueString()),
-		Uid:            string(plan.Uid.ValueString()),
-		ClientAuthType: string(plan.ClientAuthType.ValueString()),
+		Name:           plan.Name.ValueString(),
+		Uid:            plan.Uid.ValueString(),
+		ClientAuthType: plan.ClientAuthType.ValueString(),
 		MinTlsVersion:  plan.MinTlsVersion.ValueStringPointer(),
 		MaxTlsVersion:  plan.MaxTlsVersion.ValueStringPointer(),
 	}
@@ -245,7 +245,7 @@ func (r *tlsOptionsResource) Update(ctx context.Context, req resource.UpdateRequ
 	// CA certificate
 	t.ClientAuthCaCerts = []string{}
 	for _, cert := range plan.ClientAuthCaCerts {
-		t.ClientAuthCaCerts = append(t.ClientAuthCaCerts, string(cert.ValueString()))
+		t.ClientAuthCaCerts = append(t.ClientAuthCaCerts, cert.ValueString())
 	}
 
 	// Update TLS options

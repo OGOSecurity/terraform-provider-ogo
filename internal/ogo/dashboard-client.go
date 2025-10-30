@@ -15,7 +15,6 @@ import (
 
 var sem = make(chan int, 1)
 
-// Client
 type Client struct {
 	Endpoint     string
 	HostBaseURL  string
@@ -30,13 +29,13 @@ func md5sum(text string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// NewClient
+// Create new Ogo API client.
 func NewClient(host *string, email *string, apikey *string, organization *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
-	// Check if endpoint, email, apikey and organization are provided
+	// Check if endpoint, email, apikey and organization are provided.
 	if host == nil {
 		return &c, errors.New("endpoint must be provided")
 	} else {
@@ -67,16 +66,16 @@ func NewClient(host *string, email *string, apikey *string, organization *string
 }
 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
-	// Generate token based on URL Path
+	// Generate token based on URL Path.
 	token := md5sum(req.URL.Path + "-" + c.ApiKey)
 
-	// Set headers
+	// Set headers.
 	if req.Header.Get("Content-Type") == "" {
 		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
 	req.Header.Set("X-Ogo-Auth", c.Email+";"+token)
 
-	// Lock access to Ogo API to restrict concurrent requests
+	// Lock access to Ogo API to restrict concurrent requests.
 	sem <- 1
 	res, err := c.HTTPClient.Do(req)
 	<-sem
@@ -88,7 +87,7 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieved body: %s (%+v)", string(err.Error()), res)
+		return nil, fmt.Errorf("failed to retrieved body: %s (%+v)", err.Error(), res)
 	}
 
 	if res.StatusCode != http.StatusOK &&

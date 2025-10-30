@@ -20,12 +20,12 @@ var (
 	_ datasource.DataSourceWithConfigure = &clustersDataSource{}
 )
 
-// clustersDataSourceModel maps the data source schema data
+// clustersDataSourceModel maps the data source schema data.
 type clustersDataSourceModel struct {
 	Clusters []clustersModel `tfsdk:"clusters"`
 }
 
-// clusterModel maps cluster schema data
+// clusterModel maps cluster schema data.
 type clustersModel struct {
 	Uid                 types.String   `tfsdk:"uid"`
 	Name                types.String   `tfsdk:"name"`

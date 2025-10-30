@@ -3,8 +3,6 @@
 
 version: '3'
 
-vars:
-
 tasks:
   clean:
     desc: Clean test environment
@@ -13,7 +11,12 @@ tasks:
   doc:
     desc: Generate documentation
     cmds:
+      - terraform fmt -recursive examples
       - make generate
+  golint:
+    desc: Run golint
+    cmds:
+      - golangci-lint run
   test:
     desc: Run provider Unit Tests
     cmds:

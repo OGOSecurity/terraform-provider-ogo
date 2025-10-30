@@ -110,8 +110,8 @@ type ClustersResponse struct {
 
 // Organization
 type Organization struct {
-	Code         string `json:"code"`
-	CompagnyName string `json:"companyName"`
+	Code string `json:"code"`
+	Name string `json:"name"`
 }
 
 type OrganizationDetails struct {

@@ -27,8 +27,8 @@ type organizationsDataSourceModel struct {
 
 // organizationModel maps organization schema data
 type organizationsModel struct {
-	Code        types.String `tfsdk:"code"`
-	CompanyName types.String `tfsdk:"company_name"`
+	Code types.String `tfsdk:"code"`
+	Name types.String `tfsdk:"name"`
 }
 
 func NewOrganizationsDataSource() datasource.DataSource {
@@ -54,9 +54,9 @@ func (d *organizationsDataSource) Schema(_ context.Context, _ datasource.SchemaR
 							Computed:    true,
 							Description: "Code identifier used to reference this organization.",
 						},
-						"company_name": schema.StringAttribute{
+						"name": schema.StringAttribute{
 							Computed:    true,
-							Description: "Company name of this organization.",
+							Description: "Name of this organization.",
 						},
 					},
 				},
@@ -104,8 +104,8 @@ func (d *organizationsDataSource) Read(ctx context.Context, req datasource.ReadR
 	// Map response body to model
 	for _, c := range organizations {
 		organizationState := organizationsModel{
-			Code:        types.StringValue(c.Code),
-			CompanyName: types.StringValue(c.CompagnyName),
+			Code: types.StringValue(c.Code),
+			Name: types.StringValue(c.Name),
 		}
 
 		state.Organizations = append(state.Organizations, organizationState)

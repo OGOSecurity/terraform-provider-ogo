@@ -1,3 +1,0 @@
-Datasource to implement:
-  * organization (orga code)
-  * contracts (contract number)

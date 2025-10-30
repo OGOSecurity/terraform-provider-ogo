@@ -49,11 +49,12 @@ resource "ogo_shield_site" "bar_example_com" {
   tlsoptions_uid          = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
-  blacklisted_countries   = ["DE", "EN", "FR", "IT"]
+  blacklisted_countries   = ["DE", "EN", "CN"]
   brain_overrides = {
-    "/BRAIN/DRIVE_43E5A99D_5A09_47FC_A9D9_C4FF0248B6C1_Priority"                   = 0.88
-    "/ACTOR/DRIVE_493EE2EC_4776_4A98_8D56_75C2DDD28215_BELIEF"                     = 0.66
-    "/ACTOR/DRIVE_E550246A_FA9A_4EB9_AFA5_C4C3D7C3FBA8_MAX_CONSUMED_RESPONSE_TIME" = 0.55
+    "/BRAIN/DRIVE_43E5A99D_5A09_47FC_A9D9_C4FF0248B6C1_Priority" : 0.0,
+    "/ACTOR/DRIVE_493EE2EC_4776_4A98_8D56_75C2DDD28215_BELIEF" : 0.8,
+    "/ACTOR/DRIVE_E550246A_FA9A_4EB9_AFA5_C4C3D7C3FBA8_MAX_CONSUMED_RESPONSE_TIME" : 200000.0,
+    "/ACTOR/DRIVE_01234567_BELIEF" : 0.7
   }
   rewrite_rules = [
     {

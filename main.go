@@ -1,4 +1,4 @@
-// Copyright (c) OgoSecurity, Inc.
+// Copyright (c) OGO Security, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 package main

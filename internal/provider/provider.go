@@ -1,4 +1,4 @@
-// Copyright (c) OgoSecurity, Inc.
+// Copyright (c) OGO Security, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
 package provider
@@ -169,10 +169,10 @@ func (p *ogoProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	client, err := ogosecurity.NewClient(&endpoint, &email, &apikey, &organization)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to Create OgoSecurity Dashboard API Client",
-			"An unexpected error occurred when creating the OgoSecurity Dashboard API client. "+
+			"Unable to Create OGO Security Dashboard API Client",
+			"An unexpected error occurred when creating the OGO Security Dashboard API client. "+
 				"If the error is not clear, please contact the provider developers.\n\n"+
-				"OgoSecurity Dashboard Client Error: "+err.Error(),
+				"OGO Security Dashboard Client Error: "+err.Error(),
 		)
 		return
 	}

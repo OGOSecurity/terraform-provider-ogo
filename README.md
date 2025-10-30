@@ -1,6 +1,6 @@
-# OgoSecurity Terraform Provider
+# OGO Security Terraform Provider
 
-The OgoSecurity provider allows Terraform to manage your Site resources configuration through Ogo Dashboard API.
+The OGO Security provider allows Terraform to manage your Site resources configuration through Ogo Dashboard API.
 
 ⚠️  Provider is under development and may lead to changes, please feel free to give us feedback! ⚠️ 
 
@@ -17,18 +17,20 @@ terraform {
   required_providers {
     ogo = {
       source = "ogosecurity/ogo"
-
+      version = "~> 0.1"
     }
   }
 }
 
 # Provider configuration
 provider "ogo" {
-  # Ogo Dashboard API endpoint (or use env variable: OGO_ENDPOINT)
+  # Ogo Dashboard API endpoint (or use env variable OGO_ENDPOINT)
   endpoint     = "https://api.ogosecurity.com"
-  # Organization to access Ogo Dashboard API (or use env variable: OGO_ORGANIZATION)
+  # Email address used to authenticate to Ogo Dashboard API (or use env variable OGO_EMAIL)
+  email = "user@example.com"
+  # Organization to access Ogo Dashboard API (or use env variable OGO_ORGANIZATION)
   organization = "orga04242"
-  # Organization to access Ogo Dashboard API (or use env variable: OGO_APIKEY)
+  # API Key used to authenticate to Ogo Dashboard API (or use env variable OGO_APIKEY)
   apikey       = "cd583abf-a02f-49e7-949e-424bf42419ea"
 }
 
@@ -60,11 +62,11 @@ Use `terraform init` command to initialize your project.
 
 ## Documentation
 
-Full OgoSecurity provider documentation is available on the official Hashicorp Terraform provider registry [the Terraform Registry](https://registry.terraform.io/providers/ogosecurity/ogo/latest/docs).
+Full OGO Security provider documentation is available on the official Hashicorp Terraform provider registry [the Terraform Registry](https://registry.terraform.io/providers/ogosecurity/ogo/latest/docs).
 
 Some examples can also be found in this [./examples](./examples) project directory.
 
 
 ## Contacts
 
-If you believe you have found a security issue in the Terraform OgoSecurity Provider, please responsibly disclose it by contacting us at security@ogosecurity.com.
+If you believe you have found a security issue in the Terraform OGO Security Provider, please responsibly disclose it by contacting us at security@ogosecurity.com.

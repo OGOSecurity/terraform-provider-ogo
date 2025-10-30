@@ -20,6 +20,7 @@ example.tf
 terraform.tfplan
 terraform.tfstate
 secrets.tfvars
+TODO.md
 bin/
 dist/
 examples/dev

@@ -21,6 +21,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/mapdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -341,6 +342,12 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Computed:    true,
 				Description: "List of brain parameters to override",
 				ElementType: types.Float64Type,
+				Default: mapdefault.StaticValue(
+					types.MapValueMust(
+						types.Float64Type,
+						map[string]attr.Value{},
+					),
+				),
 			},
 			"ip_exceptions": schema.SetNestedAttribute{
 				Optional:    true,
@@ -791,13 +798,6 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		}
 	}
 
-	// Brain parameters overrides
-	state.BrainOverrides, diags = types.MapValueFrom(ctx, types.Float64Type, site.BrainOverrides)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
 	// CDN
 	if site.Cdn != nil {
 		state.Cdn = types.StringPointerValue(site.Cdn)
@@ -821,6 +821,13 @@ func (r *siteResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	state.BlacklistedCountries = []types.String{}
 	for _, country := range site.BlacklistedCountries {
 		state.BlacklistedCountries = append(state.BlacklistedCountries, types.StringValue(country))
+	}
+
+	// Brain parameters overrides
+	state.BrainOverrides, diags = types.MapValueFrom(ctx, types.Float64Type, site.BrainOverrides)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
 	// IP Exceptions

@@ -4,6 +4,12 @@
 version: '3'
 
 tasks:
+  all:
+    desc: Run doc generation, go lint and unit test
+    cmds:
+      - task: golint
+      - task: doc
+      - task: test
   clean:
     desc: Clean test environment
     cmds:

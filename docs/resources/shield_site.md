@@ -49,7 +49,7 @@ resource "ogo_shield_site" "bar_example_com" {
   tlsoptions_uid          = "example00812-f4d2574e-d85e-5dg7-ad11-1edd0489jmp1"
   pass_tls_client_cert    = "info"
   tags                    = ["app", "dev"]
-  blacklisted_countries   = ["DE", "EN", "CN"]
+  blacklisted_countries   = ["DE", "ES", "CN"]
   brain_overrides = {
     "/BRAIN/DRIVE_43E5A99D_5A09_47FC_A9D9_C4FF0248B6C1_Priority" : 0.0,
     "/ACTOR/DRIVE_493EE2EC_4776_4A98_8D56_75C2DDD28215_BELIEF" : 0.8,
@@ -110,7 +110,7 @@ resource "ogo_shield_site" "bar_example_com" {
 
 ### Required
 
-- `cluster_uid` (String) Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.
+- `cluster_uid` (String) Cluster UID on which site is deployed (**force site recreation if modified**). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.
 - `domain_name` (String) DNS domain name of the site.
 - `origin_server` (String) Origin server address (IP address or domain name).
 

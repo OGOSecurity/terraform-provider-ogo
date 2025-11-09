@@ -136,7 +136,7 @@ func (r *siteResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"cluster_uid": schema.StringAttribute{
 				Required:    true,
-				Description: "Cluster UID on which site is deployed (force site recreation if modified). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.",
+				Description: "Cluster UID on which site is deployed (**force site recreation if modified**). List of available cluster and associated UID can be retrieved from `ogo_shield_clusters` data source.",
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
